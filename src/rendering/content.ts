@@ -4,6 +4,7 @@ import rehypeStringify from "rehype-stringify";
 import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
+import { codeToHast } from "shiki";
 import { unified } from "unified";
 
 import type { SourceComment } from "@/domain/types";
@@ -24,11 +25,60 @@ interface MarkdownNode {
   children?: MarkdownNode[];
 }
 
+interface HastNode {
+  type: string;
+  tagName?: string;
+  value?: string;
+  properties?: {
+    className?: string[];
+  };
+  children?: HastNode[];
+}
+
 function textContent(node: MarkdownNode): string {
   if (node.type === "text" || node.type === "inlineCode") {
     return node.value ?? "";
   }
   return (node.children ?? []).map(textContent).join("");
+}
+
+function highlightCodeBlocks() {
+  return async (tree: HastNode) => {
+    async function visit(node: HastNode): Promise<void> {
+      if (
+        node.tagName === "pre" &&
+        node.children?.length === 1 &&
+        node.children[0].tagName === "code"
+      ) {
+        const code = node.children[0];
+        const languageClass = code.properties?.className?.find((className) =>
+          className.startsWith("language-"),
+        );
+        const language = languageClass?.slice("language-".length);
+
+        if (language) {
+          try {
+            const highlighted = (await codeToHast(textContent(code), {
+              lang: language,
+              theme: "github-dark-default",
+            })) as HastNode;
+            const highlightedPre = highlighted.children?.[0];
+
+            if (highlightedPre) {
+              Object.assign(node, highlightedPre);
+              return;
+            }
+          } catch {
+            // Unsupported language labels remain readable as plain code.
+          }
+        }
+      }
+
+      await Promise.all((node.children ?? []).map(visit));
+    }
+
+    await visit(tree);
+  };
 }
 
 export async function renderMarkdown(markdown: string): Promise<string> {
@@ -38,6 +88,7 @@ export async function renderMarkdown(markdown: string): Promise<string> {
     .use(remarkRehype, { allowDangerousHtml: true })
     .use(rehypeRaw)
     .use(rehypeSanitize, githubStyleSchema)
+    .use(highlightCodeBlocks)
     .use(rehypeStringify)
     .process(markdown);
 
@@ -69,4 +120,3 @@ export function splitDiscussion(comments: SourceComment[]): {
     latest: comments.slice(-10),
   };
 }
-

@@ -142,6 +142,7 @@ main { min-height: 65vh; }
 .prose a { color: var(--accent-dark); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
 .prose blockquote { margin: 2em 0; padding: 5px 0 5px 25px; border-left: 3px solid var(--accent); color: var(--muted); }
 .prose pre { padding: 22px; overflow: auto; border-radius: 3px; background: #20201d; color: #eee8dc; font-size: 14px; line-height: 1.65; }
+.prose pre.shiki { background: #20201d !important; }
 .prose code:not(pre code) { padding: .12em .35em; background: var(--paper-deep); border-radius: 3px; font-size: .88em; }
 .prose table { width: 100%; border-collapse: collapse; font-family: var(--sans); font-size: 14px; }
 .prose th, .prose td { padding: 10px 12px; border: 1px solid var(--line); text-align: left; }

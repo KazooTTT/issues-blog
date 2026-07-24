@@ -29,6 +29,24 @@ describe("content rendering", () => {
     expect(html).not.toContain("onclick");
   });
 
+  it("syntax-highlights fenced code while keeping unknown languages readable", async () => {
+    const html = await renderMarkdown(`
+\`\`\`ts
+const answer: number = 42;
+\`\`\`
+
+\`\`\`made-up-language
+still readable
+\`\`\`
+`);
+
+    expect(html).toContain('class="shiki github-dark-default"');
+    expect(html).toContain("<span");
+    expect(html).toContain("const");
+    expect(html).toContain('class="language-made-up-language"');
+    expect(html).toContain("still readable");
+  });
+
   it("derives a featured excerpt from the first prose paragraph", () => {
     expect(
       deriveExcerpt(`
