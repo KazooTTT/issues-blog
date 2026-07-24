@@ -1,0 +1,19 @@
+---
+import type { ReactionSummary } from "@/domain/types";
+import { reactionEmoji } from "@/utils/presentation";
+
+interface Props {
+  reactions: ReactionSummary[];
+  sourceUrl: string;
+}
+
+const { reactions, sourceUrl } = Astro.props;
+---
+
+<div class="reaction-bar">
+  <span>Reaction</span>
+  {reactions.length ? reactions.map((reaction) => (
+    <span class="reaction">{reactionEmoji(reaction.content)} {reaction.count}</span>
+  )) : <span class="muted">还没有 Reaction</span>}
+  <a href={sourceUrl}>去 GitHub 回应 ↗</a>
+</div>

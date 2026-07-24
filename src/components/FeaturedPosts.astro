@@ -1,0 +1,26 @@
+---
+import type { Post } from "@/domain/types";
+import { deriveExcerpt } from "@/rendering/content";
+import { formatDate } from "@/utils/presentation";
+
+interface Props {
+  posts: Post[];
+}
+
+const { posts } = Astro.props;
+---
+
+<section class="featured-grid" aria-label="精选文章">
+  {posts.map((post, index) => (
+    <article class:list={["featured-card", { "featured-card--lead": index === 0 }]}>
+      <span class="eyebrow">{String(index + 1).padStart(2, "0")} · 精选</span>
+      <h2><a href={post.permalink}>{post.title}</a></h2>
+      <p>{deriveExcerpt(post.body)}</p>
+      <footer>
+        <time datetime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
+        <span>{post.tags.join(" / ")}</span>
+      </footer>
+    </article>
+  ))}
+</section>
+

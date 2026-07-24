@@ -1,0 +1,28 @@
+---
+import { getSiteContent } from "@/data/site-content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const { posts } = await getSiteContent();
+const tags = [...new Set(posts.flatMap((post) => post.tags))]
+  .map((tag) => ({
+    name: tag,
+    count: posts.filter((post) => post.tags.includes(tag)).length,
+  }))
+  .sort((left, right) => right.count - left.count || left.name.localeCompare(right.name, "zh-CN"));
+---
+
+<BaseLayout title="标签">
+  <section class="page-intro">
+    <span class="eyebrow">TAGS</span>
+    <h1>文章标签</h1>
+    <p>按主题浏览相关内容。</p>
+  </section>
+  <div class="tag-cloud">
+    {tags.map((tag) => (
+      <a href={`/tags/${encodeURIComponent(tag.name)}/`}>
+        <span>{tag.name}</span>
+        <sup>{tag.count}</sup>
+      </a>
+    ))}
+  </div>
+</BaseLayout>

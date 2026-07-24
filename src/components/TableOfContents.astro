@@ -1,0 +1,27 @@
+---
+interface Item {
+  depth: 2 | 3;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  items: Item[];
+}
+
+const { items } = Astro.props;
+---
+
+{items.length > 0 && (
+  <nav class="toc" aria-label="文章目录">
+    <strong>目录</strong>
+    <ol>
+      {items.map((item) => (
+        <li class:list={{ "toc-child": item.depth === 3 }}>
+          <a href={`#${item.slug}`}>{item.text}</a>
+        </li>
+      ))}
+    </ol>
+  </nav>
+)}
+

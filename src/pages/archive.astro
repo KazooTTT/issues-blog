@@ -1,0 +1,32 @@
+---
+import { getSiteContent } from "@/data/site-content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { formatDate } from "@/utils/presentation";
+
+const { posts } = await getSiteContent();
+const groups = Object.groupBy(posts, (post) => post.publishedAt.slice(0, 4));
+const years = Object.keys(groups).sort().reverse();
+---
+
+<BaseLayout title="归档">
+  <section class="page-intro">
+    <span class="eyebrow">ARCHIVE · {posts.length} POSTS</span>
+    <h1>文章归档</h1>
+    <p>按首次发布时间，回看不同时期留下的记录。</p>
+  </section>
+  <div class="archive">
+    {years.map((year) => (
+      <section>
+        <h2>{year}</h2>
+        <ol>
+          {groups[year]?.map((post) => (
+            <li>
+              <time datetime={post.publishedAt}>{formatDate(post.publishedAt).slice(5)}</time>
+              <a href={post.permalink}>{post.title}</a>
+            </li>
+          ))}
+        </ol>
+      </section>
+    ))}
+  </div>
+</BaseLayout>

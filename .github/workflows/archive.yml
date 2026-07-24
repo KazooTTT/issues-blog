@@ -1,0 +1,50 @@
+name: Archive Issues
+
+on:
+  workflow_dispatch:
+  issues:
+    types: [opened, edited, closed, reopened, labeled, unlabeled, deleted]
+  issue_comment:
+    types: [created, edited, deleted]
+
+permissions:
+  contents: write
+  issues: read
+
+concurrency:
+  group: content-archive
+  cancel-in-progress: true
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm archive -- --output "$RUNNER_TEMP/content-archive"
+      - name: Commit recovery snapshot
+        run: |
+          if git show-ref --verify --quiet refs/remotes/origin/archive; then
+            git worktree add "$RUNNER_TEMP/archive-worktree" origin/archive
+          else
+            git worktree add --detach "$RUNNER_TEMP/archive-worktree"
+            git -C "$RUNNER_TEMP/archive-worktree" switch --orphan archive
+          fi
+          git -C "$RUNNER_TEMP/archive-worktree" rm -rf .
+          cp -R "$RUNNER_TEMP/content-archive/." "$RUNNER_TEMP/archive-worktree/"
+          git -C "$RUNNER_TEMP/archive-worktree" add --all
+          git -C "$RUNNER_TEMP/archive-worktree" config user.name "github-actions[bot]"
+          git -C "$RUNNER_TEMP/archive-worktree" config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git -C "$RUNNER_TEMP/archive-worktree" commit -m "archive: update issue snapshots" || exit 0
+          git -C "$RUNNER_TEMP/archive-worktree" push origin HEAD:archive

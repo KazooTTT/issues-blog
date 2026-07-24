@@ -1,0 +1,26 @@
+---
+import type { SourceComment } from "@/domain/types";
+import { renderMarkdown } from "@/rendering/content";
+import { formatDate } from "@/utils/presentation";
+
+interface Props {
+  comment: SourceComment;
+  owner: string;
+}
+
+const { comment, owner } = Astro.props;
+const html = await renderMarkdown(comment.body);
+---
+
+<article class="comment">
+  <header>
+    <img src={comment.avatarUrl || "/avatar-placeholder.svg"} alt="" width="36" height="36" loading="lazy" />
+    <div>
+      <a href={comment.url}>{comment.author}</a>
+      {comment.author === owner && <span class="author-badge">作者</span>}
+      <time datetime={comment.createdAt}>{formatDate(comment.createdAt)}</time>
+    </div>
+  </header>
+  <div class="comment-body prose" set:html={html} />
+</article>
+

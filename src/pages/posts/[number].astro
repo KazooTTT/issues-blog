@@ -1,0 +1,72 @@
+---
+import Comment from "@/components/Comment.astro";
+import ReactionBar from "@/components/ReactionBar.astro";
+import { siteConfig } from "@/config";
+import { getSiteContent } from "@/data/site-content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { deriveExcerpt, renderMarkdown, splitDiscussion } from "@/rendering/content";
+import { formatDate } from "@/utils/presentation";
+
+export async function getStaticPaths() {
+  const { posts } = await getSiteContent();
+  return posts.map((post) => ({
+    params: { number: String(post.number) },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const html = await renderMarkdown(post.body);
+const discussion = splitDiscussion(post.comments);
+---
+
+<BaseLayout
+  title={post.title}
+  description={deriveExcerpt(post.body, 160)}
+  canonical={post.permalink}
+  type="article"
+>
+  <article class="post">
+    <header class="post-header">
+      <div class="post-kicker">
+        <span>Issue #{post.number}</span>
+        <span>{post.tags.join(" · ")}</span>
+      </div>
+      <h1>{post.title}</h1>
+      <div class="post-meta">
+        <span>发布于 <time datetime={post.publishedAt}>{formatDate(post.publishedAt)}</time></span>
+        {post.updatedAt !== post.publishedAt && (
+          <span>更新于 <time datetime={post.updatedAt}>{formatDate(post.updatedAt)}</time></span>
+        )}
+        <a href={post.url}>查看源 Issue ↗</a>
+      </div>
+    </header>
+    <div class="prose post-body" set:html={html} />
+    <footer class="post-footer">
+      <div class="tag-row">
+        {post.tags.map((tag: string) => <a class="tag" href={`/tags/${encodeURIComponent(tag)}/`}>#{tag}</a>)}
+      </div>
+      <ReactionBar reactions={post.reactions} sourceUrl={post.url} />
+    </footer>
+  </article>
+
+  <section class="discussion">
+    <div class="section-heading">
+      <h2>讨论</h2>
+      <span>{post.comments.length} comments</span>
+    </div>
+    {post.comments.length === 0 ? (
+      <p class="empty-state">还没有评论。<a href={post.url}>去 GitHub 留言 ↗</a></p>
+    ) : (
+      <>
+        {discussion.older.length > 0 && (
+          <details class="older-comments">
+            <summary>查看更早的 {discussion.older.length} 条评论</summary>
+            {discussion.older.map((comment) => <Comment comment={comment} owner={siteConfig.owner} />)}
+          </details>
+        )}
+        {discussion.latest.map((comment) => <Comment comment={comment} owner={siteConfig.owner} />)}
+      </>
+    )}
+  </section>
+</BaseLayout>

@@ -1,0 +1,83 @@
+---
+import { siteConfig } from "@/config";
+import "@/styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonical?: string;
+  type?: "website" | "article";
+}
+
+const {
+  title,
+  description = siteConfig.description,
+  canonical = Astro.url.pathname,
+  type = "website",
+} = Astro.props;
+const pageTitle = title ? `${title} · ${siteConfig.title}` : siteConfig.title;
+const canonicalUrl = new URL(canonical, Astro.site);
+const socialImage = new URL("/social-card.svg", Astro.site);
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#f3eee4" />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title={siteConfig.title} href="/rss.xml" />
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={socialImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <title>{pageTitle}</title>
+    <script is:inline>
+      const saved = localStorage.getItem("theme");
+      if (saved) document.documentElement.dataset.theme = saved;
+    </script>
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="site-header">
+        <a class="brand" href="/" aria-label={`${siteConfig.title} 首页`}>
+          <span class="brand-mark" aria-hidden="true">K</span>
+          <span>
+            <strong>{siteConfig.title}</strong>
+            <small>{siteConfig.tagline}</small>
+          </span>
+        </a>
+        <nav aria-label="主导航">
+          <a href="/">文章</a>
+          <a href="/archive/">归档</a>
+          <a href="/tags/">标签</a>
+          <a href="/about/">关于</a>
+          <button class="theme-toggle" type="button" aria-label="切换明暗主题" data-theme-toggle>
+            <span aria-hidden="true">◐</span>
+          </button>
+        </nav>
+      </header>
+      <main>
+        <slot />
+      </main>
+      <footer class="site-footer">
+        <p>© {new Date().getFullYear()} {siteConfig.title}</p>
+        <p><a href="/rss.xml">RSS</a> · 由 GitHub Issues 提供内容</p>
+      </footer>
+    </div>
+    <script is:inline>
+      document.querySelector("[data-theme-toggle]")?.addEventListener("click", () => {
+        const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+        document.documentElement.dataset.theme = next;
+        localStorage.setItem("theme", next);
+      });
+    </script>
+  </body>
+</html>
+

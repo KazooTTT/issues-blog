@@ -1,0 +1,42 @@
+---
+import FeaturedPosts from "@/components/FeaturedPosts.astro";
+import PostList from "@/components/PostList.astro";
+import { siteConfig } from "@/config";
+import { getSiteContent } from "@/data/site-content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { featuredPosts, regularPosts } from "@/utils/presentation";
+
+const { posts, warnings } = await getSiteContent();
+const featured = featuredPosts(posts);
+const regular = regularPosts(posts);
+const pagePosts = regular.slice(0, siteConfig.postsPerPage);
+const pageCount = Math.ceil(regular.length / siteConfig.postsPerPage);
+warnings.forEach((warning) => console.warn(`[content] ${warning}`));
+---
+
+<BaseLayout>
+  <section class="hero">
+    <p class="eyebrow">NOTES, ESSAYS & IDEAS</p>
+    <h1>记录正在发生的思考，<em>保留未完成的部分。</em></h1>
+    <p>{siteConfig.description}</p>
+  </section>
+
+  {featured.length > 0 && (
+    <section class="home-section">
+      <div class="section-heading">
+        <h2>精选文章</h2>
+        <span>Featured</span>
+      </div>
+      <FeaturedPosts posts={featured} />
+    </section>
+  )}
+
+  <section class="home-section">
+    <div class="section-heading">
+      <h2>最近更新</h2>
+      <span>Latest posts</span>
+    </div>
+    <PostList posts={pagePosts} />
+    {pageCount > 1 && <a class="page-next" href="/page/2/">更早的文章 →</a>}
+  </section>
+</BaseLayout>
