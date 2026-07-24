@@ -59,7 +59,7 @@ const socialImage = new URL(sitePath("/social-card.svg"), Astro.site);
             <a class="primary-tag-link" href={sitePath(`/tags/${encodeURIComponent(tag)}/`)}>{tag}</a>
           ))}
           <a href={sitePath("/archive/")}>归档</a>
-          <a href={sitePath("/tags/")}>全部标签</a>
+          <a class="all-tags-link" href={sitePath("/tags/")}>全部标签</a>
           <a href={sitePath("/about/")}>关于</a>
           <button class="theme-toggle" type="button" aria-label="切换明暗主题" data-theme-toggle>
             <span aria-hidden="true">◐</span>

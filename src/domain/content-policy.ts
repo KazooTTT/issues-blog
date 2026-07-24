@@ -1,21 +1,16 @@
 import type { Post, SiteContent, SourceIssue } from "./types";
 import { siteConfig } from "@/config";
+import { importedPublicationTime } from "@/migration/d1-post";
 
 const SYSTEM_LABEL_PREFIX = "blog:";
 const PUBLISH_LABEL = "blog:publish";
 const FEATURED_LABEL = "blog:featured";
 const ABOUT_LABEL = "blog:about";
-const IMPORTED_PUBLICATION_TIME =
-  /<!--\s*issues-blog:published-at=([^\s]+)\s*-->/;
 
 function publicationTime(issue: SourceIssue): string {
-  const importedTime = issue.body.match(IMPORTED_PUBLICATION_TIME)?.[1];
+  const importedTime = importedPublicationTime(issue.body);
   if (importedTime) {
-    const parsedTime = new Date(importedTime);
-    if (Number.isNaN(parsedTime.valueOf())) {
-      throw new Error(`Issue #${issue.number} has an invalid imported publication time`);
-    }
-    return parsedTime.toISOString();
+    return importedTime;
   }
 
   const events = issue.labelEvents

@@ -5,25 +5,23 @@ import { join, resolve } from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
 
 import { z } from "zod";
-
-const rowSchema = z.object({
-  id: z.string(),
-  title: z.string(),
-  content: z.string(),
-  date: z.string(),
-  tags_json: z.string(),
-});
+import {
+  d1PostSchema,
+  issueBody,
+  labelsFor,
+  sourceIdsFromBodies,
+  type D1Post,
+} from "@/migration/d1-post";
 
 const d1ResultSchema = z.array(
   z.object({
-    results: z.array(rowSchema),
+    results: z.array(d1PostSchema),
     success: z.literal(true),
   }),
 );
 
 const issueSchema = z.object({
-  number: z.number(),
-  body: z.string(),
+  body: z.string().nullable(),
 });
 
 interface Options {
@@ -65,7 +63,7 @@ function run(command: string, args: string[], cwd?: string): string {
   });
 }
 
-function loadPosts(source: string): z.infer<typeof rowSchema>[] {
+function loadPosts(source: string): D1Post[] {
   const query = [
     "SELECT id, title, content,",
     "COALESCE(date, date_created, created_at) AS date, tags_json",
@@ -94,59 +92,18 @@ function loadPosts(source: string): z.infer<typeof rowSchema>[] {
   );
 }
 
-function normalizePublicationTime(value: string): string {
-  const dateOnly = /^\d{4}-\d{2}-\d{2}$/.test(value);
-  const date = new Date(dateOnly ? `${value}T00:00:00.000Z` : value);
-  if (Number.isNaN(date.valueOf())) {
-    throw new Error(`Invalid publication date: ${value}`);
-  }
-  return date.toISOString();
-}
-
-function sourceMarker(id: string): string {
-  return `<!-- issues-blog:source=d1:${id} -->`;
-}
-
-function issueBody(post: z.infer<typeof rowSchema>): string {
-  const content = post.content.trimEnd();
-  return [
-    content,
-    "",
-    sourceMarker(post.id),
-    `<!-- issues-blog:published-at=${normalizePublicationTime(post.date)} -->`,
-    "",
-  ].join("\n");
-}
-
 function existingSourceIds(repository: string): Set<string> {
   const output = run("gh", [
-    "issue",
-    "list",
-    "--repo",
-    repository,
-    "--state",
-    "all",
-    "--limit",
-    "1000",
-    "--json",
-    "number,body",
+    "api",
+    "--paginate",
+    "--slurp",
+    `repos/${repository}/issues?state=all&per_page=100`,
   ]);
-  const issues = z.array(issueSchema).parse(JSON.parse(output));
-  const ids = new Set<string>();
-
-  for (const issue of issues) {
-    const id = issue.body.match(/<!--\s*issues-blog:source=d1:([^\s]+)\s*-->/)?.[1];
-    if (id) ids.add(id);
-  }
-  return ids;
+  const pages = z.array(z.array(issueSchema)).parse(JSON.parse(output));
+  return sourceIdsFromBodies(pages.flat().map((issue) => issue.body));
 }
 
-function labelsFor(post: z.infer<typeof rowSchema>): string[] {
-  const tags = z.array(z.string()).parse(JSON.parse(post.tags_json));
-  return ["blog:publish", ...new Set(tags.map((tag) => tag.trim()).filter(Boolean))];
-}
-
-function ensureLabels(repository: string, posts: z.infer<typeof rowSchema>[]): void {
+function ensureLabels(repository: string, posts: D1Post[]): void {
   const labels = new Set(posts.flatMap(labelsFor));
   for (const label of labels) {
     run("gh", [

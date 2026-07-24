@@ -191,9 +191,11 @@ main { min-height: 65vh; }
   .site-header { min-height: 90px; align-items: flex-start; padding: 20px 0; }
   .brand strong { font-size: 15px; white-space: nowrap; }
   .brand small { display: none; }
-  .site-header nav { gap: 14px; padding-top: 7px; }
-  .site-header nav .primary-tag-link,
-  .site-header nav a[href*="/tags/"] { display: none; }
+  .site-header { flex-wrap: wrap; }
+  .site-header nav {
+    width: 100%; justify-content: space-between; gap: 10px;
+    padding-top: 15px; font-size: 12px;
+  }
   .hero { padding: 80px 0 70px; }
   .hero::after { width: 130px; height: 130px; right: 0; top: 65px; }
   .featured-item { grid-template-columns: 36px minmax(0, 1fr); gap: 14px; padding: 22px 0; }

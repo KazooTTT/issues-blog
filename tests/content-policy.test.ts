@@ -67,7 +67,11 @@ describe("content publication policy", () => {
     const result = classifyIssues(
       [
         issue({
-          body: "正文\n\n<!-- issues-blog:published-at=2021-03-04T00:00:00.000Z -->",
+          body: [
+            "正文",
+            "<!-- issues-blog:source=d1:post-17 -->",
+            "<!-- issues-blog:published-at=2021-03-04T00:00:00.000Z -->",
+          ].join("\n\n"),
           labelEvents: [
             { label: "blog:publish", createdAt: "2026-07-24T08:00:00Z" },
           ],
@@ -77,6 +81,19 @@ describe("content publication policy", () => {
     );
 
     expect(result.posts[0]?.publishedAt).toBe("2021-03-04T00:00:00.000Z");
+  });
+
+  it("does not let a normal post override the first publication label event", () => {
+    const result = classifyIssues(
+      [
+        issue({
+          body: "正文\n\n<!-- issues-blog:published-at=2021-03-04T00:00:00.000Z -->",
+        }),
+      ],
+      owner,
+    );
+
+    expect(result.posts[0]?.publishedAt).toBe("2026-07-03T08:00:00Z");
   });
 
   it("rejects multiple About pages", () => {
