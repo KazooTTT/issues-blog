@@ -9,7 +9,8 @@
     "check": "astro check",
     "test": "vitest run",
     "test:watch": "vitest",
-    "archive": "tsx scripts/archive.ts"
+    "archive": "tsx scripts/archive.ts",
+    "migrate:d1": "tsx scripts/migrate-d1-to-issues.ts"
   },
   "engines": {
     "node": ">=22"

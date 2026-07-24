@@ -63,6 +63,22 @@ describe("content publication policy", () => {
     expect(result.posts.map((post) => post.number)).toEqual([17]);
   });
 
+  it("preserves an imported historical publication time instead of the current label time", () => {
+    const result = classifyIssues(
+      [
+        issue({
+          body: "正文\n\n<!-- issues-blog:published-at=2021-03-04T00:00:00.000Z -->",
+          labelEvents: [
+            { label: "blog:publish", createdAt: "2026-07-24T08:00:00Z" },
+          ],
+        }),
+      ],
+      owner,
+    );
+
+    expect(result.posts[0]?.publishedAt).toBe("2021-03-04T00:00:00.000Z");
+  });
+
   it("rejects multiple About pages", () => {
     expect(() =>
       classifyIssues(

@@ -1,6 +1,31 @@
 import type { Post } from "@/domain/types";
 import { siteConfig } from "@/config";
 
+const archiveDateFormatter = new Intl.DateTimeFormat("en-CA", {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  timeZone: "Asia/Shanghai",
+});
+
+export function archiveDateParts(value: string): {
+  year: string;
+  month: string;
+  day: string;
+} {
+  const parts = Object.fromEntries(
+    archiveDateFormatter
+      .formatToParts(new Date(value))
+      .map(({ type, value: partValue }) => [type, partValue]),
+  );
+
+  return {
+    year: parts.year,
+    month: parts.month,
+    day: parts.day,
+  };
+}
+
 export function formatDate(value: string): string {
   return new Intl.DateTimeFormat("zh-CN", {
     year: "numeric",

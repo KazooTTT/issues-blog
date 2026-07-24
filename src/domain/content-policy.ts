@@ -5,8 +5,19 @@ const SYSTEM_LABEL_PREFIX = "blog:";
 const PUBLISH_LABEL = "blog:publish";
 const FEATURED_LABEL = "blog:featured";
 const ABOUT_LABEL = "blog:about";
+const IMPORTED_PUBLICATION_TIME =
+  /<!--\s*issues-blog:published-at=([^\s]+)\s*-->/;
 
 function publicationTime(issue: SourceIssue): string {
+  const importedTime = issue.body.match(IMPORTED_PUBLICATION_TIME)?.[1];
+  if (importedTime) {
+    const parsedTime = new Date(importedTime);
+    if (Number.isNaN(parsedTime.valueOf())) {
+      throw new Error(`Issue #${issue.number} has an invalid imported publication time`);
+    }
+    return parsedTime.toISOString();
+  }
+
   const events = issue.labelEvents
     .filter((event) => event.label === PUBLISH_LABEL)
     .map((event) => event.createdAt)

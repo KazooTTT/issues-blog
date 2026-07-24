@@ -1,17 +1,21 @@
 ---
 import { getSiteContent } from "@/data/site-content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { sitePath } from "@/utils/presentation";
+import { archiveDateParts, sitePath } from "@/utils/presentation";
 
 const { posts } = await getSiteContent();
-const postsByYear = Object.groupBy(posts, (post) => post.publishedAt.slice(0, 4));
+const datedPosts = posts.map((post) => ({
+  post,
+  date: archiveDateParts(post.publishedAt),
+}));
+const postsByYear = Object.groupBy(datedPosts, ({ date }) => date.year);
 const archive = Object.keys(postsByYear)
   .sort()
   .reverse()
   .map((year) => {
     const postsByMonth = Object.groupBy(
       postsByYear[year] ?? [],
-      (post) => post.publishedAt.slice(5, 7),
+      ({ date }) => date.month,
     );
 
     return {
@@ -39,9 +43,9 @@ const archive = Object.keys(postsByYear)
             <div class="archive-month">
               <h3>{month}月</h3>
               <ol>
-                {monthPosts.map((post) => (
+                {monthPosts.map(({ post, date }) => (
                   <li>
-                    <time datetime={post.publishedAt}>{post.publishedAt.slice(8, 10)}日</time>
+                    <time datetime={post.publishedAt}>{date.day}日</time>
                     <a href={sitePath(post.permalink)}>{post.title}</a>
                   </li>
                 ))}

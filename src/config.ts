@@ -7,5 +7,5 @@ export const siteConfig = {
   postsPerPage: 20,
   featuredLimit: 5,
   feedLimit: 20,
+  primaryTags: ["随笔", "笔记", "周报"],
 } as const;
-
