@@ -37,6 +37,12 @@ warnings.forEach((warning) => console.warn(`[content] ${warning}`));
       <span>Latest posts</span>
     </div>
     <PostList posts={pagePosts} />
-    {pageCount > 1 && <a class="page-next" href={sitePath("/page/2/")}>更早的文章 →</a>}
+    {pageCount > 1 && (
+      <nav class="pagination" aria-label="分页">
+        <span class="pagination-disabled">← 上一页</span>
+        <span>1 / {pageCount}</span>
+        <a href={sitePath("/page/2/")}>下一页 →</a>
+      </nav>
+    )}
   </section>
 </BaseLayout>

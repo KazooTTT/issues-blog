@@ -28,7 +28,14 @@ describe("static blog build", () => {
       undefined,
     );
     const home = readFileSync(resolve(root, "dist/index.html"), "utf8");
+    const secondPage = readFileSync(
+      resolve(root, "dist/page/2/index.html"),
+      "utf8",
+    );
     expect(home).toContain('href="/blog/posts/100/"');
+    expect(home).toContain("下一页 →");
+    expect(secondPage).toContain("← 上一页");
+    expect(secondPage).not.toContain("更早的文章");
   });
 
   it("generates full-text RSS and sitemap output", () => {

@@ -29,12 +29,14 @@ const { posts, page, pageCount } = Astro.props;
 <BaseLayout title={`文章 · 第 ${page} 页`}>
   <section class="page-intro">
     <span class="eyebrow">PAGE {String(page).padStart(2, "0")}</span>
-    <h1>更早的文章</h1>
+    <h1>文章列表</h1>
   </section>
   <PostList posts={posts} />
   <nav class="pagination" aria-label="分页">
-    <a href={sitePath(page === 2 ? "/" : `/page/${page - 1}/`)}>← 更新的文章</a>
+    <a href={sitePath(page === 2 ? "/" : `/page/${page - 1}/`)}>← 上一页</a>
     <span>{page} / {pageCount}</span>
-    {page < pageCount && <a href={sitePath(`/page/${page + 1}/`)}>更早的文章 →</a>}
+    {page < pageCount
+      ? <a href={sitePath(`/page/${page + 1}/`)}>下一页 →</a>
+      : <span class="pagination-disabled">下一页 →</span>}
   </nav>
 </BaseLayout>
