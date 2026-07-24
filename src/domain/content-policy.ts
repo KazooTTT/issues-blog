@@ -1,4 +1,5 @@
 import type { Post, SiteContent, SourceIssue } from "./types";
+import { siteConfig } from "@/config";
 
 const SYSTEM_LABEL_PREFIX = "blog:";
 const PUBLISH_LABEL = "blog:publish";
@@ -52,8 +53,10 @@ export function classifyIssues(
 
   const featuredCount = posts.filter((post) => post.featured).length;
   const warnings =
-    featuredCount > 5
-      ? [`${featuredCount} featured posts found; only the newest 5 are shown`]
+    featuredCount > siteConfig.featuredLimit
+      ? [
+          `${featuredCount} featured posts found; only the newest ${siteConfig.featuredLimit} are shown`,
+        ]
       : [];
 
   return {
@@ -62,4 +65,3 @@ export function classifyIssues(
     warnings,
   };
 }
-

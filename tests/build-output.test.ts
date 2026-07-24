@@ -14,7 +14,7 @@ describe("static blog build", () => {
       env: {
         ...process.env,
         CONTENT_MODE: "fixture",
-        SITE_URL: "https://example.com",
+        SITE_URL: "https://example.com/blog",
       },
       stdio: "pipe",
     });
@@ -27,6 +27,8 @@ describe("static blog build", () => {
     await expect(access(resolve(root, "dist/page/2/index.html"))).resolves.toBe(
       undefined,
     );
+    const home = readFileSync(resolve(root, "dist/index.html"), "utf8");
+    expect(home).toContain('href="/blog/posts/100/"');
   });
 
   it("generates full-text RSS and sitemap output", () => {
@@ -39,6 +41,6 @@ describe("static blog build", () => {
     expect(rss).toContain("第 76 次记录");
     expect(rss).toContain("<content:encoded>");
     expect(rss).toContain("&lt;h2&gt;这次记录什么&lt;/h2&gt;");
-    expect(sitemap).toContain("https://example.com/posts/101/");
+    expect(sitemap).toContain("https://example.com/blog/posts/101/");
   });
 });

@@ -2,6 +2,7 @@
 import type { SourceComment } from "@/domain/types";
 import { renderMarkdown } from "@/rendering/content";
 import { formatDate } from "@/utils/presentation";
+import { sitePath } from "@/utils/presentation";
 
 interface Props {
   comment: SourceComment;
@@ -14,7 +15,7 @@ const html = await renderMarkdown(comment.body);
 
 <article class="comment">
   <header>
-    <img src={comment.avatarUrl || "/avatar-placeholder.svg"} alt="" width="36" height="36" loading="lazy" />
+    <img src={comment.avatarUrl || sitePath("/avatar-placeholder.svg")} alt="" width="36" height="36" loading="lazy" />
     <div>
       <a href={comment.url}>{comment.author}</a>
       {comment.author === owner && <span class="author-badge">作者</span>}
@@ -23,4 +24,3 @@ const html = await renderMarkdown(comment.body);
   </header>
   <div class="comment-body prose" set:html={html} />
 </article>
-

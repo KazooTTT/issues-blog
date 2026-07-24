@@ -5,7 +5,7 @@ import { siteConfig } from "@/config";
 import { getSiteContent } from "@/data/site-content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { deriveExcerpt, renderMarkdown, splitDiscussion } from "@/rendering/content";
-import { formatDate } from "@/utils/presentation";
+import { formatDate, sitePath } from "@/utils/presentation";
 
 export async function getStaticPaths() {
   const { posts } = await getSiteContent();
@@ -44,7 +44,7 @@ const discussion = splitDiscussion(post.comments);
     <div class="prose post-body" set:html={html} />
     <footer class="post-footer">
       <div class="tag-row">
-        {post.tags.map((tag: string) => <a class="tag" href={`/tags/${encodeURIComponent(tag)}/`}>#{tag}</a>)}
+        {post.tags.map((tag: string) => <a class="tag" href={sitePath(`/tags/${encodeURIComponent(tag)}/`)}>#{tag}</a>)}
       </div>
       <ReactionBar reactions={post.reactions} sourceUrl={post.url} />
     </footer>

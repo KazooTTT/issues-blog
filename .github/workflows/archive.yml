@@ -40,8 +40,8 @@ jobs:
           else
             git worktree add --detach "$RUNNER_TEMP/archive-worktree"
             git -C "$RUNNER_TEMP/archive-worktree" switch --orphan archive
+            git -C "$RUNNER_TEMP/archive-worktree" rm -rf .
           fi
-          git -C "$RUNNER_TEMP/archive-worktree" rm -rf .
           cp -R "$RUNNER_TEMP/content-archive/." "$RUNNER_TEMP/archive-worktree/"
           git -C "$RUNNER_TEMP/archive-worktree" add --all
           git -C "$RUNNER_TEMP/archive-worktree" config user.name "github-actions[bot]"

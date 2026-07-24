@@ -4,7 +4,7 @@ import PostList from "@/components/PostList.astro";
 import { siteConfig } from "@/config";
 import { getSiteContent } from "@/data/site-content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { featuredPosts, regularPosts } from "@/utils/presentation";
+import { featuredPosts, regularPosts, sitePath } from "@/utils/presentation";
 
 const { posts, warnings } = await getSiteContent();
 const featured = featuredPosts(posts);
@@ -37,6 +37,6 @@ warnings.forEach((warning) => console.warn(`[content] ${warning}`));
       <span>Latest posts</span>
     </div>
     <PostList posts={pagePosts} />
-    {pageCount > 1 && <a class="page-next" href="/page/2/">更早的文章 →</a>}
+    {pageCount > 1 && <a class="page-next" href={sitePath("/page/2/")}>更早的文章 →</a>}
   </section>
 </BaseLayout>

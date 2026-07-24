@@ -1,6 +1,7 @@
 ---
 import type { Post } from "@/domain/types";
 import { formatDate } from "@/utils/presentation";
+import { sitePath } from "@/utils/presentation";
 
 interface Props {
   posts: Post[];
@@ -12,14 +13,13 @@ const { posts } = Astro.props;
 <ol class="post-list">
   {posts.map((post) => (
     <li>
-      <a href={post.permalink}>
+      <a href={sitePath(post.permalink)}>
         <span class="post-list-title">{post.title}</span>
         <time datetime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
       </a>
       <div class="tag-row">
-        {post.tags.map((tag) => <a class="tag" href={`/tags/${encodeURIComponent(tag)}/`}>{tag}</a>)}
+        {post.tags.map((tag) => <a class="tag" href={sitePath(`/tags/${encodeURIComponent(tag)}/`)}>{tag}</a>)}
       </div>
     </li>
   ))}
 </ol>
-

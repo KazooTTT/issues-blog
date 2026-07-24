@@ -1,7 +1,7 @@
 ---
 import { getSiteContent } from "@/data/site-content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { formatDate } from "@/utils/presentation";
+import { formatDate, sitePath } from "@/utils/presentation";
 
 const { posts } = await getSiteContent();
 const groups = Object.groupBy(posts, (post) => post.publishedAt.slice(0, 4));
@@ -22,7 +22,7 @@ const years = Object.keys(groups).sort().reverse();
           {groups[year]?.map((post) => (
             <li>
               <time datetime={post.publishedAt}>{formatDate(post.publishedAt).slice(5)}</time>
-              <a href={post.permalink}>{post.title}</a>
+              <a href={sitePath(post.permalink)}>{post.title}</a>
             </li>
           ))}
         </ol>

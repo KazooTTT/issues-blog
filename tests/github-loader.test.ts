@@ -27,7 +27,10 @@ function issueNode(number: number): TestIssueNode {
     createdAt: "2026-07-01T00:00:00Z",
     updatedAt: "2026-07-02T00:00:00Z",
     author: { login: "kazoottt" },
-    labels: { nodes: [{ name: "blog:publish" }, { name: "技术" }] },
+    labels: {
+      nodes: [{ name: "blog:publish" }, { name: "技术" }],
+      pageInfo: { hasNextPage: false, endCursor: null },
+    },
     timelineItems: {
       nodes: [
         {
@@ -35,6 +38,7 @@ function issueNode(number: number): TestIssueNode {
           label: { name: "blog:publish" },
         },
       ],
+      pageInfo: { hasNextPage: false, endCursor: null },
     },
     reactionGroups: [{ content: "THUMBS_UP", users: { totalCount: 3 } }],
     comments: {
@@ -175,5 +179,109 @@ describe("GitHub content loader", () => {
       "first",
       "second",
     ]);
+  });
+
+  it("keeps deleted GitHub actors from breaking the whole build", async () => {
+    const deleted = issueNode(9);
+    deleted.author = null;
+    deleted.comments = {
+      nodes: [
+        {
+          id: "C_deleted",
+          body: "legacy comment",
+          url: "https://github.com/comment/deleted",
+          createdAt: "2026-07-01T10:00:00Z",
+          updatedAt: "2026-07-01T10:00:00Z",
+          author: null,
+          reactionGroups: [],
+        },
+      ],
+      pageInfo: { hasNextPage: false, endCursor: null },
+    };
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(
+      response({
+        repository: {
+          issues: {
+            nodes: [deleted],
+            pageInfo: { hasNextPage: false, endCursor: null },
+          },
+        },
+      }),
+    );
+
+    const issues = await loadGitHubIssues({
+      owner: "kazoottt",
+      repo: "issues-blog",
+      token: "test-token",
+      fetcher,
+    });
+
+    expect(issues[0]?.author).toBe("[deleted]");
+    expect(issues[0]?.comments[0]?.author).toBe("[deleted]");
+  });
+
+  it("paginates labels and publication history", async () => {
+    const longHistory = issueNode(11);
+    longHistory.labels = {
+      nodes: [{ name: "blog:publish" }],
+      pageInfo: { hasNextPage: true, endCursor: "labels-2" },
+    };
+    longHistory.timelineItems = {
+      nodes: [
+        {
+          createdAt: "2026-07-02T08:00:00Z",
+          label: { name: "blog:publish" },
+        },
+      ],
+      pageInfo: { hasNextPage: true, endCursor: "timeline-2" },
+    };
+
+    const fetcher = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(
+        response({
+          repository: {
+            issues: {
+              nodes: [longHistory],
+              pageInfo: { hasNextPage: false, endCursor: null },
+            },
+          },
+        }),
+      )
+      .mockResolvedValueOnce(
+        response({
+          node: {
+            labels: {
+              nodes: [{ name: "技术" }],
+              pageInfo: { hasNextPage: false, endCursor: null },
+            },
+          },
+        }),
+      )
+      .mockResolvedValueOnce(
+        response({
+          node: {
+            timelineItems: {
+              nodes: [
+                {
+                  createdAt: "2026-07-08T08:00:00Z",
+                  label: { name: "blog:publish" },
+                },
+              ],
+              pageInfo: { hasNextPage: false, endCursor: null },
+            },
+          },
+        }),
+      );
+
+    const issues = await loadGitHubIssues({
+      owner: "kazoottt",
+      repo: "issues-blog",
+      token: "test-token",
+      fetcher,
+    });
+
+    expect(issues[0]?.labels).toEqual(["blog:publish", "技术"]);
+    expect(issues[0]?.labelEvents).toHaveLength(2);
   });
 });

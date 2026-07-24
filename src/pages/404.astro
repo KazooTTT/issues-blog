@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import { sitePath } from "@/utils/presentation";
 ---
 
 <BaseLayout title="没有找到">
@@ -7,6 +8,6 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
     <span>404</span>
     <h1>没有找到这个页面。</h1>
     <p>文章可能已撤回，或者地址从未存在过。</p>
-    <a class="button" href="/">回到首页</a>
+    <a class="button" href={sitePath("/")}>回到首页</a>
   </section>
 </BaseLayout>

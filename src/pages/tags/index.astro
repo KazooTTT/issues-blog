@@ -1,6 +1,7 @@
 ---
 import { getSiteContent } from "@/data/site-content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import { sitePath } from "@/utils/presentation";
 
 const { posts } = await getSiteContent();
 const tags = [...new Set(posts.flatMap((post) => post.tags))]
@@ -19,7 +20,7 @@ const tags = [...new Set(posts.flatMap((post) => post.tags))]
   </section>
   <div class="tag-cloud">
     {tags.map((tag) => (
-      <a href={`/tags/${encodeURIComponent(tag.name)}/`}>
+      <a href={sitePath(`/tags/${encodeURIComponent(tag.name)}/`)}>
         <span>{tag.name}</span>
         <sup>{tag.count}</sup>
       </a>

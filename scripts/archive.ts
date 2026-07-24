@@ -27,7 +27,9 @@ if (!token) {
 }
 
 const [owner, repo] = repository.split("/") as [string, string];
-const issues = await loadGitHubIssues({ owner, repo, token });
+const issues = (await loadGitHubIssues({ owner, repo, token })).filter(
+  (issue) => issue.author === owner,
+);
 
 await rm(output, { recursive: true, force: true });
 await mkdir(join(output, "articles"), { recursive: true });
@@ -72,4 +74,3 @@ await writeFile(
   ].join("\n"),
   "utf8",
 );
-

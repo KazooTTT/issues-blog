@@ -3,7 +3,7 @@ import PostList from "@/components/PostList.astro";
 import { siteConfig } from "@/config";
 import { getSiteContent } from "@/data/site-content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { regularPosts } from "@/utils/presentation";
+import { regularPosts, sitePath } from "@/utils/presentation";
 
 export async function getStaticPaths() {
   const { posts } = await getSiteContent();
@@ -33,9 +33,8 @@ const { posts, page, pageCount } = Astro.props;
   </section>
   <PostList posts={posts} />
   <nav class="pagination" aria-label="分页">
-    <a href={page === 2 ? "/" : `/page/${page - 1}/`}>← 更新的文章</a>
+    <a href={sitePath(page === 2 ? "/" : `/page/${page - 1}/`)}>← 更新的文章</a>
     <span>{page} / {pageCount}</span>
-    {page < pageCount && <a href={`/page/${page + 1}/`}>更早的文章 →</a>}
+    {page < pageCount && <a href={sitePath(`/page/${page + 1}/`)}>更早的文章 →</a>}
   </nav>
 </BaseLayout>
-

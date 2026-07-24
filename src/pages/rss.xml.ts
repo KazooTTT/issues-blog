@@ -3,6 +3,7 @@ import rss from "@astrojs/rss";
 import { siteConfig } from "@/config";
 import { getSiteContent } from "@/data/site-content";
 import { renderMarkdown } from "@/rendering/content";
+import { sitePath } from "@/utils/presentation";
 
 export async function GET(context: { site: URL | undefined }) {
   if (!context.site) {
@@ -12,7 +13,7 @@ export async function GET(context: { site: URL | undefined }) {
   const items = await Promise.all(
     posts.slice(0, siteConfig.feedLimit).map(async (post) => ({
       title: post.title,
-      link: post.permalink,
+      link: sitePath(post.permalink),
       pubDate: new Date(post.publishedAt),
       description: post.body,
       content: await renderMarkdown(post.body),
@@ -29,4 +30,3 @@ export async function GET(context: { site: URL | undefined }) {
     trailingSlash: true,
   });
 }
-
