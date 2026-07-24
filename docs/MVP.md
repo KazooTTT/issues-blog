@@ -36,7 +36,8 @@
 - Tag page: published articles sharing a content tag.
 - Archive page: all published articles grouped by year.
 - About page.
-- Regular article lists contain 20 articles per page at `/`, `/page/2/`, and so on.
+- The homepage shows the newest 20 regular articles; “查看全部文章” opens the
+  year-and-month archive instead of duplicating the archive as paginated lists.
 - Featured articles are not repeated in the homepage regular list.
 
 ## Discussion

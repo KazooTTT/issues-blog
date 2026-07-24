@@ -124,9 +124,10 @@ main { min-height: 65vh; }
 .page-intro { padding: 95px 0 70px; margin-bottom: 55px; }
 .page-intro h1 { font-size: clamp(45px, 7vw, 76px); }
 .page-intro p { max-width: 600px; color: var(--muted); line-height: 1.8; }
-.pagination { display: flex; justify-content: space-between; padding: 45px 0; color: var(--muted); }
-.pagination a { color: var(--accent-dark); font-weight: 600; }
-.pagination-disabled { opacity: .45; }
+.view-all {
+  display: inline-block; margin-top: 32px;
+  color: var(--accent-dark); font-size: 14px; font-weight: 600;
+}
 
 .post { width: min(820px, 100%); margin: 0 auto; padding-top: 90px; }
 .post-header { padding-bottom: 55px; border-bottom: 1px solid var(--line); }

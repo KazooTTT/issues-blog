@@ -20,22 +20,17 @@ describe("static blog build", () => {
     });
   }, 30_000);
 
-  it("generates stable article routes and the second listing page", async () => {
+  it("generates stable article routes and sends the full-list action to archive", async () => {
     await expect(access(resolve(root, "dist/posts/101/index.html"))).resolves.toBe(
       undefined,
     );
-    await expect(access(resolve(root, "dist/page/2/index.html"))).resolves.toBe(
-      undefined,
-    );
+    await expect(
+      access(resolve(root, "dist/page/2/index.html")),
+    ).rejects.toThrow();
     const home = readFileSync(resolve(root, "dist/index.html"), "utf8");
-    const secondPage = readFileSync(
-      resolve(root, "dist/page/2/index.html"),
-      "utf8",
-    );
     expect(home).toContain('href="/blog/posts/100/"');
-    expect(home).toContain("下一页 →");
-    expect(secondPage).toContain("← 上一页");
-    expect(secondPage).not.toContain("更早的文章");
+    expect(home).toContain('href="/blog/archive/"');
+    expect(home).toContain("查看全部文章 →");
   });
 
   it("generates full-text RSS and sitemap output", () => {
