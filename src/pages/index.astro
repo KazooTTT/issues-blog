@@ -36,8 +36,6 @@ warnings.forEach((warning) => console.warn(`[content] ${warning}`));
       <span>Latest posts</span>
     </div>
     <PostList posts={latestPosts} />
-    {regular.length > latestPosts.length && (
-      <a class="view-all" href={sitePath("/archive/")}>查看全部文章 →</a>
-    )}
+    <a class="view-all" href={sitePath("/archive/")}>查看全部文章 →</a>
   </section>
 </BaseLayout>

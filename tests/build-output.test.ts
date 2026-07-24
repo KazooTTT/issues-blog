@@ -24,13 +24,16 @@ describe("static blog build", () => {
     await expect(access(resolve(root, "dist/posts/101/index.html"))).resolves.toBe(
       undefined,
     );
-    await expect(
-      access(resolve(root, "dist/page/2/index.html")),
-    ).rejects.toThrow();
     const home = readFileSync(resolve(root, "dist/index.html"), "utf8");
+    const sitemap = readFileSync(
+      resolve(root, "dist/sitemap-0.xml"),
+      "utf8",
+    );
     expect(home).toContain('href="/blog/posts/100/"');
-    expect(home).toContain('href="/blog/archive/"');
-    expect(home).toContain("查看全部文章 →");
+    expect(home).toMatch(
+      /<a class="view-all" href="\/blog\/archive\/">查看全部文章 →<\/a>/,
+    );
+    expect(sitemap).not.toContain("/blog/page/2/");
   });
 
   it("generates full-text RSS and sitemap output", () => {

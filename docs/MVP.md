@@ -34,7 +34,7 @@
 - Homepage: identity, featured articles, and recent articles.
 - Article page: metadata, sanitized body, tags, Reaction counts, source Issue link, and read-only discussion.
 - Tag page: published articles sharing a content tag.
-- Archive page: all published articles grouped by year.
+- Archive page: all published articles grouped by year and month.
 - About page.
 - The homepage shows the newest 20 regular articles; “查看全部文章” opens the
   year-and-month archive instead of duplicating the archive as paginated lists.
