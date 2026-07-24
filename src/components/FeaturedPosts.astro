@@ -10,13 +10,16 @@ interface Props {
 const { posts } = Astro.props;
 ---
 
-<section class="featured-grid" aria-label="精选文章">
+<section class="featured-list" aria-label="精选文章">
   {posts.map((post, index) => (
-    <article class:list={["featured-card", { "featured-card--lead": index === 0 }]}>
-      <span class="eyebrow">{String(index + 1).padStart(2, "0")} · 精选</span>
-      <h2><a href={sitePath(post.permalink)}>{post.title}</a></h2>
-      <p>{deriveExcerpt(post.body)}</p>
-      <footer>
+    <article class="featured-item">
+      <span class="featured-index">{String(index + 1).padStart(2, "0")}</span>
+      <div class="featured-content">
+        <span class="eyebrow">精选</span>
+        <h2><a href={sitePath(post.permalink)}>{post.title}</a></h2>
+        <p>{deriveExcerpt(post.body)}</p>
+      </div>
+      <footer class="featured-meta">
         <time datetime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
         <span>{post.tags.join(" / ")}</span>
       </footer>

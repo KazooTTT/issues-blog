@@ -1,11 +1,27 @@
 ---
 import { getSiteContent } from "@/data/site-content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { formatDate, sitePath } from "@/utils/presentation";
+import { sitePath } from "@/utils/presentation";
 
 const { posts } = await getSiteContent();
-const groups = Object.groupBy(posts, (post) => post.publishedAt.slice(0, 4));
-const years = Object.keys(groups).sort().reverse();
+const postsByYear = Object.groupBy(posts, (post) => post.publishedAt.slice(0, 4));
+const archive = Object.keys(postsByYear)
+  .sort()
+  .reverse()
+  .map((year) => {
+    const postsByMonth = Object.groupBy(
+      postsByYear[year] ?? [],
+      (post) => post.publishedAt.slice(5, 7),
+    );
+
+    return {
+      year,
+      months: Object.keys(postsByMonth)
+        .sort()
+        .reverse()
+        .map((month) => ({ month, posts: postsByMonth[month] ?? [] })),
+    };
+  });
 ---
 
 <BaseLayout title="归档">
@@ -15,17 +31,24 @@ const years = Object.keys(groups).sort().reverse();
     <p>按首次发布时间，回看不同时期留下的记录。</p>
   </section>
   <div class="archive">
-    {years.map((year) => (
-      <section>
+    {archive.map(({ year, months }) => (
+      <section class="archive-year">
         <h2>{year}</h2>
-        <ol>
-          {groups[year]?.map((post) => (
-            <li>
-              <time datetime={post.publishedAt}>{formatDate(post.publishedAt).slice(5)}</time>
-              <a href={sitePath(post.permalink)}>{post.title}</a>
-            </li>
+        <div class="archive-months">
+          {months.map(({ month, posts: monthPosts }) => (
+            <div class="archive-month">
+              <h3>{month}月</h3>
+              <ol>
+                {monthPosts.map((post) => (
+                  <li>
+                    <time datetime={post.publishedAt}>{post.publishedAt.slice(8, 10)}日</time>
+                    <a href={sitePath(post.permalink)}>{post.title}</a>
+                  </li>
+                ))}
+              </ol>
+            </div>
           ))}
-        </ol>
+        </div>
       </section>
     ))}
   </div>
