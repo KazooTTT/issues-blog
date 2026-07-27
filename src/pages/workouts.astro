@@ -1,0 +1,75 @@
+---
+import { workouts } from "@/data/workouts";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+function formatDuration(totalSeconds: number): string {
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  return hours > 0
+    ? `${hours}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`
+    : `${minutes}:${String(seconds).padStart(2, "0")}`;
+}
+
+function formatDate(value: string): string {
+  return new Intl.DateTimeFormat("zh-CN", {
+    month: "2-digit",
+    day: "2-digit",
+    timeZone: "Asia/Shanghai",
+  }).format(new Date(`${value}T12:00:00+08:00`));
+}
+
+const latestDate = workouts[0]?.activityDate;
+const latestTimestamp = latestDate
+  ? new Date(`${latestDate}T12:00:00+08:00`).getTime()
+  : 0;
+const weekStart = latestTimestamp - 6 * 24 * 60 * 60 * 1000;
+const recentWorkouts = workouts.filter((workout) => {
+  const timestamp = new Date(`${workout.activityDate}T12:00:00+08:00`).getTime();
+  return timestamp >= weekStart && timestamp <= latestTimestamp;
+});
+const recentMinutes = Math.round(
+  recentWorkouts.reduce(
+    (total, workout) => total + workout.durationSeconds,
+    0,
+  ) / 60,
+);
+const recentCalories = recentWorkouts.reduce(
+  (total, workout) => total + workout.caloriesKcal,
+  0,
+);
+---
+
+<BaseLayout title="运动记录" description="Garmin 运动记录">
+  <section class="page-intro extras-intro">
+    <span class="eyebrow">MOVEMENT / 运动</span>
+    <h1>运动记录</h1>
+    <p>从旧博客迁移的 Garmin 运动快照。写作留下思考，运动留下身体经过时间的证据。</p>
+  </section>
+
+  <section class="workout-summary" aria-label="最近七天运动汇总">
+    <div>
+      <strong>{recentWorkouts.length}</strong>
+      <span>最近 7 天 · 次活动</span>
+    </div>
+    <div><strong>{recentMinutes}</strong><span>最近 7 天 · 分钟</span></div>
+    <div>
+      <strong>{recentCalories.toLocaleString("zh-CN")}</strong>
+      <span>最近 7 天 · 千卡</span>
+    </div>
+  </section>
+  {latestDate && <p class="workout-summary-note">统计截至 {latestDate}</p>}
+
+  <section class="workout-list" aria-label="运动记录列表">
+    {workouts.map((workout) => (
+      <article class="workout-row">
+        <time datetime={workout.activityDate}>{formatDate(workout.activityDate)}</time>
+        <h2>{workout.name}</h2>
+        <span>{formatDuration(workout.durationSeconds)}</span>
+        <span>{workout.caloriesKcal} kcal</span>
+      </article>
+    ))}
+  </section>
+
+  <p class="extras-note">数据快照更新于 2026 年 7 月 27 日。</p>
+</BaseLayout>

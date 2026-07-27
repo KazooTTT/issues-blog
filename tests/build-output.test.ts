@@ -33,6 +33,9 @@ describe("static blog build", () => {
     expect(home).toMatch(
       /<a class="view-all" href="\/blog\/archive\/">查看全部文章 →<\/a>/,
     );
+    expect(home).toContain("https://t.me/kazootttmemos");
+    expect(home).toContain("https://www.youtube.com/@kazoottt255");
+    expect(home).toContain("在别处找到我");
     expect(sitemap).not.toContain("/blog/page/2/");
   });
 
@@ -47,5 +50,29 @@ describe("static blog build", () => {
     expect(rss).toContain("<content:encoded>");
     expect(rss).toContain("&lt;h2&gt;这次记录什么&lt;/h2&gt;");
     expect(sitemap).toContain("https://example.com/blog/posts/101/");
+  });
+
+  it("keeps site-owned pages outside the Issues CMS", async () => {
+    await expect(access(resolve(root, "dist/friends/index.html"))).resolves.toBe(
+      undefined,
+    );
+    await expect(access(resolve(root, "dist/workouts/index.html"))).resolves.toBe(
+      undefined,
+    );
+    await expect(access(resolve(root, "dist/tools/index.html"))).resolves.toBe(
+      undefined,
+    );
+
+    const friends = readFileSync(resolve(root, "dist/friends/index.html"), "utf8");
+    const workouts = readFileSync(resolve(root, "dist/workouts/index.html"), "utf8");
+    const tools = readFileSync(resolve(root, "dist/tools/index.html"), "utf8");
+    expect(friends).toContain("Yuang&#39;s Blog");
+    expect(workouts).toContain("力量训练");
+    expect(workouts).toContain("最近 7 天");
+    expect(workouts).toContain("统计截至 2026-07-23");
+    expect(tools).toContain("Mac mini M2 Pro");
+    expect(tools).toContain("软件工具");
+    expect(tools).not.toContain("Nikon");
+    expect(tools).not.toContain("唯卓仕");
   });
 });

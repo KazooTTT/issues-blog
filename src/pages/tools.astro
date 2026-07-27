@@ -1,0 +1,141 @@
+---
+import { deviceGroups, softwareGroups } from "@/data/tools";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ToolIcon from "@/components/ToolIcon.astro";
+
+const totalItems = [...softwareGroups, ...deviceGroups].reduce(
+  (total, group) => total + group.items.length,
+  0,
+);
+
+function toolIcon(group: string, name: string): string {
+  if (group === "COMPUTING") return "computer";
+  if (group === "MOBILE") {
+    if (name.includes("Watch")) return "wearable";
+    if (name.includes("AirPods")) return "headphones";
+    return "mobile";
+  }
+  if (group.startsWith("CAMERA")) {
+    return name.includes("mm") ? "lens" : "camera";
+  }
+  return "tool";
+}
+
+function faviconUrl(href: string): string {
+  return `https://www.google.com/s2/favicons?domain_url=${encodeURIComponent(href)}&sz=64`;
+}
+---
+
+<BaseLayout title="工具与设备" description="我日常使用的软件、工具与设备">
+  <section class="page-intro tools-intro">
+    <span class="eyebrow">TOOLS / DEVICES</span>
+    <h1>工具与设备</h1>
+    <p>
+      不是一份购买建议，而是此刻参与我工作和生活的东西。工具会更替，留下的是使用它们形成的方法。
+    </p>
+    <span class="tools-count">{totalItems} 件正在使用或保留的工具与设备</span>
+  </section>
+
+  <section class="tools-section">
+    <header class="tools-section-heading">
+      <span>01</span>
+      <div>
+        <p>SOFTWARE</p>
+        <h2>软件工具</h2>
+      </div>
+    </header>
+    <div class="tool-groups">
+      {softwareGroups.map((group) => (
+        <article class="tool-group">
+          <header>
+            <span>{group.eyebrow}</span>
+            <h3>{group.title}</h3>
+          </header>
+          <ul>
+            {group.items.map((item) => (
+              <li>
+                {item.href ? (
+                  <a href={item.href} target="_blank" rel="noopener noreferrer">
+                    <span class="tool-item-icon">
+                      <ToolIcon name="tool" />
+                      <img
+                        class="tool-brand-icon"
+                        src={faviconUrl(item.href)}
+                        alt=""
+                        width="32"
+                        height="32"
+                        loading="lazy"
+                      />
+                    </span>
+                    <span class="tool-item-copy">
+                      <strong>{item.name}</strong>
+                      <small>{item.description}</small>
+                    </span>
+                    <span class="tool-item-arrow" aria-hidden="true">↗</span>
+                  </a>
+                ) : (
+                  <div>
+                    <span class="tool-item-icon">
+                      <ToolIcon name={toolIcon(group.eyebrow, item.name)} />
+                    </span>
+                    <span class="tool-item-copy">
+                      <strong>{item.name}</strong>
+                      <small>{item.description}</small>
+                    </span>
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="tools-section">
+    <header class="tools-section-heading">
+      <span>02</span>
+      <div>
+        <p>HARDWARE</p>
+        <h2>硬件设备</h2>
+      </div>
+    </header>
+    <div class="tool-groups">
+      {deviceGroups.map((group) => (
+        <article class="tool-group">
+          <header>
+            <span>{group.eyebrow}</span>
+            <h3>{group.title}</h3>
+          </header>
+          <ul>
+            {group.items.map((item) => (
+              <li>
+                <div>
+                  <span class="tool-item-icon">
+                    <ToolIcon name={toolIcon(group.eyebrow, item.name)} />
+                    {item.iconDomain && (
+                      <img
+                        class="tool-brand-icon"
+                        src={faviconUrl(`https://${item.iconDomain}`)}
+                        alt=""
+                        width="32"
+                        height="32"
+                        loading="lazy"
+                      />
+                    )}
+                  </span>
+                  <span class="tool-item-copy">
+                    <strong>{item.name}</strong>
+                    <small>{item.description}</small>
+                  </span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <p class="extras-note">这份清单会随使用习惯变化，不代表长期推荐。</p>
+</BaseLayout>

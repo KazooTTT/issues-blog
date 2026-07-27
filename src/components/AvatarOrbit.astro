@@ -1,0 +1,85 @@
+---
+import { sitePath } from "@/utils/presentation";
+
+const avatars = [
+  {
+    src: sitePath("/avatars/voice-oven.png"),
+    label: "声控烤箱",
+  },
+  {
+    src: sitePath("/avatars/hug.png"),
+    label: "拥抱",
+  },
+  {
+    src: sitePath("/avatars/computer.png"),
+    label: "电脑前的 KazooTTT",
+  },
+];
+---
+
+<div class="avatar-orbit" data-avatar-orbit>
+  <span class="avatar-orbit-ring" aria-hidden="true"></span>
+  {avatars.map((avatar, index) => (
+    <button
+      class="avatar-orbit-item"
+      type="button"
+      data-avatar-index={index}
+      data-avatar-slot={index}
+      aria-label={`显示头像：${avatar.label}`}
+      aria-pressed={index === 0 ? "true" : "false"}
+    >
+      <img
+        src={avatar.src}
+        alt=""
+        width="720"
+        height="720"
+        loading={index === 0 ? "eager" : "lazy"}
+      />
+    </button>
+  ))}
+</div>
+
+<script>
+  document.querySelectorAll("[data-avatar-orbit]").forEach((orbit) => {
+    const items = [...orbit.querySelectorAll("[data-avatar-index]")];
+    let activeIndex = 0;
+    let timer: number | undefined;
+
+    const activate = (nextIndex: number) => {
+      activeIndex = nextIndex;
+      items.forEach((candidate) => {
+        const index = Number(candidate.getAttribute("data-avatar-index"));
+        candidate.setAttribute(
+          "data-avatar-slot",
+          String((index - activeIndex + items.length) % items.length),
+        );
+        candidate.setAttribute("aria-pressed", String(index === activeIndex));
+      });
+    };
+
+    const stop = () => {
+      if (timer) window.clearInterval(timer);
+      timer = undefined;
+    };
+
+    const start = () => {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      stop();
+      timer = window.setInterval(() => {
+        activate((activeIndex + 1) % items.length);
+      }, 6000);
+    };
+
+    items.forEach((item) => {
+      item.addEventListener("click", () => {
+        activate(Number(item.getAttribute("data-avatar-index")));
+        start();
+      });
+    });
+    orbit.addEventListener("pointerenter", stop);
+    orbit.addEventListener("pointerleave", start);
+    orbit.addEventListener("focusin", stop);
+    orbit.addEventListener("focusout", start);
+    start();
+  });
+</script>

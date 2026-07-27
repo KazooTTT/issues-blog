@@ -1,0 +1,39 @@
+---
+import { socialLinks } from "@/data/social-links";
+import { sitePath } from "@/utils/presentation";
+import SocialIcon from "./SocialIcon.astro";
+
+interface Props {
+  compact?: boolean;
+}
+
+const { compact = false } = Astro.props;
+const links = socialLinks.map((link) => ({
+  ...link,
+  href: link.href.startsWith("/") ? sitePath(link.href) : link.href,
+}));
+---
+
+<div class:list={["social-links", { "social-links-compact": compact }]}>
+  {links.map((link) => (
+    <a
+      class="social-link"
+      href={link.href}
+      target={link.external ? "_blank" : undefined}
+      rel={link.external ? "noopener noreferrer" : undefined}
+      aria-label={compact ? `${link.label}：${link.handle}` : undefined}
+      title={compact ? link.label : undefined}
+    >
+      <span class="social-mark" aria-hidden="true">
+        <SocialIcon name={link.icon} />
+      </span>
+      {!compact && (
+        <span class="social-copy">
+          <strong>{link.label}</strong>
+          <small>{link.handle}</small>
+        </span>
+      )}
+      {!compact && <span class="social-arrow" aria-hidden="true">↗</span>}
+    </a>
+  ))}
+</div>

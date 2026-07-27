@@ -1,6 +1,8 @@
 ---
 import FeaturedPosts from "@/components/FeaturedPosts.astro";
 import PostList from "@/components/PostList.astro";
+import SocialLinks from "@/components/SocialLinks.astro";
+import AvatarOrbit from "@/components/AvatarOrbit.astro";
 import { siteConfig } from "@/config";
 import { getSiteContent } from "@/data/site-content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
@@ -16,8 +18,21 @@ warnings.forEach((warning) => console.warn(`[content] ${warning}`));
 <BaseLayout>
   <section class="hero">
     <p class="eyebrow">NOTES, ESSAYS & IDEAS</p>
-    <h1>记录正在发生的思考，<em>保留未完成的部分。</em></h1>
-    <p>{siteConfig.description}</p>
+    <h1 class="hero-slogan">
+      <span>保持学习的习惯，</span>
+      <span>保持对世界的好奇心，</span>
+      <span><em>保持独立思考的能力。</em></span>
+    </h1>
+    <AvatarOrbit />
+  </section>
+
+  <section class="home-section social-section">
+    <div class="section-heading">
+      <h2>在别处找到我</h2>
+      <span>Elsewhere</span>
+    </div>
+    <p class="social-intro">照片、短消息、视频与代码，散落在互联网的不同角落。</p>
+    <SocialLinks />
   </section>
 
   {featured.length > 0 && (
@@ -38,4 +53,5 @@ warnings.forEach((warning) => console.warn(`[content] ${warning}`));
     <PostList posts={latestPosts} />
     <a class="view-all" href={sitePath("/archive/")}>查看全部文章 →</a>
   </section>
+
 </BaseLayout>

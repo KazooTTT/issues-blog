@@ -66,3 +66,18 @@ pnpm migrate:d1 \
 ```
 
 设计与领域决策见 [docs/MVP.md](docs/MVP.md)、[CONTEXT.md](CONTEXT.md) 和 [docs/adr](docs/adr)。
+
+## 站点自有数据
+
+GitHub Issues 只负责文章、About 和评论。友链保存在
+`src/data/friends.ts`；运动记录保存在 `src/data/workouts.json`，构建时会执行
+Schema 校验。
+
+可将数组或 `{ "workouts": [...] }` 形式的 JSON 交给同步脚本：
+
+```bash
+pnpm sync:workouts --input /path/to/workouts.json
+cat /path/to/workouts.json | pnpm sync:workouts
+```
+
+同步脚本会校验、按外部 ID 去重、按日期倒序排列，再更新仓库中的静态快照。

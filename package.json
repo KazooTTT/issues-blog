@@ -10,6 +10,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "archive": "tsx scripts/archive.ts",
+    "sync:workouts": "tsx scripts/sync-workouts.ts",
     "migrate:d1": "tsx scripts/migrate-d1-to-issues.ts"
   },
   "engines": {

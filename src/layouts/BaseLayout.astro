@@ -1,5 +1,6 @@
 ---
 import { siteConfig } from "@/config";
+import SocialLinks from "@/components/SocialLinks.astro";
 import { sitePath } from "@/utils/presentation";
 import "@/styles/global.css";
 
@@ -19,6 +20,14 @@ const {
 const pageTitle = title ? `${title} · ${siteConfig.title}` : siteConfig.title;
 const canonicalUrl = new URL(sitePath(canonical), Astro.site);
 const socialImage = new URL(sitePath("/social-card.svg"), Astro.site);
+const pathname = Astro.url.pathname;
+const routePath = (path: string) => sitePath(path);
+const routeIs = (path: string) => pathname === routePath(path);
+const routeStartsWith = (path: string) => pathname.startsWith(routePath(path));
+const articleActive =
+  routeStartsWith("/posts/") ||
+  routeStartsWith("/tags/") ||
+  routeStartsWith("/archive/");
 ---
 
 <!doctype html>
@@ -55,12 +64,52 @@ const socialImage = new URL(sitePath("/social-card.svg"), Astro.site);
           </span>
         </a>
         <nav aria-label="主导航">
-          {siteConfig.primaryTags.map((tag) => (
-            <a class="primary-tag-link" href={sitePath(`/tags/${encodeURIComponent(tag)}/`)}>{tag}</a>
-          ))}
-          <a href={sitePath("/archive/")}>归档</a>
-          <a class="all-tags-link" href={sitePath("/tags/")}>全部标签</a>
-          <a href={sitePath("/about/")}>关于</a>
+          <div class="nav-menu" data-nav-menu>
+            <a
+              class:list={["nav-menu-primary", { "nav-link-active": articleActive }]}
+              href={sitePath("/archive/")}
+              aria-current={articleActive ? "page" : undefined}
+            >文章</a>
+            <button
+              class="nav-menu-toggle"
+              type="button"
+              aria-label="展开文章菜单"
+              aria-expanded="false"
+              data-nav-menu-toggle
+            ></button>
+            <div class="nav-dropdown">
+              <a
+                class:list={{ "nav-link-active": routeStartsWith("/archive/") }}
+                href={sitePath("/archive/")}
+              >归档</a>
+              {siteConfig.primaryTags.map((tag) => (
+                <a
+                  class:list={{ "nav-link-active": routeIs(`/tags/${encodeURIComponent(tag)}/`) }}
+                  href={sitePath(`/tags/${encodeURIComponent(tag)}/`)}
+                >{tag}</a>
+              ))}
+              <a
+                class:list={{ "nav-link-active": routeIs("/tags/") }}
+                href={sitePath("/tags/")}
+              >标签</a>
+            </div>
+          </div>
+          <a
+            class:list={{ "nav-link-active": routeStartsWith("/tools/") }}
+            href={sitePath("/tools/")}
+          >工具</a>
+          <a
+            class:list={["extras-nav-link", { "nav-link-active": routeStartsWith("/workouts/") }]}
+            href={sitePath("/workouts/")}
+          >运动</a>
+          <a
+            class:list={["extras-nav-link", { "nav-link-active": routeStartsWith("/friends/") }]}
+            href={sitePath("/friends/")}
+          >友链</a>
+          <a
+            class:list={{ "nav-link-active": routeStartsWith("/about/") }}
+            href={sitePath("/about/")}
+          >关于</a>
           <button class="theme-toggle" type="button" aria-label="切换明暗主题" data-theme-toggle>
             <span aria-hidden="true">◐</span>
           </button>
@@ -70,8 +119,11 @@ const socialImage = new URL(sitePath("/social-card.svg"), Astro.site);
         <slot />
       </main>
       <footer class="site-footer">
-        <p>© {new Date().getFullYear()} {siteConfig.title}</p>
-        <p><a href={sitePath("/rss.xml")}>RSS</a> · 由 GitHub Issues 提供内容</p>
+        <div>
+          <p>© {new Date().getFullYear()} {siteConfig.title}</p>
+          <p>文章由 GitHub Issues 提供内容</p>
+        </div>
+        <SocialLinks compact />
       </footer>
     </div>
     <script is:inline>
@@ -79,6 +131,17 @@ const socialImage = new URL(sitePath("/social-card.svg"), Astro.site);
         const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
         document.documentElement.dataset.theme = next;
         localStorage.setItem("theme", next);
+      });
+      const navMenu = document.querySelector("[data-nav-menu]");
+      const navMenuToggle = document.querySelector("[data-nav-menu-toggle]");
+      navMenuToggle?.addEventListener("click", () => {
+        const open = navMenu?.classList.toggle("is-open") ?? false;
+        navMenuToggle.setAttribute("aria-expanded", String(open));
+      });
+      document.addEventListener("click", (event) => {
+        if (navMenu?.contains(event.target)) return;
+        navMenu?.classList.remove("is-open");
+        navMenuToggle?.setAttribute("aria-expanded", "false");
       });
     </script>
   </body>
