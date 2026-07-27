@@ -71,6 +71,12 @@ describe("static blog build", () => {
       expect(page).toContain('new BroadcastChannel("blog-theme")');
       expect(page).toContain('addEventListener("pageshow"');
       expect(page).toContain('addEventListener("storage"');
+
+      const themeBootstrap = page.indexOf("window.blogTheme");
+      expect(themeBootstrap).toBeLessThan(
+        page.indexOf("www.googletagmanager.com"),
+      );
+      expect(themeBootstrap).toBeLessThan(page.indexOf('rel="stylesheet"'));
     }
   });
 

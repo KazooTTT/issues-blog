@@ -50,7 +50,6 @@ const articleActive =
     <meta property="og:image" content={socialImage} />
     <meta name="twitter:card" content="summary_large_image" />
     <title>{pageTitle}</title>
-    <Analytics />
     <script is:inline>
       (() => {
         const key = "theme";
@@ -97,6 +96,7 @@ const articleActive =
         apply(read());
       })();
     </script>
+    <Analytics />
   </head>
   <body>
     <div class="site-shell">
