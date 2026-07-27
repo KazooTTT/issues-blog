@@ -2,8 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import {
   deriveExcerpt,
-  extractReferences,
   renderMarkdown,
+  renderMarkdownDocument,
   splitDiscussion,
 } from "@/rendering/content";
 import type { SourceComment } from "@/domain/types";
@@ -60,22 +60,29 @@ still readable
     ).toBe("这是第一段真正适合展示在首页的正文，它应该成为文章摘要。");
   });
 
-  it("extracts unique external references in their first-seen order", () => {
-    expect(
-      extractReferences(`
+  it("extracts rendered external references in their first-seen order", async () => {
+    const { references } = await renderMarkdownDocument(`
 [项目主页](https://example.com/project)
 
 再次引用 [同一页面](https://example.com/project)，以及 <https://github.com/KazooTTT/issues-blog>。
 
 [站内页面](/about/)
+[绝对站内页面](https://blog.example.com/about/)
 
 ![外部图片](https://images.example.com/cover.jpg)
-`),
-    ).toEqual([
+
+<a href="https://source.example.net/article">原始 HTML 来源</a>
+`, "https://blog.example.com");
+
+    expect(references).toEqual([
       { href: "https://example.com/project", label: "项目主页" },
       {
         href: "https://github.com/KazooTTT/issues-blog",
         label: "https://github.com/KazooTTT/issues-blog",
+      },
+      {
+        href: "https://source.example.net/article",
+        label: "原始 HTML 来源",
       },
     ]);
   });

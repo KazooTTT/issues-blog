@@ -6,8 +6,7 @@ import { getSiteContent } from "@/data/site-content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import {
   deriveExcerpt,
-  extractReferences,
-  renderMarkdown,
+  renderMarkdownDocument,
   splitDiscussion,
 } from "@/rendering/content";
 import { formatDate, sitePath } from "@/utils/presentation";
@@ -21,8 +20,7 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const html = await renderMarkdown(post.body);
-const references = extractReferences(post.body);
+const { html, references } = await renderMarkdownDocument(post.body, Astro.site);
 const discussion = splitDiscussion(post.comments);
 ---
 

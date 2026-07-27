@@ -21,7 +21,6 @@ const githubStyleSchema = {
 
 interface MarkdownNode {
   type: string;
-  url?: string;
   value?: string;
   children?: MarkdownNode[];
 }
@@ -32,6 +31,7 @@ interface HastNode {
   value?: string;
   properties?: {
     className?: string[];
+    href?: string;
   };
   children?: HastNode[];
 }
@@ -83,17 +83,68 @@ function highlightCodeBlocks() {
 }
 
 export async function renderMarkdown(markdown: string): Promise<string> {
+  return (await renderMarkdownDocument(markdown)).html;
+}
+
+export interface MarkdownReference {
+  href: string;
+  label: string;
+}
+
+function collectExternalReferences(
+  references: MarkdownReference[],
+  siteOrigin: string,
+) {
+  return (tree: HastNode) => {
+    const seen = new Set<string>();
+
+    function visit(node: HastNode): void {
+      const href = node.tagName === "a" ? node.properties?.href : undefined;
+
+      if (href) {
+        try {
+          const url = new URL(href, siteOrigin);
+          if (
+            /^https?:$/.test(url.protocol) &&
+            url.origin !== siteOrigin &&
+            !seen.has(url.href)
+          ) {
+            seen.add(url.href);
+            references.push({
+              href: url.href,
+              label: textContent(node).trim() || url.href,
+            });
+          }
+        } catch {
+          // Invalid links are already handled by the sanitized renderer.
+        }
+      }
+
+      node.children?.forEach(visit);
+    }
+
+    visit(tree);
+  };
+}
+
+export async function renderMarkdownDocument(
+  markdown: string,
+  siteUrl: string | URL = "http://localhost",
+): Promise<{ html: string; references: MarkdownReference[] }> {
+  const references: MarkdownReference[] = [];
+  const siteOrigin = new URL(siteUrl).origin;
   const output = await unified()
     .use(remarkParse)
     .use(remarkGfm)
     .use(remarkRehype, { allowDangerousHtml: true })
     .use(rehypeRaw)
     .use(rehypeSanitize, githubStyleSchema)
+    .use(() => collectExternalReferences(references, siteOrigin))
     .use(highlightCodeBlocks)
     .use(rehypeStringify)
     .process(markdown);
 
-  return String(output);
+  return { html: String(output), references };
 }
 
 export function deriveExcerpt(markdown: string, maxLength = 120): string {
@@ -107,32 +158,6 @@ export function deriveExcerpt(markdown: string, maxLength = 120): string {
     return text;
   }
   return `${text.slice(0, maxLength).trimEnd()}…`;
-}
-
-export interface MarkdownReference {
-  href: string;
-  label: string;
-}
-
-export function extractReferences(markdown: string): MarkdownReference[] {
-  const tree = unified().use(remarkParse).use(remarkGfm).parse(markdown) as MarkdownNode;
-  const references: MarkdownReference[] = [];
-  const seen = new Set<string>();
-
-  function visit(node: MarkdownNode): void {
-    if (node.type === "link" && node.url && /^https?:\/\//i.test(node.url) && !seen.has(node.url)) {
-      seen.add(node.url);
-      references.push({
-        href: node.url,
-        label: textContent(node).trim() || node.url,
-      });
-    }
-
-    node.children?.forEach(visit);
-  }
-
-  visit(tree);
-  return references;
 }
 
 export function splitDiscussion(comments: SourceComment[]): {

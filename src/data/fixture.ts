@@ -15,7 +15,7 @@ export const fixtureIssues: SourceIssue[] = [
           : `第 ${number} 次记录`,
       body:
         index === 0
-          ? `这里是 **KazooTTT 声控烤箱**。\n\n我会在这里记录技术、生活，以及那些还没有完全想明白的事情。\n\n## 为什么写作\n\n写作不一定要得出结论，能够准确记录当时的判断就已经足够。内容发布在 [GitHub Issues](https://github.com/KazooTTT/issues-blog/issues)。\n\n<details><summary>这里会记录什么</summary>\n\n代码、照片和一些不太成熟的想法。\n\n</details>`
+          ? `这里是 **KazooTTT 声控烤箱**。\n\n我会在这里记录技术、生活，以及那些还没有完全想明白的事情。\n\n## 为什么写作\n\n写作不一定要得出结论，能够准确记录当时的判断就已经足够。\n\n<details><summary>这里会记录什么</summary>\n\n代码、照片和一些不太成熟的想法。\n\n</details>`
           : `这是第 ${number} 次记录。写作不一定要得出结论，能够准确记录当时的判断就已经足够。\n\n## 这次记录什么\n\n一点 ${topics[index % topics.length]}，再加一点没有完成的想法。`,
       url: `https://github.com/kazoottt/issues-blog/issues/${number}`,
       author: "kazoottt",
