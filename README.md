@@ -73,16 +73,27 @@ GitHub Issues 只负责文章、About 和评论。友链保存在
 `src/data/friends.ts`；运动记录保存在 `src/data/workouts.json`，构建时会执行
 Schema 校验。
 
-可将数组或 `{ "workouts": [...] }` 形式的 JSON 交给同步脚本：
+同步脚本使用 Python 从 Garmin 拉取最近 14 天的活动，并与现有快照合并：
 
 ```bash
-pnpm sync:workouts --input /path/to/workouts.json
-cat /path/to/workouts.json | pnpm sync:workouts
+GARMIN_EMAIL=you@example.com \
+GARMIN_PASSWORD=your-password \
+python scripts/fetch-garmin-workouts.py \
+  --days 14 \
+  --merge \
+  --output src/data/workouts.json
+```
+
+也可以导入数组或 `{ "workouts": [...] }` 形式的已有 JSON：
+
+```bash
+python scripts/fetch-garmin-workouts.py --merge --input /path/to/workouts.json
+cat /path/to/workouts.json | python scripts/fetch-garmin-workouts.py --merge --input -
 ```
 
 同步脚本会校验、按外部 ID 去重、按日期倒序排列，再更新仓库中的静态快照。
 
-佳明活动由 `.github/workflows/sync-workouts.yml` 每天北京时间 10:15
+佳明活动由 `.github/workflows/sync-workouts.yml` 每天北京时间 00:00
 同步最近 14 天的数据。首次启用前，在仓库 Actions Secrets 中添加
 `GARMIN_EMAIL` 和 `GARMIN_PASSWORD`。中国区账号无需额外设置；国际区账号
 需要添加 Repository Variable `GARMIN_IS_CN=false`。也可以从 Actions 页面

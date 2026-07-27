@@ -7,10 +7,9 @@
     "dev": "astro dev",
     "build": "astro check && astro build",
     "check": "astro check",
-    "test": "vitest run",
+    "test": "python3 -m unittest tests/test_fetch_garmin_workouts.py && vitest run",
     "test:watch": "vitest",
     "archive": "tsx scripts/archive.ts",
-    "sync:workouts": "tsx scripts/sync-workouts.ts",
     "migrate:d1": "tsx scripts/migrate-d1-to-issues.ts"
   },
   "engines": {
