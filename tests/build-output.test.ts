@@ -88,6 +88,21 @@ describe("static blog build", () => {
     );
   });
 
+  it("centers Markdown images and gives them a reading-friendly surface", () => {
+    const styles = readFileSync(resolve(root, "src/styles/global.css"), "utf8");
+
+    expect(styles).toMatch(
+      /\.prose p:has\(> img:only-child\) > img,[^{]*\{[^}]*display:\s*block;/s,
+    );
+    expect(styles).toMatch(
+      /\.prose p:has\(> img:only-child\) > img,[^{]*\{[^}]*margin-inline:\s*auto;/s,
+    );
+    expect(styles).toMatch(
+      /\.prose p:has\(> img:only-child\) > img,[^{]*\{[^}]*border-radius:/s,
+    );
+    expect(styles).not.toContain(".prose img:not(.external-link-favicon)");
+  });
+
   it("uses the same main content width on home and inner pages", () => {
     const styles = readFileSync(resolve(root, "src/styles/global.css"), "utf8");
 
