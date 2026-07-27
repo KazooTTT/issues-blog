@@ -1,0 +1,210 @@
+---
+import type { Workout } from "@/data/workouts";
+
+interface Props {
+  workout: Workout;
+  summary?: boolean;
+}
+
+const { workout, summary = false } = Astro.props;
+
+type HeartRateZone = {
+  zoneNumber: number;
+  secsInZone: number;
+  zoneLowBoundary?: number;
+};
+
+const sectionNames: Record<string, string> = {
+  heartRateZones: "心率区间",
+  powerZones: "功率区间",
+  splits: "分段",
+  typedSplits: "类型化分段",
+  splitSummaries: "分段汇总",
+  exerciseSets: "力量动作组",
+  _sync: "同步状态",
+};
+
+function formatDuration(totalSeconds: number): string {
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = Math.round(totalSeconds % 60);
+  return hours > 0
+    ? `${hours}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`
+    : `${minutes}:${String(seconds).padStart(2, "0")}`;
+}
+
+function formatNumber(value: number, maximumFractionDigits = 1): string {
+  return value.toLocaleString("zh-CN", { maximumFractionDigits });
+}
+
+function detailLabel(value: string): string {
+  return value
+    .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+    .replaceAll("_", " ")
+    .replace(/^\w/, (letter) => letter.toUpperCase());
+}
+
+function flatten(value: unknown, path: string[] = []): Array<[string, string]> {
+  if (value === null || value === undefined) return [];
+  if (typeof value !== "object") {
+    return [[path.map(detailLabel).join(" · "), String(value)]];
+  }
+  if (Array.isArray(value)) {
+    return value.flatMap((item, index) => flatten(item, [...path, `#${index + 1}`]));
+  }
+  return Object.entries(value).flatMap(([key, item]) => flatten(item, [...path, key]));
+}
+
+const allDetails: Array<[string, string | undefined]> = [
+  ["日期", workout.activityDate],
+  ["本地开始", workout.startTimeLocal],
+  ["GMT 开始", workout.startTimeGmt],
+  ["Garmin 类型", workout.activityType],
+  ["总时长", formatDuration(workout.durationSeconds)],
+  ["移动时长", workout.movingDurationSeconds === undefined ? undefined : formatDuration(workout.movingDurationSeconds)],
+  ["经过时长", workout.elapsedDurationSeconds === undefined ? undefined : formatDuration(workout.elapsedDurationSeconds)],
+  ["活动热量", `${formatNumber(workout.caloriesKcal, 0)} kcal`],
+  ["基础代谢热量", workout.bmrCaloriesKcal === undefined ? undefined : `${formatNumber(workout.bmrCaloriesKcal)} kcal`],
+  ["平均心率", workout.averageHeartRateBpm === undefined ? undefined : `${formatNumber(workout.averageHeartRateBpm)} bpm`],
+  ["最高心率", workout.maxHeartRateBpm === undefined ? undefined : `${formatNumber(workout.maxHeartRateBpm)} bpm`],
+  ["距离", workout.distanceMeters === undefined ? undefined : workout.distanceMeters >= 1000 ? `${formatNumber(workout.distanceMeters / 1000, 2)} km` : `${formatNumber(workout.distanceMeters)} m`],
+  ["累计爬升", workout.elevationGainMeters === undefined ? undefined : `${formatNumber(workout.elevationGainMeters)} m`],
+  ["累计下降", workout.elevationLossMeters === undefined ? undefined : `${formatNumber(workout.elevationLossMeters)} m`],
+  ["平均速度", workout.averageSpeedMps === undefined ? undefined : `${formatNumber(workout.averageSpeedMps * 3.6)} km/h`],
+  ["最高速度", workout.maxSpeedMps === undefined ? undefined : `${formatNumber(workout.maxSpeedMps * 3.6)} km/h`],
+  ["平均功率", workout.averagePowerWatts === undefined ? undefined : `${formatNumber(workout.averagePowerWatts)} W`],
+  ["最高功率", workout.maxPowerWatts === undefined ? undefined : `${formatNumber(workout.maxPowerWatts)} W`],
+  ["标准化功率", workout.normalizedPowerWatts === undefined ? undefined : `${formatNumber(workout.normalizedPowerWatts)} W`],
+  ["有氧训练效果", workout.aerobicTrainingEffect === undefined ? undefined : formatNumber(workout.aerobicTrainingEffect)],
+  ["无氧训练效果", workout.anaerobicTrainingEffect === undefined ? undefined : formatNumber(workout.anaerobicTrainingEffect)],
+  ["训练负荷", workout.trainingLoad === undefined ? undefined : formatNumber(workout.trainingLoad)],
+  ["训练效果", workout.trainingEffectLabel],
+  ["平均步频", workout.averageRunningCadenceSpm === undefined ? undefined : `${formatNumber(workout.averageRunningCadenceSpm)} 步/分`],
+  ["最高步频", workout.maxRunningCadenceSpm === undefined ? undefined : `${formatNumber(workout.maxRunningCadenceSpm)} 步/分`],
+  ["总组数", workout.totalSets === undefined ? undefined : formatNumber(workout.totalSets, 0)],
+  ["有效组数", workout.activeSets === undefined ? undefined : formatNumber(workout.activeSets, 0)],
+  ["总次数", workout.totalReps === undefined ? undefined : formatNumber(workout.totalReps, 0)],
+  ["总容量", workout.totalVolume === undefined ? undefined : formatNumber(workout.totalVolume)],
+  ["Garmin ID", workout.externalId],
+];
+const details = allDetails
+  .filter((detail): detail is [string, string] => detail[1] !== undefined)
+  .filter(([label]) => !summary || ["日期", "总时长", "活动热量", "平均心率", "最高心率", "训练效果"].includes(label));
+const trainingSections = summary
+  ? []
+  : Object.entries(workout.trainingDetails ?? {})
+      .filter(([section]) => section !== "heartRateZones")
+      .map(([section, value]) => ({
+        title: sectionNames[section] ?? detailLabel(section),
+        rows: flatten(value),
+      }))
+      .filter(({ rows }) => rows.length > 0);
+const heartRateZones = Array.isArray(workout.trainingDetails?.heartRateZones)
+  ? workout.trainingDetails.heartRateZones.filter(
+      (zone): zone is HeartRateZone =>
+        typeof zone === "object" &&
+        zone !== null &&
+        "zoneNumber" in zone &&
+        "secsInZone" in zone &&
+        typeof zone.zoneNumber === "number" &&
+        typeof zone.secsInZone === "number",
+    )
+  : [];
+const totalZoneSeconds = heartRateZones.reduce(
+  (total, zone) => total + zone.secsInZone,
+  0,
+);
+const trainingMetrics = [
+  ["有氧效果", workout.aerobicTrainingEffect],
+  ["无氧效果", workout.anaerobicTrainingEffect],
+  ["训练负荷", workout.trainingLoad],
+].filter((metric): metric is [string, number] => metric[1] !== undefined);
+---
+
+<section class:list={["workout-data-section", { "is-summary": summary }]}>
+  <h4>活动摘要</h4>
+  <dl>
+    {details.map(([label, value]) => <div><dt>{label}</dt><dd>{value}</dd></div>)}
+  </dl>
+</section>
+{!summary && (
+  <>
+    {trainingMetrics.length > 0 && (
+      <section class="workout-training-effect">
+        <header>
+          <h2>训练效果</h2>
+          {workout.trainingEffectLabel && <span>{workout.trainingEffectLabel}</span>}
+        </header>
+        <div>
+          {trainingMetrics.map(([label, value]) => (
+            <article>
+              <strong>{formatNumber(value)}</strong>
+              <span>{label}</span>
+              {label !== "训练负荷" && (
+                <i style={`--effect: ${Math.min(value / 5, 1) * 100}%`}></i>
+              )}
+            </article>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {heartRateZones.length > 0 && (
+      <section class="workout-zone-section">
+        <header>
+          <div>
+            <span class="eyebrow">HEART RATE</span>
+            <h2>心率区间</h2>
+          </div>
+          <p>
+            平均 {workout.averageHeartRateBpm ?? "—"} · 最高 {workout.maxHeartRateBpm ?? "—"} bpm
+          </p>
+        </header>
+        <div class="workout-zone-stack" aria-label="各心率区间时长占比">
+          {heartRateZones.map((zone) => {
+            const percentage = totalZoneSeconds
+              ? (zone.secsInZone / totalZoneSeconds) * 100
+              : 0;
+            return (
+              <span
+                class={`zone-${zone.zoneNumber}`}
+                style={`width: ${percentage}%`}
+                title={`区间 ${zone.zoneNumber}：${percentage.toFixed(1)}%`}
+              ></span>
+            );
+          })}
+        </div>
+        <div class="workout-zone-rows">
+          {heartRateZones.map((zone) => {
+            const percentage = totalZoneSeconds
+              ? (zone.secsInZone / totalZoneSeconds) * 100
+              : 0;
+            return (
+              <div>
+                <i class={`zone-${zone.zoneNumber}`}></i>
+                <strong>Z{zone.zoneNumber}</strong>
+                <span>{zone.zoneLowBoundary ? `${zone.zoneLowBoundary}+ bpm` : "—"}</span>
+                <span>{formatDuration(zone.secsInZone)}</span>
+                <b>{percentage.toFixed(1)}%</b>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+    )}
+
+    {trainingSections.length > 0 && (
+      <details class="workout-raw-details">
+        <summary>查看全部原始训练数据</summary>
+        {trainingSections.map(({ title, rows }) => (
+          <section>
+            <h4>{title}</h4>
+            <dl>
+              {rows.map(([label, value]) => <div><dt>{label}</dt><dd>{value}</dd></div>)}
+            </dl>
+          </section>
+        ))}
+      </details>
+    )}
+  </>
+)}

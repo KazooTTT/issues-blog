@@ -1,0 +1,32 @@
+---
+import WorkoutDetails from "@/components/WorkoutDetails.astro";
+import { workouts, type Workout } from "@/data/workouts";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+export function getStaticPaths() {
+  return workouts.map((workout) => ({
+    params: { id: workout.externalId },
+    props: { workout },
+  }));
+}
+
+interface Props {
+  workout: Workout;
+}
+
+const { workout } = Astro.props;
+---
+
+<BaseLayout title={`${workout.name} · 运动详情`} description={`${workout.activityDate} ${workout.name}的完整训练详情`}>
+  <article class="workout-detail-page">
+    <a class="workout-detail-back" href="/issues-blog/workouts/">← 返回运动记录</a>
+    <header>
+      <span class="eyebrow">WORKOUT / 运动详情</span>
+      <h1>{workout.name}</h1>
+      <p>{workout.activityDate} · Garmin #{workout.externalId}</p>
+    </header>
+    <div class="workout-detail-content">
+      <WorkoutDetails workout={workout} />
+    </div>
+  </article>
+</BaseLayout>
