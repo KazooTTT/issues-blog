@@ -61,6 +61,26 @@ describe("static blog build", () => {
     expect(article).toContain("${target.origin}/favicon.ico");
   });
 
+  it("keeps the selected theme synchronized across page loads and tabs", () => {
+    const home = readFileSync(resolve(root, "dist/index.html"), "utf8");
+    const article = readFileSync(resolve(root, "dist/posts/101/index.html"), "utf8");
+
+    for (const page of [home, article]) {
+      expect(page).toContain("window.blogTheme");
+      expect(page).toContain('document.cookie = `theme=${theme}; Path=/;');
+      expect(page).toContain('addEventListener("pageshow"');
+      expect(page).toContain('addEventListener("storage"');
+    }
+  });
+
+  it("uses the same main content width on home and inner pages", () => {
+    const styles = readFileSync(resolve(root, "src/styles/global.css"), "utf8");
+
+    expect(styles).not.toMatch(/\.post\s*\{[^}]*width:/s);
+    expect(styles).not.toMatch(/\.discussion\s*\{[^}]*width:/s);
+    expect(styles).not.toMatch(/\.about-body\s*\{[^}]*width:/s);
+  });
+
   it("generates full-text RSS and sitemap output", () => {
     const rss = readFileSync(resolve(root, "dist/rss.xml"), "utf8");
     const sitemap = readFileSync(

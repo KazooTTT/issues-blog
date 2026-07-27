@@ -52,8 +52,44 @@ const articleActive =
     <title>{pageTitle}</title>
     <Analytics />
     <script is:inline>
-      const saved = localStorage.getItem("theme");
-      if (saved) document.documentElement.dataset.theme = saved;
+      (() => {
+        const key = "theme";
+        const validTheme = (value) => value === "light" || value === "dark";
+        const read = () => {
+          try {
+            const stored = localStorage.getItem(key);
+            if (validTheme(stored)) return stored;
+          } catch {
+            // Cookies keep the preference working when storage is unavailable.
+          }
+          const cookie = document.cookie
+            .split("; ")
+            .find((item) => item.startsWith(`${key}=`))
+            ?.slice(key.length + 1);
+          return validTheme(cookie) ? cookie : undefined;
+        };
+        const apply = (theme) => {
+          if (validTheme(theme)) {
+            document.documentElement.dataset.theme = theme;
+          } else {
+            delete document.documentElement.dataset.theme;
+          }
+          document
+            .querySelector('meta[name="theme-color"]')
+            ?.setAttribute("content", theme === "dark" ? "#191917" : "#f3eee4");
+        };
+        const save = (theme) => {
+          try {
+            localStorage.setItem(key, theme);
+          } catch {
+            // The cookie below is the persistence fallback.
+          }
+          document.cookie = `theme=${theme}; Path=/; Max-Age=31536000; SameSite=Lax`;
+        };
+
+        window.blogTheme = { apply, read, save };
+        apply(read());
+      })();
     </script>
   </head>
   <body>
@@ -140,8 +176,16 @@ const articleActive =
     <script is:inline>
       document.querySelector("[data-theme-toggle]")?.addEventListener("click", () => {
         const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
-        document.documentElement.dataset.theme = next;
-        localStorage.setItem("theme", next);
+        window.blogTheme?.apply(next);
+        window.blogTheme?.save(next);
+      });
+      window.addEventListener("pageshow", () => {
+        window.blogTheme?.apply(window.blogTheme.read());
+      });
+      window.addEventListener("storage", (event) => {
+        if (event.key === "theme") {
+          window.blogTheme?.apply(event.newValue ?? window.blogTheme.read());
+        }
       });
       const navMenu = document.querySelector("[data-nav-menu]");
       const navMenuToggle = document.querySelector("[data-nav-menu-toggle]");
