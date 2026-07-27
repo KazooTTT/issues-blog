@@ -1,5 +1,6 @@
 ---
 import { siteConfig } from "@/config";
+import Analytics from "@/components/Analytics.astro";
 import SocialLinks from "@/components/SocialLinks.astro";
 import { sitePath } from "@/utils/presentation";
 import "@/styles/global.css";
@@ -48,6 +49,7 @@ const articleActive =
     <meta property="og:image" content={socialImage} />
     <meta name="twitter:card" content="summary_large_image" />
     <title>{pageTitle}</title>
+    <Analytics />
     <script is:inline>
       const saved = localStorage.getItem("theme");
       if (saved) document.documentElement.dataset.theme = saved;

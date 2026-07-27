@@ -36,6 +36,15 @@ describe("static blog build", () => {
     expect(home).toContain("https://t.me/kazootttmemos");
     expect(home).toContain("https://www.youtube.com/@kazoottt255");
     expect(home).toContain("在别处找到我");
+    expect(home).toContain(
+      "https://www.googletagmanager.com/gtag/js?id=G-F4KLD4XCDB",
+    );
+    expect(home).toContain("https://www.clarity.ms/tag/");
+    expect(home).toContain('"kvbyuhu6d2"');
+    expect(home).toContain("https://cloud.umami.is/script.js");
+    expect(home).toContain(
+      'data-website-id="247d7726-70c1-46fd-9453-fbe95630c3d6"',
+    );
     expect(sitemap).not.toContain("/blog/page/2/");
   });
 
