@@ -3,6 +3,8 @@ import { workouts } from "@/data/workouts";
 import WorkoutDetails from "@/components/WorkoutDetails.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
+
 type WorkoutKind =
   | "strength"
   | "dance"
@@ -167,7 +169,7 @@ const calendarMonths = [...new Set(workouts.map(({ activityDate }) => activityDa
       return (
         <a
           class="workout-row"
-          href={`/issues-blog/workouts/${workout.externalId}/`}
+          href={`${basePath}/workouts/${workout.externalId}/`}
           aria-describedby={detailId}
         >
           <time datetime={workout.activityDate}>{formatDate(workout.activityDate)}</time>
@@ -235,7 +237,7 @@ const calendarMonths = [...new Set(workouts.map(({ activityDate }) => activityDa
                     return (
                       <span class="workout-calendar-marker">
                         <a
-                          href={`/issues-blog/workouts/${workout.externalId}/`}
+                          href={`${basePath}/workouts/${workout.externalId}/`}
                           class:list={["workout-kind", `workout-kind--${kind}`]}
                           aria-label={`${workout.name}，${workout.activityDate}`}
                           aria-describedby={detailId}
