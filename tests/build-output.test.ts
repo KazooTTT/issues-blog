@@ -66,10 +66,17 @@ describe("static blog build", () => {
     const friends = readFileSync(resolve(root, "dist/friends/index.html"), "utf8");
     const workouts = readFileSync(resolve(root, "dist/workouts/index.html"), "utf8");
     const tools = readFileSync(resolve(root, "dist/tools/index.html"), "utf8");
+    const workoutSnapshot = JSON.parse(
+      readFileSync(resolve(root, "src/data/workouts.json"), "utf8"),
+    ) as Array<{ activityDate: string }>;
+    const latestWorkoutDate = workoutSnapshot
+      .map(({ activityDate }) => activityDate)
+      .sort()
+      .at(-1);
     expect(friends).toContain("Yuang&#39;s Blog");
     expect(workouts).toContain("力量训练");
     expect(workouts).toContain("最近 7 天");
-    expect(workouts).toContain("统计截至 2026-07-23");
+    expect(workouts).toContain(`统计截至 ${latestWorkoutDate}`);
     expect(tools).toContain("Mac mini M2 Pro");
     expect(tools).toContain("软件工具");
     expect(tools).not.toContain("Nikon");
