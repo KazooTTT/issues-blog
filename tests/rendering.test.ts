@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   deriveExcerpt,
+  extractReferences,
   renderMarkdown,
   splitDiscussion,
 } from "@/rendering/content";
@@ -57,6 +58,26 @@ still readable
 这是第一段真正适合展示在首页的正文，它应该成为文章摘要。
 `),
     ).toBe("这是第一段真正适合展示在首页的正文，它应该成为文章摘要。");
+  });
+
+  it("extracts unique external references in their first-seen order", () => {
+    expect(
+      extractReferences(`
+[项目主页](https://example.com/project)
+
+再次引用 [同一页面](https://example.com/project)，以及 <https://github.com/KazooTTT/issues-blog>。
+
+[站内页面](/about/)
+
+![外部图片](https://images.example.com/cover.jpg)
+`),
+    ).toEqual([
+      { href: "https://example.com/project", label: "项目主页" },
+      {
+        href: "https://github.com/KazooTTT/issues-blog",
+        label: "https://github.com/KazooTTT/issues-blog",
+      },
+    ]);
   });
 
   it("keeps the latest ten comments visible and collapses older discussion", () => {

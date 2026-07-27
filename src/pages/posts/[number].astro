@@ -4,7 +4,12 @@ import ReactionBar from "@/components/ReactionBar.astro";
 import { siteConfig } from "@/config";
 import { getSiteContent } from "@/data/site-content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { deriveExcerpt, renderMarkdown, splitDiscussion } from "@/rendering/content";
+import {
+  deriveExcerpt,
+  extractReferences,
+  renderMarkdown,
+  splitDiscussion,
+} from "@/rendering/content";
 import { formatDate, sitePath } from "@/utils/presentation";
 
 export async function getStaticPaths() {
@@ -17,6 +22,7 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const html = await renderMarkdown(post.body);
+const references = extractReferences(post.body);
 const discussion = splitDiscussion(post.comments);
 ---
 
@@ -42,6 +48,16 @@ const discussion = splitDiscussion(post.comments);
       </div>
     </header>
     <div class="prose post-body" set:html={html} />
+    {references.length > 0 && (
+      <section class="post-references prose" aria-labelledby="post-references-title">
+        <h2 id="post-references-title">引用链接</h2>
+        <ol>
+          {references.map((reference) => (
+            <li><a href={reference.href}>{reference.label}</a></li>
+          ))}
+        </ol>
+      </section>
+    )}
     <footer class="post-footer">
       <div class="tag-row">
         {post.tags.map((tag: string) => <a class="tag" href={sitePath(`/tags/${encodeURIComponent(tag)}/`)}>#{tag}</a>)}

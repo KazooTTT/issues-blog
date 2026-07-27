@@ -61,6 +61,16 @@ describe("static blog build", () => {
     expect(article).toContain("${target.origin}/favicon.ico");
   });
 
+  it("lists unique external references below the article body", () => {
+    const article = readFileSync(resolve(root, "dist/posts/101/index.html"), "utf8");
+
+    expect(article).toContain('class="post-references prose"');
+    expect(article).toContain('id="post-references-title">引用链接</h2>');
+    expect(article).toContain(
+      '<a href="https://github.com/KazooTTT/issues-blog/issues">GitHub Issues</a>',
+    );
+  });
+
   it("generates full-text RSS and sitemap output", () => {
     const rss = readFileSync(resolve(root, "dist/rss.xml"), "utf8");
     const sitemap = readFileSync(

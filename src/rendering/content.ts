@@ -21,6 +21,7 @@ const githubStyleSchema = {
 
 interface MarkdownNode {
   type: string;
+  url?: string;
   value?: string;
   children?: MarkdownNode[];
 }
@@ -106,6 +107,32 @@ export function deriveExcerpt(markdown: string, maxLength = 120): string {
     return text;
   }
   return `${text.slice(0, maxLength).trimEnd()}…`;
+}
+
+export interface MarkdownReference {
+  href: string;
+  label: string;
+}
+
+export function extractReferences(markdown: string): MarkdownReference[] {
+  const tree = unified().use(remarkParse).use(remarkGfm).parse(markdown) as MarkdownNode;
+  const references: MarkdownReference[] = [];
+  const seen = new Set<string>();
+
+  function visit(node: MarkdownNode): void {
+    if (node.type === "link" && node.url && /^https?:\/\//i.test(node.url) && !seen.has(node.url)) {
+      seen.add(node.url);
+      references.push({
+        href: node.url,
+        label: textContent(node).trim() || node.url,
+      });
+    }
+
+    node.children?.forEach(visit);
+  }
+
+  visit(tree);
+  return references;
 }
 
 export function splitDiscussion(comments: SourceComment[]): {

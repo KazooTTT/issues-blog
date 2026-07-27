@@ -238,6 +238,11 @@ main { min-height: 65vh; }
 .prose th, .prose td { padding: 10px 12px; border: 1px solid var(--line); text-align: left; }
 .prose details { margin: 1.5em 0; padding: 14px 18px; border: 1px solid var(--line); background: var(--card); }
 .prose summary { cursor: pointer; font-family: var(--sans); font-weight: 600; }
+.post-references { padding: 0 0 45px; font-size: 14px; }
+.post-references h2 { margin-top: 0; font-size: 22px; }
+.post-references ol { margin: 0; padding-left: 1.6em; }
+.post-references li { padding: 4px 0; color: var(--muted); }
+.post-references a { overflow-wrap: anywhere; }
 .post-footer { padding: 35px 0 70px; border-top: 1px solid var(--line); }
 .reaction-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 35px; padding: 18px 0; color: var(--muted); font-size: 13px; }
 .reaction { padding: 5px 9px; border: 1px solid var(--line); border-radius: 99px; }
