@@ -47,4 +47,32 @@ describe("workout snapshots", () => {
       ]),
     ).toThrow();
   });
+
+  it("preserves optional Garmin summaries and training details", () => {
+    const [workout] = normalizeWorkouts([
+      {
+        externalId: "3",
+        name: "力量训练",
+        activityDate: "2026-07-03",
+        startTimeLocal: "2026-07-03 18:30:00",
+        durationSeconds: 1800,
+        caloriesKcal: 280,
+        averageHeartRateBpm: 132,
+        totalSets: 12,
+        trainingDetails: {
+          heartRateZones: {
+            zones: [{ zoneNumber: 3, secsInZone: 720 }],
+          },
+        },
+      },
+    ]);
+
+    expect(workout?.averageHeartRateBpm).toBe(132);
+    expect(workout?.totalSets).toBe(12);
+    expect(workout?.trainingDetails).toEqual({
+      heartRateZones: {
+        zones: [{ zoneNumber: 3, secsInZone: 720 }],
+      },
+    });
+  });
 });

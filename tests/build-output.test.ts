@@ -36,6 +36,7 @@ describe("static blog build", () => {
     expect(home).toContain("https://t.me/kazootttmemos");
     expect(home).toContain("https://www.youtube.com/@kazoottt255");
     expect(home).toContain("在别处找到我");
+    expect(home).toContain("https://github.com/KazooTTT/issues-blog");
     expect(home).toContain(
       "https://www.googletagmanager.com/gtag/js?id=G-F4KLD4XCDB",
     );
@@ -86,6 +87,14 @@ describe("static blog build", () => {
     expect(workouts).toContain("力量训练");
     expect(workouts).toContain("最近 7 天");
     expect(workouts).toContain(`统计截至 ${latestWorkoutDate}`);
+    expect(workouts).toContain('data-workout-view="list"');
+    expect(workouts).toContain('data-workout-view="calendar"');
+    expect(workouts).toContain('role="tablist"');
+    expect(workouts).toContain('class="workout-kind workout-kind--strength"');
+    expect(workouts).toContain('class="workout-calendar"');
+    expect(workouts).toContain('aria-describedby="workout-detail-');
+    expect(workouts).toContain('role="tooltip"');
+    expect(workouts).not.toContain("数据快照更新于");
     expect(tools).toContain("Mac mini M2 Pro");
     expect(tools).toContain("软件工具");
     expect(tools).not.toContain("Nikon");

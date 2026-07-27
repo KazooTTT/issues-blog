@@ -17,6 +17,28 @@ SPEC.loader.exec_module(MODULE)
 
 
 class GarminWorkoutSynchronizationTest(unittest.TestCase):
+    def test_detail_failure_preserves_previous_data_and_records_status(self) -> None:
+        class GarminStub:
+            def __getattr__(self, name: str):
+                def detail(_activity_id: str):
+                    if name == "get_activity_hr_in_timezones":
+                        raise RuntimeError("temporary failure")
+                    return {}
+
+                return detail
+
+        details = MODULE.fetch_training_details(
+            GarminStub(),
+            "104",
+            {"heartRateZones": {"zones": [{"zoneNumber": 3, "secsInZone": 720}]}},
+        )
+
+        self.assertEqual(
+            details["heartRateZones"]["zones"][0]["secsInZone"],
+            720,
+        )
+        self.assertIn("heartRateZones", details["_sync"]["unavailable"])
+
     def test_normalizes_garmin_activities(self) -> None:
         self.assertEqual(
             MODULE.normalize_garmin_activities(
@@ -36,6 +58,8 @@ class GarminWorkoutSynchronizationTest(unittest.TestCase):
                     "externalId": "101",
                     "name": "Easy Run",
                     "activityDate": "2026-07-08",
+                    "startTimeLocal": "2026-07-08 07:30:00",
+                    "activityType": "running",
                     "durationSeconds": 1800,
                     "caloriesKcal": 360,
                 }
@@ -57,6 +81,81 @@ class GarminWorkoutSynchronizationTest(unittest.TestCase):
         self.assertEqual(workout["externalId"], "101")
         self.assertEqual(workout["durationSeconds"], 1800)
         self.assertEqual(workout["caloriesKcal"], 360)
+
+    def test_preserves_all_available_activity_summary_details(self) -> None:
+        workout = MODULE.normalize_garmin_activities(
+            [
+                {
+                    "activityId": "104",
+                    "activityName": "力量训练",
+                    "activityType": {"typeKey": "strength_training"},
+                    "startTimeLocal": "2026-07-11 18:30:00",
+                    "startTimeGMT": "2026-07-11 10:30:00",
+                    "duration": 1800,
+                    "movingDuration": 1700,
+                    "elapsedDuration": 1900,
+                    "distance": 1200.5,
+                    "elevationGain": 12.4,
+                    "elevationLoss": 9.8,
+                    "averageSpeed": 0.7,
+                    "maxSpeed": 1.5,
+                    "averageHR": 132,
+                    "maxHR": 168,
+                    "calories": 280,
+                    "bmrCalories": 42,
+                    "avgPower": 115,
+                    "maxPower": 260,
+                    "normPower": 130,
+                    "aerobicTrainingEffect": 2.8,
+                    "anaerobicTrainingEffect": 1.7,
+                    "activityTrainingLoad": 72,
+                    "trainingEffectLabel": "AEROBIC_BASE",
+                    "averageRunningCadenceInStepsPerMinute": 150,
+                    "maxRunningCadenceInStepsPerMinute": 180,
+                    "totalSets": 12,
+                    "activeSets": 10,
+                    "totalReps": 96,
+                    "totalVolume": 4200,
+                    "trainingDetails": {
+                        "heartRateZones": {
+                            "zones": [
+                                {
+                                    "zoneNumber": 3,
+                                    "secsInZone": 720,
+                                    "startLatitude": 31.2,
+                                    "endLng": 121.4,
+                                }
+                            ]
+                        },
+                        "exerciseSets": {"totalSets": 12},
+                        "splits": {
+                            "weather": {"temperature": 28},
+                            "deviceId": "watch",
+                            "gear": {"name": "Shoes"},
+                        },
+                    },
+                }
+            ]
+        )[0]
+
+        self.assertEqual(workout["startTimeGmt"], "2026-07-11 10:30:00")
+        self.assertEqual(workout["averageHeartRateBpm"], 132)
+        self.assertEqual(workout["aerobicTrainingEffect"], 2.8)
+        self.assertEqual(workout["totalSets"], 12)
+        self.assertEqual(workout["totalVolume"], 4200)
+        self.assertEqual(
+            workout["trainingDetails"]["heartRateZones"]["zones"][0]["secsInZone"],
+            720,
+        )
+        self.assertNotIn(
+            "startLatitude",
+            workout["trainingDetails"]["heartRateZones"]["zones"][0],
+        )
+        self.assertNotIn(
+            "endLng",
+            workout["trainingDetails"]["heartRateZones"]["zones"][0],
+        )
+        self.assertEqual(workout["trainingDetails"]["splits"], {})
 
     def test_uses_readable_activity_type_when_name_is_missing(self) -> None:
         workout = MODULE.normalize_garmin_activities(
