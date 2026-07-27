@@ -209,13 +209,12 @@ main { min-height: 65vh; }
 .prose h2 { margin: 2.4em 0 1em; font-size: 29px; }
 .prose h3 { margin: 2em 0 .8em; font-size: 22px; }
 .prose a { color: var(--accent-dark); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
-.prose .external-link-with-favicon { display: inline-flex; align-items: baseline; gap: .32em; }
-.prose .external-link-favicon { width: 1em; height: 1em; flex: 0 0 auto; border-radius: 2px; transform: translateY(.12em); }
+.prose .external-link-favicon { display: inline-block; width: 1em; height: 1em; margin-right: .32em; border-radius: 2px; vertical-align: -.12em; }
 .prose blockquote { margin: 2em 0; padding: 5px 0 5px 25px; border-left: 3px solid var(--accent); color: var(--muted); }
 .prose pre { position: relative; padding: 22px; overflow: auto; border-radius: 3px; background: #20201d; color: #eee8dc; font-size: 14px; line-height: 1.65; }
 .prose pre.shiki { background: #20201d !important; }
 .code-copy-button {
-  position: sticky; top: 0; left: 100%; z-index: 1; display: block; width: max-content; margin: -12px -12px -20px 16px;
+  position: sticky; top: 0; left: 100%; z-index: 1; float: right; width: max-content; margin: -12px -12px 0 16px;
   padding: 5px 9px; border: 1px solid #ffffff30; border-radius: 3px; background: #20201de8; color: #eee8dc;
   font: 600 11px/1.4 var(--sans); cursor: pointer;
 }

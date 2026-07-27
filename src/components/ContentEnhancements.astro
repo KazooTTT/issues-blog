@@ -17,7 +17,7 @@
     button.dataset.copyCode = "";
     button.textContent = "复制";
     button.setAttribute("aria-label", "复制代码");
-    pre.append(button);
+    pre.prepend(button);
   });
 
   const openImage = (image) => {
@@ -26,6 +26,9 @@
     lightboxImage.alt = image.alt;
     lightbox.showModal();
   };
+
+  const zoomableImage = (target) =>
+    target instanceof HTMLImageElement && target.matches(".prose img") ? target : null;
 
   document.querySelectorAll(".prose img").forEach((image) => {
     image.classList.add("zoomable-image");
@@ -73,20 +76,18 @@
       return;
     }
 
-    if (target instanceof HTMLImageElement && target.matches(".prose img")) {
-      openImage(target);
+    const image = zoomableImage(target);
+    if (image) {
+      event.preventDefault();
+      openImage(image);
     }
   });
 
   document.addEventListener("keydown", (event) => {
-    const target = event.target;
-    if (
-      target instanceof HTMLImageElement &&
-      target.matches(".prose img") &&
-      (event.key === "Enter" || event.key === " ")
-    ) {
+    const image = zoomableImage(event.target);
+    if (image && (event.key === "Enter" || event.key === " ")) {
       event.preventDefault();
-      openImage(target);
+      openImage(image);
     }
   });
 

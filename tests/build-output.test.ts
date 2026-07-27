@@ -55,6 +55,7 @@ describe("static blog build", () => {
     expect(article).toContain("data-image-lightbox");
     expect(article).toContain("data-copy-code");
     expect(article).toContain('target.matches(".prose img")');
+    expect(article).toContain("event.preventDefault()");
     expect(article).toContain("navigator.clipboard.writeText(code)");
     expect(article).toContain("external-link-favicon");
     expect(article).toContain("${target.origin}/favicon.ico");
