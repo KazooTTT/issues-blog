@@ -26,6 +26,10 @@
   --shadow: 0 24px 80px rgba(0, 0, 0, 0.22);
 }
 
+@view-transition {
+  navigation: auto;
+}
+
 * { box-sizing: border-box; }
 
 html {

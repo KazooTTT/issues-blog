@@ -80,6 +80,14 @@ describe("static blog build", () => {
     }
   });
 
+  it("keeps the current page visible while navigating to the next theme-aware document", () => {
+    const styles = readFileSync(resolve(root, "src/styles/global.css"), "utf8");
+
+    expect(styles).toMatch(
+      /@view-transition\s*\{\s*navigation:\s*auto;\s*\}/,
+    );
+  });
+
   it("uses the same main content width on home and inner pages", () => {
     const styles = readFileSync(resolve(root, "src/styles/global.css"), "utf8");
 
