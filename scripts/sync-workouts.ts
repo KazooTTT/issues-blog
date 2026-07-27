@@ -1,6 +1,10 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
+import {
+  mergeWorkouts,
+  normalizeGarminActivities,
+} from "../src/data/garmin-workouts";
 import { normalizeWorkouts } from "../src/data/workouts";
 
 function argument(name: string): string | undefined {
@@ -28,6 +32,14 @@ if (!source.trim()) {
   throw new Error("Provide workout JSON through --input or stdin");
 }
 
-const workouts = normalizeWorkouts(JSON.parse(source));
+const incoming = process.argv.includes("--garmin")
+  ? normalizeGarminActivities(JSON.parse(source))
+  : normalizeWorkouts(JSON.parse(source));
+const workouts = process.argv.includes("--merge")
+  ? mergeWorkouts(
+      normalizeWorkouts(JSON.parse(await readFile(outputPath, "utf8"))),
+      incoming,
+    )
+  : incoming;
 await writeFile(outputPath, `${JSON.stringify(workouts, null, 2)}\n`, "utf8");
 console.log(`Synced ${workouts.length} workouts to ${outputPath}`);

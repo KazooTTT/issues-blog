@@ -81,3 +81,12 @@ cat /path/to/workouts.json | pnpm sync:workouts
 ```
 
 同步脚本会校验、按外部 ID 去重、按日期倒序排列，再更新仓库中的静态快照。
+
+佳明活动由 `.github/workflows/sync-workouts.yml` 每天北京时间 10:15
+同步最近 14 天的数据。首次启用前，在仓库 Actions Secrets 中添加
+`GARMIN_EMAIL` 和 `GARMIN_PASSWORD`。中国区账号无需额外设置；国际区账号
+需要添加 Repository Variable `GARMIN_IS_CN=false`。也可以从 Actions 页面
+手动运行 `Sync Garmin workouts` 完成首次验证。
+
+同步采用增量快照语义：新活动和最近 14 天内的修改会覆盖同 ID 记录，更早的
+历史记录会保留；若一次运行遇到主分支并发更新而推送失败，下次定时运行会重试。
