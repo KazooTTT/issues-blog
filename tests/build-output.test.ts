@@ -68,6 +68,7 @@ describe("static blog build", () => {
     for (const page of [home, article]) {
       expect(page).toContain("window.blogTheme");
       expect(page).toContain('document.cookie = `theme=${theme}; Path=/;');
+      expect(page).toContain('new BroadcastChannel("blog-theme")');
       expect(page).toContain('addEventListener("pageshow"');
       expect(page).toContain('addEventListener("storage"');
     }

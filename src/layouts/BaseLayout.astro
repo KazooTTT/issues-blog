@@ -54,6 +54,10 @@ const articleActive =
     <script is:inline>
       (() => {
         const key = "theme";
+        const channel =
+          "BroadcastChannel" in window
+            ? new BroadcastChannel("blog-theme")
+            : undefined;
         const validTheme = (value) => value === "light" || value === "dark";
         const read = () => {
           try {
@@ -85,9 +89,11 @@ const articleActive =
             // The cookie below is the persistence fallback.
           }
           document.cookie = `theme=${theme}; Path=/; Max-Age=31536000; SameSite=Lax`;
+          channel?.postMessage(theme);
         };
 
         window.blogTheme = { apply, read, save };
+        channel?.addEventListener("message", (event) => apply(event.data));
         apply(read());
       })();
     </script>
