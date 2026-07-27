@@ -1,10 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <rect width="1200" height="630" fill="#f3eee4"/>
-  <path d="M0 520C220 450 310 610 540 520s350-40 660-170v280H0z" fill="#d95d39"/>
-  <circle cx="1030" cy="110" r="230" fill="#20201d"/>
-  <text x="80" y="170" font-family="ui-serif,serif" font-size="38" fill="#d95d39">ISSUES · ESSAYS · IDEAS</text>
-  <text x="80" y="290" font-family="ui-serif,serif" font-weight="700" font-size="78" fill="#20201d">KazooTTT 声控烤箱</text>
-  <text x="84" y="370" font-family="ui-sans-serif,sans-serif" font-size="34" fill="#666158">浅尝辄止，技艺不精。</text>
-  <text x="975" y="145" font-family="ui-serif,serif" font-weight="700" font-size="100" fill="#f3eee4">K</text>
-</svg>
-
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630"><rect width="1200" height="630" fill="#f3eee4"/><path fill="#d95d39" d="M0 520C220 450 310 610 540 520s350-40 660-170v280H0z"/><circle cx="1030" cy="110" r="230" fill="#20201d"/><text x="80" y="170" fill="#d95d39" font-family="ui-serif,serif" font-size="38">ISSUES · ESSAYS · IDEAS</text><text x="80" y="290" fill="#20201d" font-family="ui-serif,serif" font-size="78" font-weight="700">KazooTTT 声控烤箱</text><text x="84" y="370" fill="#666158" font-family="ui-sans-serif,sans-serif" font-size="34">浅尝辄止，技艺不精。</text><text x="975" y="145" fill="#f3eee4" font-family="ui-serif,serif" font-size="100" font-weight="700">K</text></svg>
