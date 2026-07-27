@@ -97,6 +97,13 @@ const calendarMonths = [...new Set(workouts.map(({ activityDate }) => activityDa
       key: monthKey,
       label: `${year} 年 ${month} 月`,
       activityCount: monthWorkouts.length,
+      activityDays: [...workoutsByDay.entries()]
+        .sort(([left], [right]) => right - left)
+        .map(([day, dayWorkouts]) => ({
+          day,
+          date: `${monthKey}-${String(day).padStart(2, "0")}`,
+          workouts: dayWorkouts,
+        })),
       cells: [
         ...Array.from({ length: leadingDays }, () => null),
         ...Array.from({ length: daysInMonth }, (_, index) => ({
@@ -264,6 +271,49 @@ const calendarMonths = [...new Set(workouts.map(({ activityDate }) => activityDa
             ),
           )}
         </div>
+        <div class="workout-calendar-agenda">
+          {calendarMonth.activityDays.map((activityDay) => (
+            <section
+              class="workout-calendar-agenda-day"
+              data-calendar-date={activityDay.date}
+            >
+              <time datetime={activityDay.date}>
+                <strong>{activityDay.day}</strong>
+                <span>
+                  {new Intl.DateTimeFormat("zh-CN", {
+                    weekday: "short",
+                    timeZone: "Asia/Shanghai",
+                  }).format(new Date(`${activityDay.date}T12:00:00+08:00`))}
+                </span>
+              </time>
+              <div>
+                {activityDay.workouts.map((workout) => {
+                  const kind = workoutKind(workout.name);
+                  return (
+                    <a
+                      class="workout-calendar-agenda-item"
+                      href={`${basePath}/workouts/${workout.externalId}/`}
+                    >
+                      <i
+                        class:list={["workout-kind", `workout-kind--${kind}`]}
+                        aria-hidden="true"
+                      >
+                        {workoutKinds[kind].mark}
+                      </i>
+                      <span>
+                        <strong>{workout.name}</strong>
+                        <small>
+                          {formatDuration(workout.durationSeconds)} · {workout.caloriesKcal} kcal
+                        </small>
+                      </span>
+                      <b aria-hidden="true">→</b>
+                    </a>
+                  );
+                })}
+              </div>
+            </section>
+          ))}
+        </div>
       </article>
     ))}
   </section>
@@ -313,6 +363,6 @@ const calendarMonths = [...new Set(workouts.map(({ activityDate }) => activityDa
     day: "2-digit",
   }).format(new Date());
   document
-    .querySelector(`[data-calendar-date="${todayInShanghai}"]`)
-    ?.classList.add("is-today");
+    .querySelectorAll(`[data-calendar-date="${todayInShanghai}"]`)
+    .forEach((day) => day.classList.add("is-today"));
 </script>
