@@ -2,6 +2,11 @@ name: Sync Garmin workouts
 
 on:
   workflow_dispatch:
+    inputs:
+      days:
+        description: "Number of days to fetch (use a larger value for backfills)"
+        required: false
+        default: "14"
   schedule:
     - cron: "0 16 * * *"
 
@@ -25,6 +30,7 @@ jobs:
       GARMIN_EMAIL: ${{ secrets.GARMIN_EMAIL }}
       GARMIN_PASSWORD: ${{ secrets.GARMIN_PASSWORD }}
       GARMIN_IS_CN: ${{ vars.GARMIN_IS_CN || 'true' }}
+      GARMIN_SYNC_DAYS: ${{ github.event_name == 'workflow_dispatch' && inputs.days || '14' }}
       GITHUB_TOKEN: ${{ github.token }}
       SITE_URL: ${{ vars.SITE_URL || format('https://{0}.github.io/{1}', github.repository_owner, github.event.repository.name) }}
     steps:
@@ -44,7 +50,7 @@ jobs:
       - name: Test workout synchronization
         run: python -m unittest tests/test_fetch_garmin_workouts.py
       - name: Sync recent activities
-        run: python scripts/fetch-garmin-workouts.py --days 14 --merge --output src/data/workouts.json
+        run: python scripts/fetch-garmin-workouts.py --days "$GARMIN_SYNC_DAYS" --merge --output src/data/workouts.json
       - run: pnpm test
       - run: pnpm build
       - id: changes
