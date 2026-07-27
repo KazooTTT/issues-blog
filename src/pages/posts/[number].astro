@@ -34,7 +34,11 @@ const discussion = splitDiscussion(post.comments);
     <header class="post-header">
       <div class="post-kicker">
         <span>Issue #{post.number}</span>
-        <span>{post.tags.join(" · ")}</span>
+        <nav class="post-tags" aria-label="文章标签">
+          {post.tags.map((tag: string) => (
+            <a class="tag" href={sitePath(`/tags/${encodeURIComponent(tag)}/`)}>#{tag}</a>
+          ))}
+        </nav>
       </div>
       <h1>{post.title}</h1>
       <div class="post-meta">
@@ -57,9 +61,6 @@ const discussion = splitDiscussion(post.comments);
       </section>
     )}
     <footer class="post-footer">
-      <div class="tag-row">
-        {post.tags.map((tag: string) => <a class="tag" href={sitePath(`/tags/${encodeURIComponent(tag)}/`)}>#{tag}</a>)}
-      </div>
       <ReactionBar reactions={post.reactions} sourceUrl={post.url} />
     </footer>
   </article>

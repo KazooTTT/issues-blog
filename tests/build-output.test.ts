@@ -61,6 +61,17 @@ describe("static blog build", () => {
     expect(article).toContain("${target.origin}/favicon.ico");
   });
 
+  it("renders linked article tags once at the top of the post", () => {
+    const article = readFileSync(resolve(root, "dist/posts/101/index.html"), "utf8");
+    const header = article.match(/<header class="post-header">([\s\S]*?)<\/header>/)?.[1];
+    const footer = article.match(/<footer class="post-footer">([\s\S]*?)<\/footer>/)?.[1];
+
+    expect(header).toContain('href="/blog/tags/');
+    expect(header).toContain('class="tag"');
+    expect(article.match(/class="post-tags"/g)).toHaveLength(1);
+    expect(footer).not.toContain('class="tag"');
+  });
+
   it("keeps the selected theme synchronized across page loads and tabs", () => {
     const home = readFileSync(resolve(root, "dist/index.html"), "utf8");
     const article = readFileSync(resolve(root, "dist/posts/101/index.html"), "utf8");
