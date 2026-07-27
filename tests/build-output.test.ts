@@ -49,6 +49,17 @@ describe("static blog build", () => {
     expect(sitemap).not.toContain("/blog/page/2/");
   });
 
+  it("includes code copy and image preview controls on article pages", () => {
+    const article = readFileSync(resolve(root, "dist/posts/101/index.html"), "utf8");
+
+    expect(article).toContain("data-image-lightbox");
+    expect(article).toContain("data-copy-code");
+    expect(article).toContain('target.matches(".prose img")');
+    expect(article).toContain("navigator.clipboard.writeText(code)");
+    expect(article).toContain("external-link-favicon");
+    expect(article).toContain("${target.origin}/favicon.ico");
+  });
+
   it("generates full-text RSS and sitemap output", () => {
     const rss = readFileSync(resolve(root, "dist/rss.xml"), "utf8");
     const sitemap = readFileSync(

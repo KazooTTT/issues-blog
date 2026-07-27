@@ -1,6 +1,7 @@
 ---
 import { siteConfig } from "@/config";
 import Analytics from "@/components/Analytics.astro";
+import ContentEnhancements from "@/components/ContentEnhancements.astro";
 import SocialLinks from "@/components/SocialLinks.astro";
 import { sitePath } from "@/utils/presentation";
 import "@/styles/global.css";
@@ -135,6 +136,7 @@ const articleActive =
         <SocialLinks compact />
       </footer>
     </div>
+    <ContentEnhancements />
     <script is:inline>
       document.querySelector("[data-theme-toggle]")?.addEventListener("click", () => {
         const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";

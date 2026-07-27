@@ -1,0 +1,97 @@
+<dialog class="image-lightbox" data-image-lightbox aria-label="图片预览">
+  <button class="image-lightbox-close" type="button" data-image-lightbox-close aria-label="关闭图片预览">×</button>
+  <img data-image-lightbox-image alt="" />
+</dialog>
+
+<script is:inline>
+  const lightbox = document.querySelector("[data-image-lightbox]");
+  const lightboxImage = document.querySelector("[data-image-lightbox-image]");
+  const lightboxClose = document.querySelector("[data-image-lightbox-close]");
+
+  document.querySelectorAll(".prose pre").forEach((pre) => {
+    if (pre.querySelector("[data-copy-code]")) return;
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "code-copy-button";
+    button.dataset.copyCode = "";
+    button.textContent = "复制";
+    button.setAttribute("aria-label", "复制代码");
+    pre.append(button);
+  });
+
+  const openImage = (image) => {
+    if (!(lightbox instanceof HTMLDialogElement) || !(lightboxImage instanceof HTMLImageElement)) return;
+    lightboxImage.src = image.currentSrc || image.src;
+    lightboxImage.alt = image.alt;
+    lightbox.showModal();
+  };
+
+  document.querySelectorAll(".prose img").forEach((image) => {
+    image.classList.add("zoomable-image");
+    image.tabIndex = 0;
+    image.setAttribute("role", "button");
+    image.setAttribute("aria-label", image.alt ? `放大预览：${image.alt}` : "放大预览图片");
+  });
+
+  document.querySelectorAll(".prose a[href]").forEach((link) => {
+    if (link.querySelector("img")) return;
+
+    try {
+      const target = new URL(link.href, window.location.href);
+      if (!/^https?:$/.test(target.protocol) || target.origin === window.location.origin) return;
+
+      const favicon = document.createElement("img");
+      favicon.className = "external-link-favicon";
+      favicon.src = `${target.origin}/favicon.ico`;
+      favicon.alt = "";
+      favicon.width = 16;
+      favicon.height = 16;
+      favicon.loading = "lazy";
+      favicon.addEventListener("error", () => favicon.remove());
+      link.prepend(favicon);
+      link.classList.add("external-link-with-favicon");
+    } catch {
+      // Invalid URLs stay as ordinary links.
+    }
+  });
+
+  document.addEventListener("click", async (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+
+    const copyButton = target.closest("[data-copy-code]");
+    if (copyButton instanceof HTMLButtonElement) {
+      const code = copyButton.closest("pre")?.querySelector("code")?.textContent ?? "";
+      try {
+        await navigator.clipboard.writeText(code);
+        copyButton.textContent = "已复制";
+      } catch {
+        copyButton.textContent = "复制失败";
+      }
+      window.setTimeout(() => { copyButton.textContent = "复制"; }, 1600);
+      return;
+    }
+
+    if (target instanceof HTMLImageElement && target.matches(".prose img")) {
+      openImage(target);
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    const target = event.target;
+    if (
+      target instanceof HTMLImageElement &&
+      target.matches(".prose img") &&
+      (event.key === "Enter" || event.key === " ")
+    ) {
+      event.preventDefault();
+      openImage(target);
+    }
+  });
+
+  lightboxClose?.addEventListener("click", () => lightbox?.close());
+  lightbox?.addEventListener("click", (event) => {
+    if (event.target === lightbox) lightbox.close();
+  });
+</script>

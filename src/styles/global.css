@@ -209,9 +209,31 @@ main { min-height: 65vh; }
 .prose h2 { margin: 2.4em 0 1em; font-size: 29px; }
 .prose h3 { margin: 2em 0 .8em; font-size: 22px; }
 .prose a { color: var(--accent-dark); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+.prose .external-link-with-favicon { display: inline-flex; align-items: baseline; gap: .32em; }
+.prose .external-link-favicon { width: 1em; height: 1em; flex: 0 0 auto; border-radius: 2px; transform: translateY(.12em); }
 .prose blockquote { margin: 2em 0; padding: 5px 0 5px 25px; border-left: 3px solid var(--accent); color: var(--muted); }
-.prose pre { padding: 22px; overflow: auto; border-radius: 3px; background: #20201d; color: #eee8dc; font-size: 14px; line-height: 1.65; }
+.prose pre { position: relative; padding: 22px; overflow: auto; border-radius: 3px; background: #20201d; color: #eee8dc; font-size: 14px; line-height: 1.65; }
 .prose pre.shiki { background: #20201d !important; }
+.code-copy-button {
+  position: sticky; top: 0; left: 100%; z-index: 1; display: block; width: max-content; margin: -12px -12px -20px 16px;
+  padding: 5px 9px; border: 1px solid #ffffff30; border-radius: 3px; background: #20201de8; color: #eee8dc;
+  font: 600 11px/1.4 var(--sans); cursor: pointer;
+}
+.code-copy-button:hover { border-color: #ffffff70; background: #33332f; }
+.prose .zoomable-image { cursor: zoom-in; }
+.prose .zoomable-image:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+.image-lightbox {
+  width: 100vw; height: 100vh; max-width: none; max-height: none; margin: 0; padding: 40px;
+  border: 0; background: #0f0f0ee8; overflow: hidden;
+}
+.image-lightbox[open] { display: grid; place-items: center; }
+.image-lightbox::backdrop { background: #0f0f0ee8; }
+.image-lightbox img { display: block; max-width: 100%; max-height: 100%; object-fit: contain; }
+.image-lightbox-close {
+  position: fixed; top: 18px; right: 22px; z-index: 1; width: 42px; height: 42px; padding: 0; border: 1px solid #ffffff55;
+  border-radius: 50%; background: #20201dcc; color: white; font: 300 30px/1 var(--sans); cursor: pointer;
+}
+.image-lightbox-close:hover { background: #3b3b37; }
 .prose code:not(pre code) { padding: .12em .35em; background: var(--paper-deep); border-radius: 3px; font-size: .88em; }
 .prose table { width: 100%; border-collapse: collapse; font-family: var(--sans); font-size: 14px; }
 .prose th, .prose td { padding: 10px 12px; border: 1px solid var(--line); text-align: left; }
