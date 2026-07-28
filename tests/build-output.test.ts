@@ -167,10 +167,32 @@ describe("static blog build", () => {
     expect(workouts).toContain('class="workout-calendar"');
     expect(workouts).toContain('aria-describedby="workout-detail-');
     expect(workouts).toContain('role="tooltip"');
+    const tooltip = workouts.match(/role="tooltip"[\s\S]*?<section class="workout-data-section is-summary">[\s\S]*?<\/section>/)?.[0];
+    expect(tooltip).toBeTruthy();
+    expect(tooltip).not.toContain("activityDate");
+    expect(tooltip).not.toContain("durationSeconds");
+    expect(tooltip).not.toContain("trainingEffectLabel");
     expect(workouts).not.toContain("数据快照更新于");
     expect(tools).toContain("Mac mini M2 Pro");
     expect(tools).toContain("软件工具");
     expect(tools).not.toContain("Nikon");
     expect(tools).not.toContain("唯卓仕");
+  });
+
+  it("explains Garmin workout fields without showing the redundant GMT time", () => {
+    const workout = readFileSync(
+      resolve(root, "dist/workouts/612229533/index.html"),
+      "utf8",
+    );
+
+    expect(workout).toContain("本地开始（startTimeLocal）");
+    expect(workout).toContain("Asia/Shanghai");
+    expect(workout).not.toContain("GMT 开始");
+    expect(workout).not.toContain("startTimeGmt");
+    expect(workout).toContain("Garmin 类型（activityType）");
+    expect(workout).toContain("室内有氧（indoor_cardio）");
+    expect(workout).toContain("主要训练效果（trainingEffectLabel）");
+    expect(workout).toContain("速度（SPEED）");
+    expect(workout).toContain("主要训练收益偏向速度");
   });
 });

@@ -563,6 +563,8 @@ button.workout-kind, a.workout-kind { cursor: pointer; }
   padding: 5px 9px; border-radius: 999px; color: var(--accent-dark);
   background: color-mix(in srgb, var(--accent) 12%, transparent); font-size: 10px;
 }
+.workout-training-effect .training-effect-summary { text-align: right; }
+.workout-training-effect .training-effect-summary p { max-width: 480px; margin: 6px 0 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
 .workout-training-effect > div { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .workout-training-effect article { position: relative; padding: 20px; background: var(--paper-deep); }
 .workout-training-effect article strong { display: block; font: 600 34px/1 var(--serif); }

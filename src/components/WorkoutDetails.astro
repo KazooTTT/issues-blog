@@ -24,6 +24,42 @@ const sectionNames: Record<string, string> = {
   _sync: "同步状态",
 };
 
+const activityTypeNames: Record<string, string> = {
+  dance: "舞蹈",
+  hiit: "高强度间歇训练",
+  indoor_cardio: "室内有氧",
+  strength_training: "力量训练",
+  treadmill_running: "跑步机跑步",
+  walking: "步行",
+};
+
+const trainingEffectNames: Record<string, { name: string; description: string }> = {
+  AEROBIC_BASE: {
+    name: "有氧基础",
+    description: "主要帮助建立或维持低强度有氧基础。",
+  },
+  TEMPO: {
+    name: "节奏",
+    description: "主要帮助提升持续进行较高强度运动的能力。",
+  },
+  LACTATE_THRESHOLD: {
+    name: "乳酸阈值",
+    description: "主要帮助提高能够持续维持的高强度水平。",
+  },
+  VO2MAX: {
+    name: "最大摄氧量",
+    description: "主要帮助提升最大摄氧量和高强度有氧能力。",
+  },
+  SPEED: {
+    name: "速度",
+    description: "表示 Garmin 判定这次活动的主要训练收益偏向速度，有助于维持或提升快速、爆发式运动能力。",
+  },
+  ANAEROBIC_CAPACITY: {
+    name: "无氧能力",
+    description: "主要帮助提升短时高强度输出和无氧能力。",
+  },
+};
+
 function formatDuration(totalSeconds: number): string {
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
@@ -37,17 +73,19 @@ function formatNumber(value: number, maximumFractionDigits = 1): string {
   return value.toLocaleString("zh-CN", { maximumFractionDigits });
 }
 
-function detailLabel(value: string): string {
-  return value
-    .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
-    .replaceAll("_", " ")
-    .replace(/^\w/, (letter) => letter.toUpperCase());
+function bilingualLabel(name: string, key: string): string {
+  return `${name}（${key}）`;
+}
+
+function formatEnum(value: string, names: Record<string, string>): string {
+  const translated = names[value];
+  return translated ? `${translated}（${value}）` : value;
 }
 
 function flatten(value: unknown, path: string[] = []): Array<[string, string]> {
   if (value === null || value === undefined) return [];
   if (typeof value !== "object") {
-    return [[path.map(detailLabel).join(" · "), String(value)]];
+    return [[path.join(" · "), String(value)]];
   }
   if (Array.isArray(value)) {
     return value.flatMap((item, index) => flatten(item, [...path, `#${index + 1}`]));
@@ -55,47 +93,51 @@ function flatten(value: unknown, path: string[] = []): Array<[string, string]> {
   return Object.entries(value).flatMap(([key, item]) => flatten(item, [...path, key]));
 }
 
-const allDetails: Array<[string, string | undefined]> = [
-  ["日期", workout.activityDate],
-  ["本地开始", workout.startTimeLocal],
-  ["GMT 开始", workout.startTimeGmt],
-  ["Garmin 类型", workout.activityType],
-  ["总时长", formatDuration(workout.durationSeconds)],
-  ["移动时长", workout.movingDurationSeconds === undefined ? undefined : formatDuration(workout.movingDurationSeconds)],
-  ["经过时长", workout.elapsedDurationSeconds === undefined ? undefined : formatDuration(workout.elapsedDurationSeconds)],
-  ["活动热量", `${formatNumber(workout.caloriesKcal, 0)} kcal`],
-  ["基础代谢热量", workout.bmrCaloriesKcal === undefined ? undefined : `${formatNumber(workout.bmrCaloriesKcal)} kcal`],
-  ["平均心率", workout.averageHeartRateBpm === undefined ? undefined : `${formatNumber(workout.averageHeartRateBpm)} bpm`],
-  ["最高心率", workout.maxHeartRateBpm === undefined ? undefined : `${formatNumber(workout.maxHeartRateBpm)} bpm`],
-  ["距离", workout.distanceMeters === undefined ? undefined : workout.distanceMeters >= 1000 ? `${formatNumber(workout.distanceMeters / 1000, 2)} km` : `${formatNumber(workout.distanceMeters)} m`],
-  ["累计爬升", workout.elevationGainMeters === undefined ? undefined : `${formatNumber(workout.elevationGainMeters)} m`],
-  ["累计下降", workout.elevationLossMeters === undefined ? undefined : `${formatNumber(workout.elevationLossMeters)} m`],
-  ["平均速度", workout.averageSpeedMps === undefined ? undefined : `${formatNumber(workout.averageSpeedMps * 3.6)} km/h`],
-  ["最高速度", workout.maxSpeedMps === undefined ? undefined : `${formatNumber(workout.maxSpeedMps * 3.6)} km/h`],
-  ["平均功率", workout.averagePowerWatts === undefined ? undefined : `${formatNumber(workout.averagePowerWatts)} W`],
-  ["最高功率", workout.maxPowerWatts === undefined ? undefined : `${formatNumber(workout.maxPowerWatts)} W`],
-  ["标准化功率", workout.normalizedPowerWatts === undefined ? undefined : `${formatNumber(workout.normalizedPowerWatts)} W`],
-  ["有氧训练效果", workout.aerobicTrainingEffect === undefined ? undefined : formatNumber(workout.aerobicTrainingEffect)],
-  ["无氧训练效果", workout.anaerobicTrainingEffect === undefined ? undefined : formatNumber(workout.anaerobicTrainingEffect)],
-  ["训练负荷", workout.trainingLoad === undefined ? undefined : formatNumber(workout.trainingLoad)],
-  ["训练效果", workout.trainingEffectLabel],
-  ["平均步频", workout.averageRunningCadenceSpm === undefined ? undefined : `${formatNumber(workout.averageRunningCadenceSpm)} 步/分`],
-  ["最高步频", workout.maxRunningCadenceSpm === undefined ? undefined : `${formatNumber(workout.maxRunningCadenceSpm)} 步/分`],
-  ["总组数", workout.totalSets === undefined ? undefined : formatNumber(workout.totalSets, 0)],
-  ["有效组数", workout.activeSets === undefined ? undefined : formatNumber(workout.activeSets, 0)],
-  ["总次数", workout.totalReps === undefined ? undefined : formatNumber(workout.totalReps, 0)],
-  ["总容量", workout.totalVolume === undefined ? undefined : formatNumber(workout.totalVolume)],
-  ["Garmin ID", workout.externalId],
+const trainingEffect = workout.trainingEffectLabel
+  ? trainingEffectNames[workout.trainingEffectLabel]
+  : undefined;
+const allDetails: Array<[string, string, string | undefined]> = [
+  ["activityDate", "日期", workout.activityDate],
+  ["startTimeLocal", "本地开始", workout.startTimeLocal ? `${workout.startTimeLocal}（Asia/Shanghai）` : undefined],
+  ["activityType", "Garmin 类型", workout.activityType ? formatEnum(workout.activityType, activityTypeNames) : undefined],
+  ["durationSeconds", "总时长", formatDuration(workout.durationSeconds)],
+  ["movingDurationSeconds", "移动时长", workout.movingDurationSeconds === undefined ? undefined : formatDuration(workout.movingDurationSeconds)],
+  ["elapsedDurationSeconds", "经过时长", workout.elapsedDurationSeconds === undefined ? undefined : formatDuration(workout.elapsedDurationSeconds)],
+  ["caloriesKcal", "活动热量", `${formatNumber(workout.caloriesKcal, 0)} kcal`],
+  ["bmrCaloriesKcal", "基础代谢热量", workout.bmrCaloriesKcal === undefined ? undefined : `${formatNumber(workout.bmrCaloriesKcal)} kcal`],
+  ["averageHeartRateBpm", "平均心率", workout.averageHeartRateBpm === undefined ? undefined : `${formatNumber(workout.averageHeartRateBpm)} bpm`],
+  ["maxHeartRateBpm", "最高心率", workout.maxHeartRateBpm === undefined ? undefined : `${formatNumber(workout.maxHeartRateBpm)} bpm`],
+  ["distanceMeters", "距离", workout.distanceMeters === undefined ? undefined : workout.distanceMeters >= 1000 ? `${formatNumber(workout.distanceMeters / 1000, 2)} km` : `${formatNumber(workout.distanceMeters)} m`],
+  ["elevationGainMeters", "累计爬升", workout.elevationGainMeters === undefined ? undefined : `${formatNumber(workout.elevationGainMeters)} m`],
+  ["elevationLossMeters", "累计下降", workout.elevationLossMeters === undefined ? undefined : `${formatNumber(workout.elevationLossMeters)} m`],
+  ["averageSpeedMps", "平均速度", workout.averageSpeedMps === undefined ? undefined : `${formatNumber(workout.averageSpeedMps * 3.6)} km/h`],
+  ["maxSpeedMps", "最高速度", workout.maxSpeedMps === undefined ? undefined : `${formatNumber(workout.maxSpeedMps * 3.6)} km/h`],
+  ["averagePowerWatts", "平均功率", workout.averagePowerWatts === undefined ? undefined : `${formatNumber(workout.averagePowerWatts)} W`],
+  ["maxPowerWatts", "最高功率", workout.maxPowerWatts === undefined ? undefined : `${formatNumber(workout.maxPowerWatts)} W`],
+  ["normalizedPowerWatts", "标准化功率", workout.normalizedPowerWatts === undefined ? undefined : `${formatNumber(workout.normalizedPowerWatts)} W`],
+  ["aerobicTrainingEffect", "有氧训练效果", workout.aerobicTrainingEffect === undefined ? undefined : formatNumber(workout.aerobicTrainingEffect)],
+  ["anaerobicTrainingEffect", "无氧训练效果", workout.anaerobicTrainingEffect === undefined ? undefined : formatNumber(workout.anaerobicTrainingEffect)],
+  ["trainingLoad", "训练负荷", workout.trainingLoad === undefined ? undefined : formatNumber(workout.trainingLoad)],
+  ["trainingEffectLabel", "主要训练效果", workout.trainingEffectLabel ? `${trainingEffect?.name ?? workout.trainingEffectLabel}（${workout.trainingEffectLabel}）` : undefined],
+  ["averageRunningCadenceSpm", "平均步频", workout.averageRunningCadenceSpm === undefined ? undefined : `${formatNumber(workout.averageRunningCadenceSpm)} 步/分`],
+  ["maxRunningCadenceSpm", "最高步频", workout.maxRunningCadenceSpm === undefined ? undefined : `${formatNumber(workout.maxRunningCadenceSpm)} 步/分`],
+  ["totalSets", "总组数", workout.totalSets === undefined ? undefined : formatNumber(workout.totalSets, 0)],
+  ["activeSets", "有效组数", workout.activeSets === undefined ? undefined : formatNumber(workout.activeSets, 0)],
+  ["totalReps", "总次数", workout.totalReps === undefined ? undefined : formatNumber(workout.totalReps, 0)],
+  ["totalVolume", "总容量", workout.totalVolume === undefined ? undefined : formatNumber(workout.totalVolume)],
+  ["externalId", "Garmin ID", workout.externalId],
 ];
 const details = allDetails
-  .filter((detail): detail is [string, string] => detail[1] !== undefined)
-  .filter(([label]) => !summary || ["日期", "总时长", "活动热量", "平均心率", "最高心率", "训练效果"].includes(label));
+  .filter((detail): detail is [string, string, string] => detail[2] !== undefined)
+  .filter(([key]) => !summary || ["activityDate", "durationSeconds", "caloriesKcal", "averageHeartRateBpm", "maxHeartRateBpm", "trainingEffectLabel"].includes(key));
 const trainingSections = summary
   ? []
   : Object.entries(workout.trainingDetails ?? {})
       .filter(([section]) => section !== "heartRateZones")
       .map(([section, value]) => ({
-        title: sectionNames[section] ?? detailLabel(section),
+        title: sectionNames[section]
+          ? bilingualLabel(sectionNames[section], section)
+          : section,
         rows: flatten(value),
       }))
       .filter(({ rows }) => rows.length > 0);
@@ -115,16 +157,16 @@ const totalZoneSeconds = heartRateZones.reduce(
   0,
 );
 const trainingMetrics = [
-  ["有氧效果", workout.aerobicTrainingEffect],
-  ["无氧效果", workout.anaerobicTrainingEffect],
-  ["训练负荷", workout.trainingLoad],
-].filter((metric): metric is [string, number] => metric[1] !== undefined);
+  { key: "aerobicTrainingEffect", label: "有氧效果", value: workout.aerobicTrainingEffect },
+  { key: "anaerobicTrainingEffect", label: "无氧效果", value: workout.anaerobicTrainingEffect },
+  { key: "trainingLoad", label: "训练负荷", value: workout.trainingLoad },
+].filter((metric): metric is { key: string; label: string; value: number } => metric.value !== undefined);
 ---
 
 <section class:list={["workout-data-section", { "is-summary": summary }]}>
   <h4>活动摘要</h4>
   <dl>
-    {details.map(([label, value]) => <div><dt>{label}</dt><dd>{value}</dd></div>)}
+    {details.map(([key, label, value]) => <div><dt>{summary ? label : bilingualLabel(label, key)}</dt><dd>{value}</dd></div>)}
   </dl>
 </section>
 {!summary && (
@@ -133,14 +175,19 @@ const trainingMetrics = [
       <section class="workout-training-effect">
         <header>
           <h2>训练效果</h2>
-          {workout.trainingEffectLabel && <span>{workout.trainingEffectLabel}</span>}
+          {workout.trainingEffectLabel && (
+            <div class="training-effect-summary">
+              <span>{trainingEffect?.name ?? workout.trainingEffectLabel}（{workout.trainingEffectLabel}）</span>
+              {trainingEffect && <p>{trainingEffect.description}</p>}
+            </div>
+          )}
         </header>
         <div>
-          {trainingMetrics.map(([label, value]) => (
+          {trainingMetrics.map(({ key, label, value }) => (
             <article>
               <strong>{formatNumber(value)}</strong>
-              <span>{label}</span>
-              {label !== "训练负荷" && (
+              <span>{bilingualLabel(label, key)}</span>
+              {key !== "trainingLoad" && (
                 <i style={`--effect: ${Math.min(value / 5, 1) * 100}%`}></i>
               )}
             </article>
@@ -154,10 +201,10 @@ const trainingMetrics = [
         <header>
           <div>
             <span class="eyebrow">HEART RATE</span>
-            <h2>心率区间</h2>
+            <h2>心率区间（heartRateZones）</h2>
           </div>
           <p>
-            平均 {workout.averageHeartRateBpm ?? "—"} · 最高 {workout.maxHeartRateBpm ?? "—"} bpm
+            平均（averageHeartRateBpm） {workout.averageHeartRateBpm ?? "—"} · 最高（maxHeartRateBpm） {workout.maxHeartRateBpm ?? "—"} bpm
           </p>
         </header>
         <div class="workout-zone-stack" aria-label="各心率区间时长占比">
