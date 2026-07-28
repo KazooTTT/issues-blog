@@ -473,7 +473,7 @@ button.workout-kind, a.workout-kind { cursor: pointer; }
 .workout-calendar-day.is-empty { background: color-mix(in srgb, var(--paper-deep) 55%, transparent); }
 .workout-calendar-marks { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
 .workout-calendar-marker { position: relative; display: inline-flex; }
-.workout-calendar-marks .workout-kind { flex-basis: 23px; width: 23px; height: 23px; font-size: 8px; }
+.workout-calendar-marks .workout-kind { flex-basis: 32px; width: 32px; height: 32px; font-size: 11px; }
 .workout-calendar-detail {
   position: absolute; z-index: 5; left: 50%; bottom: calc(100% + 10px);
   display: grid; width: min(340px, calc(100vw - 42px)); padding: 15px 16px;
