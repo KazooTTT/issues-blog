@@ -195,4 +195,25 @@ describe("static blog build", () => {
     expect(workout).toContain("速度（SPEED）");
     expect(workout).toContain("主要训练收益偏向速度");
   });
+
+  it("keeps workout tooltips pointed at their trigger while avoiding viewport edges", () => {
+    const workoutPage = readFileSync(resolve(root, "src/pages/workouts.astro"), "utf8");
+    const styles = readFileSync(resolve(root, "src/styles/global.css"), "utf8");
+
+    expect(workoutPage).toContain('event.clientX');
+    expect(workoutPage).toContain('"--tooltip-anchor-x"');
+    expect(workoutPage).toContain('"--tooltip-shift-x"');
+    expect(workoutPage).toContain('"--tooltip-arrow-x"');
+    expect(workoutPage).toContain('tooltipRect.top < viewportGap ? "bottom" : "top"');
+    expect(workoutPage).toContain(
+      'event.target.closest(".workout-calendar-detail")',
+    );
+    expect(styles).toContain("left: var(--tooltip-arrow-x, 50%)");
+    expect(styles).not.toContain(
+      ".workout-calendar-day:nth-child(7n + 1) .workout-calendar-detail",
+    );
+    expect(styles).not.toContain(
+      ".workout-calendar-day:nth-child(7n) .workout-calendar-detail",
+    );
+  });
 });

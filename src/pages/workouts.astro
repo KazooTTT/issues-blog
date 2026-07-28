@@ -356,6 +356,60 @@ const calendarMonths = [...new Set(workouts.map(({ activityDate }) => activityDa
     });
   });
 
+  const tooltipTriggers = document.querySelectorAll<HTMLElement>(
+    ".workout-row, .workout-calendar-marker",
+  );
+  const viewportGap = 12;
+
+  function positionWorkoutTooltip(trigger: HTMLElement, clientX?: number) {
+    const tooltip =
+      trigger.querySelector<HTMLElement>(".workout-calendar-detail");
+    if (!tooltip) return;
+
+    const triggerRect = trigger.getBoundingClientRect();
+    const anchorClientX = clientX ?? triggerRect.left + triggerRect.width / 2;
+    const anchorX = anchorClientX - triggerRect.left;
+    tooltip.style.setProperty("--tooltip-anchor-x", `${anchorX}px`);
+    tooltip.style.setProperty("--tooltip-shift-x", "0px");
+    tooltip.style.setProperty("--tooltip-arrow-x", "50%");
+    tooltip.dataset.placement = "top";
+
+    const tooltipRect = tooltip.getBoundingClientRect();
+    const shiftX =
+      tooltipRect.left < viewportGap
+        ? viewportGap - tooltipRect.left
+        : tooltipRect.right > window.innerWidth - viewportGap
+          ? window.innerWidth - viewportGap - tooltipRect.right
+          : 0;
+    const arrowX = Math.min(
+      tooltipRect.width - 14,
+      Math.max(14, tooltipRect.width / 2 - shiftX),
+    );
+
+    tooltip.style.setProperty("--tooltip-shift-x", `${shiftX}px`);
+    tooltip.style.setProperty("--tooltip-arrow-x", `${arrowX}px`);
+    tooltip.dataset.placement =
+      tooltipRect.top < viewportGap ? "bottom" : "top";
+  }
+
+  tooltipTriggers.forEach((trigger) => {
+    trigger.addEventListener("pointerenter", (event) => {
+      positionWorkoutTooltip(trigger, event.clientX);
+    });
+    trigger.addEventListener("pointermove", (event) => {
+      if (
+        event.target instanceof Element &&
+        event.target.closest(".workout-calendar-detail")
+      ) {
+        return;
+      }
+      positionWorkoutTooltip(trigger, event.clientX);
+    });
+    trigger.addEventListener("focusin", () => {
+      positionWorkoutTooltip(trigger);
+    });
+  });
+
   const todayInShanghai = new Intl.DateTimeFormat("en-CA", {
     timeZone: "Asia/Shanghai",
     year: "numeric",

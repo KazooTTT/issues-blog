@@ -432,8 +432,11 @@ button.workout-kind, a.workout-kind { cursor: pointer; }
   bottom: calc(100% + 10px);
 }
 .workout-row:hover .workout-row-detail,
-.workout-row:focus-within .workout-row-detail {
-  opacity: 1; visibility: visible; pointer-events: auto; transform: translate(-50%, 0);
+.workout-row:focus-within .workout-row-detail,
+.workout-calendar-marker:hover .workout-calendar-detail,
+.workout-calendar-marker:focus-within .workout-calendar-detail {
+  opacity: 1; visibility: visible; pointer-events: auto;
+  transform: translate(calc(-50% + var(--tooltip-shift-x, 0px)), 0);
 }
 .workout-calendar { display: grid; gap: 34px; }
 .workout-calendar-month { border: 1px solid var(--line); background: var(--card); }
@@ -475,20 +478,27 @@ button.workout-kind, a.workout-kind { cursor: pointer; }
 .workout-calendar-marker { position: relative; display: inline-flex; }
 .workout-calendar-marks .workout-kind { flex-basis: 32px; width: 32px; height: 32px; font-size: 11px; }
 .workout-calendar-detail {
-  position: absolute; z-index: 5; left: 50%; bottom: calc(100% + 10px);
+  position: absolute; z-index: 5;
+  left: var(--tooltip-anchor-x, 50%); bottom: calc(100% + 10px);
   display: grid; width: min(340px, calc(100vw - 42px)); padding: 15px 16px;
   border: 1px solid var(--line);
   border-radius: 8px; color: var(--ink); background: var(--paper);
   box-shadow: 0 12px 34px rgb(46 38 30 / .16);
   font: 400 11px/1.5 var(--sans); text-align: left;
   opacity: 0; visibility: hidden; pointer-events: none;
-  transform: translate(-50%, 5px);
+  transform: translate(calc(-50% + var(--tooltip-shift-x, 0px)), 5px);
   transition: opacity .16s ease, transform .16s ease, visibility .16s;
 }
 .workout-calendar-detail::after {
-  position: absolute; top: 100%; left: 50%; width: 8px; height: 8px;
+  position: absolute; top: 100%; left: var(--tooltip-arrow-x, 50%); width: 8px; height: 8px;
   border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
   background: var(--paper); content: ""; transform: translate(-50%, -4px) rotate(45deg);
+}
+.workout-calendar-detail[data-placement="bottom"] {
+  top: calc(100% + 10px); bottom: auto;
+}
+.workout-calendar-detail[data-placement="bottom"]::after {
+  top: 0; transform: translate(-50%, -5px) rotate(225deg);
 }
 .workout-calendar-detail strong { margin-bottom: 3px; font: 600 15px/1.3 var(--serif); }
 .workout-calendar-detail-scroll { overflow: auto; max-height: min(410px, 65vh); margin-top: 8px; }
@@ -507,27 +517,8 @@ button.workout-kind, a.workout-kind { cursor: pointer; }
 .workout-calendar-detail dd {
   margin: 0; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; text-align: right;
 }
-.workout-calendar-marker:hover .workout-calendar-detail,
-.workout-calendar-marker:focus-within .workout-calendar-detail {
-  opacity: 1; visibility: visible; pointer-events: auto; transform: translate(-50%, 0);
-}
 .workout-calendar-marker:hover,
 .workout-calendar-marker:focus-within { z-index: 10; }
-.workout-calendar-day:nth-child(7n + 1) .workout-calendar-detail {
-  left: -6px; transform: translate(0, 5px);
-}
-.workout-calendar-day:nth-child(7n + 1) .workout-calendar-marker:hover .workout-calendar-detail,
-.workout-calendar-day:nth-child(7n + 1) .workout-calendar-marker:focus-within .workout-calendar-detail {
-  transform: translate(0, 0);
-}
-.workout-calendar-day:nth-child(7n) .workout-calendar-detail {
-  right: -6px; left: auto; transform: translate(0, 5px);
-}
-.workout-calendar-day:nth-child(7n) .workout-calendar-detail::after { right: 12px; left: auto; }
-.workout-calendar-day:nth-child(7n) .workout-calendar-marker:hover .workout-calendar-detail,
-.workout-calendar-day:nth-child(7n) .workout-calendar-marker:focus-within .workout-calendar-detail {
-  transform: translate(0, 0);
-}
 .workout-calendar-agenda { display: none; }
 .workout-detail-page { padding: 72px 0 110px; }
 .workout-detail-back {
