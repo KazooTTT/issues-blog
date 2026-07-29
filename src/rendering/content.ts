@@ -1,13 +1,19 @@
 import rehypeRaw from "rehype-raw";
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
-import rehypeShiki from "@shikijs/rehype";
+import rehypeShikiFromHighlighter from "@shikijs/rehype/core";
 import rehypeStringify from "rehype-stringify";
 import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
+import { createHighlighter } from "shiki";
 import { unified } from "unified";
 
 import type { SourceComment } from "@/domain/types";
+
+const highlighter = await createHighlighter({
+  langs: [],
+  themes: ["github-dark-default"],
+});
 
 const githubStyleSchema = {
   ...defaultSchema,
@@ -167,7 +173,7 @@ export async function renderMarkdownDocument(
     .use(rehypeSanitize, githubStyleSchema)
     .use(() => collectExternalReferences(references, siteOrigin))
     .use(prepareMermaidDiagrams)
-    .use(rehypeShiki, {
+    .use(rehypeShikiFromHighlighter, highlighter, {
       addLanguageClass: true,
       lazy: true,
       onError() {
