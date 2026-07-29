@@ -111,6 +111,10 @@ describe("static blog build", () => {
     expect(styles).toMatch(
       /\.prose p:has\(> img:only-child\) > img,[^{]*\{[^}]*border-radius:/s,
     );
+    expect(styles).toContain(
+      ".prose a:not(.external-link-with-favicon):has(> img:only-child)",
+    );
+    expect(styles).not.toContain(".prose a:has(> img:only-child)");
     expect(styles).not.toContain(".prose img:not(.external-link-favicon)");
   });
 

@@ -217,15 +217,15 @@ main { min-height: 65vh; }
 .prose a { color: var(--accent-dark); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
 .prose .external-link-favicon { display: inline-block; width: 1em; height: 1em; margin-right: .32em; border-radius: 2px; vertical-align: -.12em; }
 .prose p:has(> img:only-child) > img,
-.prose p:has(> a:only-child > img:only-child) > a > img {
+.prose p:has(> a:only-child:not(.external-link-with-favicon) > img:only-child) > a > img {
   display: block; width: auto; max-width: 100%; height: auto;
   margin-inline: auto;
   border: 1px solid var(--line); border-radius: 8px;
   background: var(--paper-deep); box-shadow: 0 14px 40px rgba(59, 45, 30, .12);
 }
 .prose p:has(> img:only-child),
-.prose p:has(> a:only-child > img:only-child) { margin-block: 2.2em; }
-.prose a:has(> img:only-child) {
+.prose p:has(> a:only-child:not(.external-link-with-favicon) > img:only-child) { margin-block: 2.2em; }
+.prose a:not(.external-link-with-favicon):has(> img:only-child) {
   display: block; width: fit-content; max-width: 100%; margin-inline: auto;
 }
 .prose blockquote { margin: 2em 0; padding: 5px 0 5px 25px; border-left: 3px solid var(--accent); color: var(--muted); }
