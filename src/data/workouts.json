@@ -1,5 +1,146 @@
 [
   {
+    "externalId": "622084713",
+    "name": "力量训练",
+    "activityDate": "2026-07-29",
+    "durationSeconds": 3423,
+    "caloriesKcal": 180,
+    "startTimeLocal": "2026-07-29 07:47:18",
+    "startTimeGmt": "2026-07-28 23:47:18",
+    "activityType": "strength_training",
+    "movingDurationSeconds": 3423.159912109375,
+    "elapsedDurationSeconds": 3423.159912109375,
+    "distanceMeters": 0.0,
+    "averageSpeedMps": 0.0,
+    "averageHeartRateBpm": 115.0,
+    "maxHeartRateBpm": 146.0,
+    "bmrCaloriesKcal": 62.0,
+    "aerobicTrainingEffect": 1.100000023841858,
+    "anaerobicTrainingEffect": 0.0,
+    "trainingLoad": 16.803421020507812,
+    "trainingEffectLabel": "AEROBIC_BASE",
+    "totalSets": 1,
+    "activeSets": 1,
+    "totalReps": 0,
+    "trainingDetails": {
+      "heartRateZones": [
+        {
+          "zoneNumber": 1,
+          "secsInZone": 1517.607,
+          "zoneLowBoundary": 97
+        },
+        {
+          "zoneNumber": 2,
+          "secsInZone": 1339.744,
+          "zoneLowBoundary": 116
+        },
+        {
+          "zoneNumber": 3,
+          "secsInZone": 282.587,
+          "zoneLowBoundary": 135
+        },
+        {
+          "zoneNumber": 4,
+          "secsInZone": 0.0,
+          "zoneLowBoundary": 154
+        },
+        {
+          "zoneNumber": 5,
+          "secsInZone": 0.0,
+          "zoneLowBoundary": 174
+        }
+      ],
+      "splits": {
+        "activityId": 622084713,
+        "lapDTOs": [
+          {
+            "startTimeGMT": "2026-07-28T23:47:18.0",
+            "distance": 0.0,
+            "duration": 3423.16,
+            "movingDuration": 3423.16,
+            "elapsedDuration": 3423.16,
+            "averageSpeed": 0.0,
+            "averageMovingSpeed": 0.0,
+            "calories": 180.0,
+            "bmrCalories": 62.0,
+            "averageHR": 115.0,
+            "maxHR": 146.0,
+            "trainingEffect": 1.100000023841858,
+            "waterEstimated": 678.0,
+            "lapIndex": 1,
+            "lengthDTOs": [],
+            "connectIQMeasurement": []
+          }
+        ],
+        "eventDTOs": [
+          {
+            "startTimeGMT": "2026-07-28T23:47:17.0",
+            "startTimeGMTDoubleValue": 1785282437000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-07-28T23:47:18.0",
+            "startTimeGMTDoubleValue": 1785282438000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          }
+        ]
+      },
+      "typedSplits": {
+        "activityId": 622084713,
+        "activityUUID": {
+          "uuid": "f89ea137-0c03-4b2c-bfc4-122002e0b4b4"
+        },
+        "splits": []
+      },
+      "splitSummaries": {
+        "activityId": 622084713,
+        "activityUUID": {
+          "uuid": "f89ea137-0c03-4b2c-bfc4-122002e0b4b4"
+        },
+        "splitSummaries": []
+      },
+      "exerciseSets": {
+        "activityId": 622084713,
+        "exerciseSets": [
+          {
+            "exercises": [
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 99.609375
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              }
+            ],
+            "duration": 3423.16,
+            "repetitionCount": 0,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-07-28T23:47:18.0",
+            "wktStepIndex": null,
+            "messageIndex": 0
+          }
+        ]
+      }
+    }
+  },
+  {
     "externalId": "621862134",
     "name": "舞蹈健身",
     "activityDate": "2026-07-28",
