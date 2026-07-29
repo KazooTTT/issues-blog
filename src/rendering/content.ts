@@ -1,10 +1,10 @@
 import rehypeRaw from "rehype-raw";
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
+import rehypeShiki from "@shikijs/rehype";
 import rehypeStringify from "rehype-stringify";
 import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
-import { codeToHast } from "shiki";
 import { unified } from "unified";
 
 import type { SourceComment } from "@/domain/types";
@@ -31,6 +31,7 @@ interface HastNode {
   value?: string;
   properties?: {
     className?: string[];
+    dataLanguage?: string;
     href?: string;
   };
   children?: HastNode[];
@@ -43,42 +44,67 @@ function textContent(node: MarkdownNode): string {
   return (node.children ?? []).map(textContent).join("");
 }
 
-function highlightCodeBlocks() {
-  return async (tree: HastNode) => {
-    async function visit(node: HastNode): Promise<void> {
+function prepareMermaidDiagrams() {
+  return (tree: HastNode) => {
+    function visit(node: HastNode): void {
       if (
         node.tagName === "pre" &&
         node.children?.length === 1 &&
-        node.children[0].tagName === "code"
+        node.children[0].tagName === "code" &&
+        node.children[0].properties?.className?.includes("language-mermaid")
       ) {
-        const code = node.children[0];
-        const languageClass = code.properties?.className?.find((className) =>
+        const source = textContent(node.children[0]);
+        node.tagName = "div";
+        node.properties = { className: ["mermaid-diagram"] };
+        node.children = [{ type: "text", value: source }];
+        return;
+      }
+
+      node.children?.forEach(visit);
+    }
+
+    visit(tree);
+  };
+}
+
+const languageLabels: Record<string, string> = {
+  bash: "Shell",
+  css: "CSS",
+  html: "HTML",
+  js: "JavaScript",
+  javascript: "JavaScript",
+  json: "JSON",
+  jsx: "JSX",
+  markdown: "Markdown",
+  md: "Markdown",
+  sh: "Shell",
+  shell: "Shell",
+  ts: "TypeScript",
+  tsx: "TSX",
+  yaml: "YAML",
+  yml: "YAML",
+};
+
+function labelCodeLanguages() {
+  return (tree: HastNode) => {
+    function visit(node: HastNode): void {
+      if (node.tagName === "pre") {
+        const code = node.children?.find((child) => child.tagName === "code");
+        const languageClass = code?.properties?.className?.find((className) =>
           className.startsWith("language-"),
         );
         const language = languageClass?.slice("language-".length);
 
         if (language) {
-          try {
-            const highlighted = (await codeToHast(textContent(code), {
-              lang: language,
-              theme: "github-dark-default",
-            })) as HastNode;
-            const highlightedPre = highlighted.children?.[0];
-
-            if (highlightedPre) {
-              Object.assign(node, highlightedPre);
-              return;
-            }
-          } catch {
-            // Unsupported language labels remain readable as plain code.
-          }
+          node.properties ??= {};
+          node.properties.dataLanguage = languageLabels[language] ?? language;
         }
       }
 
-      await Promise.all((node.children ?? []).map(visit));
+      node.children?.forEach(visit);
     }
 
-    await visit(tree);
+    visit(tree);
   };
 }
 
@@ -140,7 +166,26 @@ export async function renderMarkdownDocument(
     .use(rehypeRaw)
     .use(rehypeSanitize, githubStyleSchema)
     .use(() => collectExternalReferences(references, siteOrigin))
-    .use(highlightCodeBlocks)
+    .use(prepareMermaidDiagrams)
+    .use(rehypeShiki, {
+      addLanguageClass: true,
+      lazy: true,
+      onError() {
+        // Unknown language labels remain readable as plain code blocks.
+      },
+      theme: "github-dark-default",
+      transformers: [
+        {
+          name: "issues-blog:code-language-label",
+          pre(node) {
+            const language = String(this.options.lang);
+            node.properties.dataLanguage =
+              languageLabels[language] ?? language;
+          },
+        },
+      ],
+    })
+    .use(labelCodeLanguages)
     .use(rehypeStringify)
     .process(markdown);
 

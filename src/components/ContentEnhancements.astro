@@ -3,6 +3,40 @@
   <img data-image-lightbox-image alt="" />
 </dialog>
 
+<script>
+  const diagrams = Array.from(
+    document.querySelectorAll<HTMLElement>(".mermaid-diagram"),
+  );
+
+  if (diagrams.length > 0) {
+    const { default: mermaid } = await import("mermaid");
+    mermaid.initialize({
+      startOnLoad: false,
+      securityLevel: "strict",
+      theme: document.documentElement.dataset.theme === "dark" ? "dark" : "neutral",
+    });
+
+    await Promise.all(
+      diagrams.map(async (diagram, index) => {
+        const source = diagram.textContent ?? "";
+        try {
+          const { svg, bindFunctions } = await mermaid.render(
+            `mermaid-diagram-${index}`,
+            source,
+          );
+          diagram.innerHTML = svg;
+          diagram.setAttribute("role", "img");
+          diagram.setAttribute("aria-label", "流程图");
+          bindFunctions?.(diagram);
+        } catch {
+          diagram.classList.add("mermaid-diagram-error");
+          diagram.textContent = source;
+        }
+      }),
+    );
+  }
+</script>
+
 <script is:inline>
   const lightbox = document.querySelector("[data-image-lightbox]");
   const lightboxImage = document.querySelector("[data-image-lightbox-image]");

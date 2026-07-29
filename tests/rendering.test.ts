@@ -44,8 +44,24 @@ still readable
     expect(html).toContain('class="shiki github-dark-default"');
     expect(html).toContain("<span");
     expect(html).toContain("const");
+    expect(html).toContain('data-language="TypeScript"');
     expect(html).toContain('class="language-made-up-language"');
+    expect(html).toContain('data-language="made-up-language"');
     expect(html).toContain("still readable");
+  });
+
+  it("marks Mermaid fences for client-side diagram rendering", async () => {
+    const html = await renderMarkdown(`
+\`\`\`mermaid
+sequenceDiagram
+  Page->>Detail: 请求服务端详情
+\`\`\`
+`);
+
+    expect(html).toContain('<div class="mermaid-diagram">');
+    expect(html).toContain("sequenceDiagram");
+    expect(html).toContain("Page->>Detail: 请求服务端详情");
+    expect(html).not.toContain("language-mermaid");
   });
 
   it("derives a featured excerpt from the first prose paragraph", () => {

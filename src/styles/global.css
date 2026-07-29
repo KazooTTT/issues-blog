@@ -229,8 +229,31 @@ main { min-height: 65vh; }
   display: block; width: fit-content; max-width: 100%; margin-inline: auto;
 }
 .prose blockquote { margin: 2em 0; padding: 5px 0 5px 25px; border-left: 3px solid var(--accent); color: var(--muted); }
-.prose pre { position: relative; padding: 22px; overflow: auto; border-radius: 3px; background: #20201d; color: #eee8dc; font-size: 14px; line-height: 1.65; }
+.prose pre { position: relative; padding: 42px 22px 22px; overflow: auto; border-radius: 3px; background: #20201d; color: #eee8dc; font-size: 14px; line-height: 1.65; }
 .prose pre.shiki { background: #20201d !important; }
+.prose pre[data-language]::before {
+  position: absolute;
+  top: 12px;
+  left: 22px;
+  color: #eee8dc99;
+  content: attr(data-language);
+  font: 600 11px/1.4 var(--sans);
+  letter-spacing: .04em;
+}
+.prose .mermaid-diagram {
+  margin: 2.2em 0;
+  padding: 22px;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: var(--card);
+  font-family: var(--sans);
+  line-height: 1.5;
+  text-align: center;
+  white-space: pre-wrap;
+}
+.prose .mermaid-diagram svg { display: block; width: auto; max-width: 100%; height: auto; margin-inline: auto; }
+.prose .mermaid-diagram-error { text-align: left; }
 .code-copy-button {
   position: sticky; top: 0; left: 100%; z-index: 1; float: right; width: max-content; margin: -12px -12px 0 16px;
   padding: 5px 9px; border: 1px solid #ffffff30; border-radius: 3px; background: #20201de8; color: #eee8dc;
