@@ -26,20 +26,11 @@ warnings.forEach((warning) => console.warn(`[content] ${warning}`));
     <AvatarOrbit />
   </section>
 
-  <section class="home-section social-section">
-    <div class="section-heading">
-      <h2>在别处找到我</h2>
-      <span>Elsewhere</span>
-    </div>
-    <p class="social-intro">照片、短消息、视频与代码，散落在互联网的不同角落。</p>
-    <SocialLinks />
-  </section>
-
   {featured.length > 0 && (
     <section class="home-section">
       <div class="section-heading">
-        <h2>精选文章</h2>
-        <span>Featured</span>
+        <h2>从这里开始</h2>
+        <span>Start here</span>
       </div>
       <FeaturedPosts posts={featured} />
     </section>
@@ -52,6 +43,15 @@ warnings.forEach((warning) => console.warn(`[content] ${warning}`));
     </div>
     <PostList posts={latestPosts} />
     <a class="view-all" href={sitePath("/archive/")}>查看全部文章 →</a>
+  </section>
+
+  <section class="home-section social-section">
+    <div class="section-heading">
+      <h2>在别处找到我</h2>
+      <span>Elsewhere</span>
+    </div>
+    <p class="social-intro">照片、短消息、视频与代码，散落在互联网的不同角落。</p>
+    <SocialLinks />
   </section>
 
 </BaseLayout>
