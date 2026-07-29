@@ -1,0 +1,36 @@
+{
+  "number": 79,
+  "title": "Thino 页面触发 Linter 自动插入 Frontmatter 的排查与解决",
+  "body": "## 现象\n\n在 Obsidian 的 Thino 页面中，进入页面或按下 `Cmd+S` 后，输入框中会自动加上如下 frontmatter：\n\n```yaml\n---\ntitle:\npublished:\ndate: \ntags: []\ncategory:\nslug:\ndescription: \ndate_created: 20260603\n---\n```\n\n最开始看起来像是 Thino 写入日记时触发了格式化，因为 Thino 的内容确实存放在日记里。\n\n## 第一层原因\n\n直接原因来自 Obsidian Linter：\n\n- `lintOnSave` 开启。\n- `lintOnFileChange` 开启。\n- `insert-yaml-attributes` 规则开启，会插入 `date/tags/category/slug/published/description/title`。\n- `yaml-timestamp` 规则开启，会补 `date_created`。\n\n因此，只要 Linter 认为当前文件应该被 lint，就会把这套博客 frontmatter 补进去。\n\n## 为什么忽略日记目录没用\n\n一开始尝试把 `02-日记` 加到 Linter 的 `foldersToIgnore`。这个配置本身是正确的，Linter 的匹配逻辑是：\n\n```js\nfile.path.startsWith(normalizePath(folder) + \"/\")\n```\n\n也就是说，`02-日记/2026/06/2026-06-29.md` 会被正确忽略。\n\n但这个方案没有解决问题，因为 Thino 页面在 Linter 眼里不是日记文件。\n\n## 真正根因\n\n临时调试插件记录到的关键运行时状态是：\n\n```text\nactiveView.type = thino_view\nactiveFile.path = index.md\nshouldIgnoreActiveFile = false\n```\n\n也就是说：\n\n- 当前视图确实是 Thino 的 `thino_view`。\n- 但 Obsidian/Linter 暴露出来的 active file 是根目录 `index.md`。\n- Linter 看到的是 `index.md`，不是日记文件。\n- 所以忽略 `02-日记` 拦不住。\n\n这解释了两个现象：\n\n- 按 `Cmd+S` 时，Linter 会 lint `index.md`。\n- 进入 Thino 页面时，`active-leaf-change` / `editor-change` 也可能触发 Linter 处理 `index.md`。\n\n## 最终方案\n\n新增一个极小的本地 Obsidian 插件：\n\n```text\n.obsidian/plugins/thino-linter-guard/\n```\n\n插件已发布到 GitHub：\n\nhttps://github.com/KazooTTT/thino-linter-guard\n\n插件入口：\n\n```text\n.obsidian/plugins/thino-linter-guard/main.js\n```\n\n核心思路：\n\n1. 当 Obsidian 当前处在 Thino 页面时（active view 是 `thino_view`），把这次 Linter 判断视为“应跳过”，避免它处理 Thino 暴露出来的虚拟 `index.md`。\n2. 当 Obsidian 当前处在 Thino 页面时，且执行 `editor:save-file` 时，临时关闭 Linter，保存结束后恢复。\n\n这样可以同时覆盖：\n\n- 进入 Thino 页面时触发的 Linter 链路。\n- 在 Thino 页面按 `Cmd+S` 时触发的保存链路。\n\n普通 Markdown 文件不受影响，仍然会正常走 Linter。\n\n## 当前插件代码要点\n\n```js\npatchShouldIgnoreFile() {\n  const linter = this.app.plugins?.plugins?.[\"obsidian-linter\"];\n  if (!linter || typeof linter.shouldIgnoreFile !== \"function\") return;\n\n  const original = linter.shouldIgnoreFile;\n  const plugin = this;\n\n  const wrapped = function (file, ...args) {\n    if (plugin.isActiveThinoView()) return true;\n    return original.call(this, file, ...args);\n  };\n\n  linter.shouldIgnoreFile = wrapped;\n}\n```\n\n```js\nisActiveThinoView() {\n  return this.app.workspace.activeLeaf?.view?.getViewType?.() === \"thino_view\";\n}\n```\n\n## 启用方式\n\n确保 `.obsidian/community-plugins.json` 中包含：\n\n```json\n\"thino-linter-guard\"\n```\n\n修改插件后，需要重载 `Thino Linter Guard` 插件或重启 Obsidian。\n\n<!-- issues-blog:source=d1:738af6c0-1aea-4d9c-b772-d2f8ecf20586 -->\n<!-- issues-blog:published-at=2026-06-29T00:00:00.000Z -->\n",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/79",
+  "state": "OPEN",
+  "createdAt": "2026-07-24T10:23:29Z",
+  "updatedAt": "2026-07-24T10:23:29Z",
+  "author": "KazooTTT",
+  "labels": [
+    "blog:publish",
+    "obsidian",
+    "linter",
+    "thino"
+  ],
+  "labelEvents": [
+    {
+      "label": "blog:publish",
+      "createdAt": "2026-07-24T10:23:30Z"
+    },
+    {
+      "label": "obsidian",
+      "createdAt": "2026-07-24T10:23:30Z"
+    },
+    {
+      "label": "linter",
+      "createdAt": "2026-07-24T10:23:30Z"
+    },
+    {
+      "label": "thino",
+      "createdAt": "2026-07-24T10:23:30Z"
+    }
+  ],
+  "reactions": [],
+  "comments": []
+}

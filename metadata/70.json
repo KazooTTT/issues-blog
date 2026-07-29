@@ -1,0 +1,31 @@
+{
+  "number": 70,
+  "title": "使用GitHub Actions自动发布npm包需要注意的点",
+  "body": "\n以我经常使用的 antfu 的 <https://github.com/antfu/starter-ts> 这个 template 为例，这个项目的发版工作流是：\n\n```yml\nname: Release\n\non:\n  push:\n    tags:\n      - 'v*'\n\njobs:\n  release:\n    uses: sxzz/workflows/.github/workflows/release.yml@v1\n    with:\n      publish: true\n    permissions:\n      contents: write\n      id-token: write\n```\n\n<https://github.com/sxzz/workflows/blob/v1/.github/workflows/release.yml> 这个工作流具体的内容是：\n\n```yml\nname: Release\n\non:\n  workflow_call:\n    inputs:\n      publish:\n        required: false\n        type: boolean\n        default: false\n      build:\n        required: false\n        type: string\n        default: ''\n\njobs:\n  release:\n    name: Release\n    runs-on: ubuntu-latest\n\n    permissions:\n      contents: write\n      id-token: write\n\n    steps:\n      - name: Setup JS\n        uses: sxzz/workflows/setup-js@v1\n        with:\n          fetch-all: true\n\n      - name: Generate GitHub Changelog\n        run: pnpx changelogithub\n        continue-on-error: true\n        env:\n          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n\n      - name: Build\n        run: ${{ inputs.build }}\n        if: ${{ inputs.build && inputs.publish }}\n\n      - name: Publish to NPM\n        run: pnpm -r publish --access public --no-git-checks\n        if: ${{ inputs.publish }}\n```\n\n完成了对比版本 tag 之间根据 commit msg 生成 changelog 、npm 发版的操作。\n\n在 <https://github.com/antfu/starter-ts/blob/main/README.md> 有以下提示：\n\n![IMG-7BF0639551873F6F24C0419B456950D2.png](<https://pictures.kazoottt.top/2025/12/20251210-7bf0639551873f6f24c0419b456950d2.png>)\n\n我们编写好了想要发布的发布的包之后,需要手动 npm publish 一下。\n\n## 注意点 1：包名与权限配置\n\npackage.json 中的 name 就是我们的 npm 包名，不允许和其他包重复。并且即使没有重复也可能有 npm 不接受的关键词。\n\n> **引用自 npm 发包失败的原因:**\n\n### Npm 发包失败的原因\n\n#### 可能的原因\n\n1. 当前的账号没有发包权限。（比如没有某个包或者某个 scope 的权限）\n2. 当前的包名不符合规范。（需要 URL-safe characters）\n3. 当前的包名是屏蔽词。（例如 download\n4. 可能是当前的 npm 设置了镜像地址，而不是原始的 npm 地址，导致 login 的时候无法登录从而无法发布。解决方法就是在发布的时候先切换为原始的 npm 地址，再发布。\n\n// 吐槽一下，npm 的 cli 给的信息很多都是无效信息，有时候很难从中知道到底是哪里有问题\n\n#### Npm 包名屏蔽词\n\n1. download (我替换成 downloader 之后才成功发布）\n\n#### 参考\n\n[\\[BUG\\] npm publish get 400 Bad Request without any useful information · Issue #6090 · npm/cli · GitHub](<https://github.com/npm/cli/issues/6090>)\n\n## 注意点 2\n\n如果你之前配置过 npm 的镜像源，此时要发布到 npm 上，则需要切换回 npm 原始的源。\n\n### 方法 1：安装 nrm\n\n```shell\nnpm install -g nrm\n\nnrm use npm\n\n# 发布完之后可以切换回镜像源\nnrm use taobao\n```\n\n### 方法 2：手动切换 npm 源\n\n```shell\nnpm config set registry https://registry.npmjs.org/\n\n# 发布完之后可以手动切换回镜像\nnpm config set registry https://registry.npmmirror.com/\n```\n\n发布好之后可以去 npm 设置 Trusted Publisher  \n\n## 注意 3 Trusted Publisher 的 repo 只需要填写 repo name\n\n需要注意的是：这里的 repo 只需要填写 repo name 即可，不需要填写完整路径。\n比如 <https://github.com/KazooTTT/qkpr> 那么只需要填写 pkqr 即可，而不是 `https://github.com/KazooTTT/qkpr` 或者 `github. com/KazooTTT/qkpr`\n\n![IMG-987B468B36E82E9235A1098D11B310A6](<https://pictures.kazoottt.top/2025/12/20251210-987b468b36e82e9235a1098d11b310a6.png>)\n\n总的来说，通过 GitHub Actions 自动发布 npm 包需要注意配置正确的权限、设置合适的镜像源、遵循包名规范，并正确配置 Trusted Publisher，这样才能确保发布流程顺利进行。\n\n<!-- issues-blog:source=d1:post.github-actions-npm-publish-guide -->\n<!-- issues-blog:published-at=2025-11-26T00:00:00.000Z -->\n",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/70",
+  "state": "OPEN",
+  "createdAt": "2026-07-24T10:22:11Z",
+  "updatedAt": "2026-07-24T10:22:11Z",
+  "author": "KazooTTT",
+  "labels": [
+    "blog:publish",
+    "笔记",
+    "npm"
+  ],
+  "labelEvents": [
+    {
+      "label": "blog:publish",
+      "createdAt": "2026-07-24T10:22:13Z"
+    },
+    {
+      "label": "笔记",
+      "createdAt": "2026-07-24T10:22:13Z"
+    },
+    {
+      "label": "npm",
+      "createdAt": "2026-07-24T10:22:13Z"
+    }
+  ],
+  "reactions": [],
+  "comments": []
+}

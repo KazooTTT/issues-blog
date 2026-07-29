@@ -1,0 +1,51 @@
+{
+  "number": 80,
+  "title": "Obsidian 全屏日历",
+  "body": "我用 Periodic Notes 写日记、周报、月报、季报和年报，但 Obsidian 官方的 Calendar 插件只能看见日记和周报，而且挤在右侧边栏里，越用越觉得不够用。\n\n于是按照自己需求 vibe coding 了一个项目：**Periodic Calendar Page**。它是在主编辑区打开的全屏日历页，能完整展示 5 类周期性笔记（日记、周报、月报、季报、年报），以及带有轻量的统计功能。\n\n- 项目地址：[GitHub - KazooTTT/periodic-calendar-page: Full-page Obsidian calendar for Periodic Notes (daily/weekly/monthly/quarterly/yearly) with writing stats](https://github.com/KazooTTT/periodic-calendar-page)\n\n## 需求来源：Calendar 无法显示我需要的周期性笔记\n\n我的笔记体系围绕 Periodic Notes 展开，5 种周期都已启用：\n\n| 类型  | 典型用途                     |\n| --- | ------------------------ |\n| 日记  | 每日记录                     |\n| 周报  | 一周复盘（配合 Templater 中文重命名） |\n| 月报  | 月度总结                     |\n| 季报  | 季度回顾                     |\n| 年报  | 年度总结                     |\n\n![Pasted image 20260703105144](https://pictures.kazoottt.top/2026/07/20260703-aa9878122dec29bb3abf75236778b074.png)\n\nPeriodic Notes 负责配置路径以及对应的模板，可以使用命令快速创建，这部分没问题。问题出在 Calendar 插件——它只索引 daily 和 weekly，月报、季报、年报在日历上不可见。\n\n另外还有一点不太满意：Calendar 默认挂在右侧边栏，且有的时候侧边栏会切到其他的插件去。\n\n## 产品定位：实现所有周期性笔记的可见性\n\nPeriodic Calendar Page 的定位是基于 Periodic Notes 的配置之上提供可视化与导航。\n\n```\nPeriodic Notes  →  配置、创建、归档\n       ↓\nPeriodic Calendar Page  →  看见、导航、统计、提醒补写\n```\n\n几个关键设计决策：\n\n| 决策   | 选择                            | 原因              |\n| ---- | ----------------------------- | --------------- |\n| 入口   | 命令面板打开，不设启动页                  | 不打扰日常写作流        |\n| 页面形态 | ItemView 全屏 Tab               | 容纳多栏布局与详情面板     |\n| Templater 中文标题 | 不改自动化；模板保留 `date`/`slug` + 插件四级回落 | 人类可读标题与机器索引解耦 |\n\n## 主要功能介绍\n\n### 日历模式：日视图 + 详情面板\n\n打开命令「打开日记日历」，你会看到一张完整的月历。日期格里有日记字数圆点，周期末日线有月报/季报/年报标记，周数列有周报标记。点击某一天，右侧详情面板会列出**该日所在时间范围内的全部 5 类笔记**——不管你是不是在月末，都能看到「这个月报写没写」。\n\n交互上区分了两种意图：\n\n- **普通点击**：更新选中状态，看详情\n- **⌘/Ctrl + 点击**：直接打开或创建对应笔记\n- **右键**：打开、创建、删除、在文件列表中显示\n\n![日历日视图：月历与右侧 5 类笔记详情面板](https://pictures.kazoottt.top/2026/07/20260703-3a71675e39e2de2cd378879d6f5e78f6.png)\n\n### 三层缩放：从天到年到多年\n\n日历不只有月视图。点击标题可以逐级放大视野：\n\n```\n日视图（2026年7月）  →  年视图（2026年）  →  多年视图（2016–2027年）\n```\n\n年视图用 2×2 季度块组织：每块上方是 3 个月份格，下方是季报底栏，顶部还有年报卡片。多年视图则是 4×3 年份网格，每格显示该年年报是否存在。写年终总结前扫一眼，哪些年有、哪些年缺，一目了然。\n\n![Pasted image 20260703105803](https://pictures.kazoottt.top/2026/07/20260703-bb53f2458729b8a69cbfa2d3847d6786.png)\n\n![Pasted image 20260703105801](https://pictures.kazoottt.top/2026/07/20260703-99a984f9b6d69020f4fe84b9cd62b2ea.png)\n\n### 轻量统计模式\n\n顶栏切换到「统计」，进入记录统计页。每年三张指标卡——**条笔记、字数、记录天数**——用柱状图展示 1–12 月的分布，参考了 flomo 记录统计的呈现方式。\n\n![记录统计：按年三指标柱状图](https://pictures.kazoottt.top/2026/07/20260703-a1865351102c5eac461dda11c2ca2f54.png)\n\n几个细节：\n\n- 柱图 hover 显示当月数据；点击某月会切回日历并定位到该月\n- 统计目前只计入日记（Phase 1），热力图和可配置范围在路线图中\n\n## 开发过程\n\n全程基于 x 会员赠送的 grok cli 中的 composer 2.5 fast 开发，主要使用的 skills 是 [GitHub - obra/superpowers: An agentic skills framework & software development methodology that works.](https://github.com/obra/superpowers)\n\n这个项目在 2026-07-02 一天内从 v0.1 迭代到 v0.8.16\n\n| 阶段      | 内容                      | 大约版本      |\n| ------- | ----------------------- | --------- |\n| Phase 1 | ItemView 骨架、月历渲染、命令入口   | v0.1      |\n| Phase 2 | 读取 Periodic 配置、5 类索引与标记 | v0.2      |\n| Phase 3 | 交互、年/多年视图、详情面板、右键菜单     | v0.3–v0.7 |\n| Phase 4 | 统计视图、开源发布、UI 打磨         | v0.8.x    |\n\n### 文档驱动\n\n开发过程中维护了几份文档，中断后能快速接上：\n\n- 需求调研（为什么要做、已确认决策）\n- 开发进度（阶段清单 + 按版本的开发日志）\n- 统计视图方案（Phase 1–3 规划）\n\n### 周期笔记文件名：怎么在 Templater 重命名后还能索引到\n\n以周报为例：文件名不是一直叫 `2026-W27.md`。Periodic Notes 先按 ISO 周创建临时文件，Templater 再填充内容并重命名成中文标题：\n\n```\n2026年7月第1周（06.29–07.05）.md\n```\n\n**为什么不读模板语法？** Periodic Notes 的 `template` 只管笔记内容；Templater 的 `tp.file.rename()` 是任意 JavaScript，每人写法不同，插件没法通用解析。所以不靠「猜模板」，而是靠两层**显式契约**：\n\n| 契约来源 | 字段 | 说明 |\n|---------|------|------|\n| Periodic Notes 官方 | `format` | 创建时的 moment 文件名格式 |\n| 模板作者约定 | `date` + `slug` | frontmatter 里的机器可读锚点（**最稳妥**） |\n\n周报模板里刻意保留：\n\n```yaml\nslug: 2026-7-W27\ndate: 2026-07-05\n```\n\n人类看中文标题，插件读 `slug` / `date`——两者解耦，以后改标题格式也不影响日历索引。\n\n`FilenameParser` 为全部 5 类笔记统一做了四级回落（前面快、后面稳）：\n\n```\nparseNoteDate(file, format, periodicity)\n  ├─ ① Periodic Notes format 匹配\n  ├─ ② 常见备用文件名（2025-08、2026-Q1 等）\n  ├─ ③ 内置中文标题正则（已知模式的便利层）\n  └─ ④ frontmatter（date / slug）← 用户契约，最终兜底\n```\n\n**① format**：读 Periodic Notes 配置，和官方插件同一套 moment 解析。未重命名的 `2026-W27.md` 走这里。\n\n**② 备用文件名**：format 留空或文件名偏离配置时的简写兜底，例如月报 `2025-08`、季报 `2026-Q1`、年报 `2025年度总结`。\n\n**③ 中文标题正则**：内置了几种常见模式（如 `2026年7月第1周（06.29–07.05）`、`2025年08月月报`）。这是**便利层**，不是核心设计——你的标题格式一旦改动，这一级可能失效，但④仍能用。\n\n**④ frontmatter**：读 `date` 归一到对应周期，或从 `slug` 反推（如 `2026-7-W27`、`2025-08-monthly-report`）。**推荐在模板里始终写这两个字段**，不管文件名怎么变都能索引。\n\n索引时，`NoteIndexer` 扫描各周期文件夹，调用上述解析生成 UID。只要四级里任意一级成功，笔记就会出现在日历正确位置。\n\n## 如何安装\n\n**前置依赖**：安装并启用 [Periodic Notes](https://github.com/liamcain/obsidian-periodic-notes)，Obsidian ≥ 1.5.0。\n\n### BRAT（推荐）\n\n1. 安装 [BRAT](https://github.com/TfTHacker/obsidian42-brat)\n2. Add Beta plugin → `KazooTTT/periodic-calendar-page`\n3. 设置 → 第三方插件 → 启用 **Periodic Calendar Page**\n\n### 手动安装\n\n从 [Releases](https://github.com/KazooTTT/periodic-calendar-page/releases) 下载，或将仓库根目录的 `manifest.json`、`main.js`、`styles.css` 复制到：\n\n```\n<你的库>/.obsidian/plugins/periodic-calendar-page/\n```\n\n更完整的说明见仓库内 [INSTALL.md](https://github.com/KazooTTT/periodic-calendar-page/blob/main/docs/INSTALL.md)。\n\n### 打开方式\n\n| 入口 | 说明 |\n|------|------|\n| 命令面板 → `打开日记日历` | 进入日历模式 |\n| 命令面板 → `打开记录统计` | 直达统计页 |\n| 左侧 Ribbon | `calendar-range` 图标 |\n\n## 路线图 \n\n- 当前版本：v0.8.15\n\n**已完成**\n\n- 全屏日历 + 5 类笔记索引与标记\n- 日 / 年 / 多年三层缩放\n- 详情面板、右键菜单、字数圆点\n- 记录统计 Phase 1（柱图三指标）\n- 独立 GitHub 仓库与 Release\n\n**计划中**\n\n- GitHub 热力图（写作连续性可视化）\n- 统计范围可配置（含周报等）、CSV 导出\n- 缺失提醒（如「本月月报未写」）\n\n<!-- issues-blog:source=d1:701a8693-891d-4e86-9669-85c8a722ea00 -->\n<!-- issues-blog:published-at=2026-07-02T00:00:00.000Z -->\n",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/80",
+  "state": "OPEN",
+  "createdAt": "2026-07-24T10:23:38Z",
+  "updatedAt": "2026-07-24T10:23:38Z",
+  "author": "KazooTTT",
+  "labels": [
+    "blog:publish",
+    "obsidian",
+    "插件开发",
+    "日历",
+    "知识管理",
+    "Periodic Notes",
+    "blog:featured"
+  ],
+  "labelEvents": [
+    {
+      "label": "blog:publish",
+      "createdAt": "2026-07-24T10:23:39Z"
+    },
+    {
+      "label": "obsidian",
+      "createdAt": "2026-07-24T10:23:39Z"
+    },
+    {
+      "label": "插件开发",
+      "createdAt": "2026-07-24T10:23:39Z"
+    },
+    {
+      "label": "日历",
+      "createdAt": "2026-07-24T10:23:39Z"
+    },
+    {
+      "label": "知识管理",
+      "createdAt": "2026-07-24T10:23:40Z"
+    },
+    {
+      "label": "Periodic Notes",
+      "createdAt": "2026-07-24T10:23:40Z"
+    },
+    {
+      "label": "blog:featured",
+      "createdAt": "2026-07-29T07:46:46Z"
+    }
+  ],
+  "reactions": [],
+  "comments": []
+}

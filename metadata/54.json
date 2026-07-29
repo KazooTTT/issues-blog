@@ -1,0 +1,56 @@
+{
+  "number": 54,
+  "title": "如何运行 ts 文件",
+  "body": "\n![cover](<https://s2.loli.net/2025/03/06/kfu6KdC2m1HoLM9.png>)\n\n在 VSCode 中安装扩展 Code Runner，我创建了一个 .ts 文件，点击运行按钮，但提示\n\n> 'ts-node' 不是内部或外部命令  \n> 'ts-node' is not recognized as an internal or external command\n\n解决方法是全局安装 ts-node，例如：\n\n``` shell\npnpm i -g ts-node\n```\n\n但在我安装之后，错误确实消失了，却又提示另一个错误\n\n``` log\nTypeError: Unknown file extension \".ts\" for /xxx/xxx/test.ts\n    at Object.getFileProtocolModuleFormat [as file:] (node:internal/modules/esm/get_format:176:9)\n    at defaultGetFormat (node:internal/modules/esm/get_format:219:36)\n    at defaultLoad (node:internal/modules/esm/load:133:22)\n    at async ModuleLoader.load (node:internal/modules/esm/loader:554:7)\n    at async ModuleLoader.moduleProvider (node:internal/modules/esm/loader:435:45)\n    at async ModuleJob._link (node:internal/modules/esm/module_job:106:19) {\n  code: 'ERR_UNKNOWN_FILE_EXTENSION'\n}\n```\n\n所以我认为或许不止我一个人对于如何运行 ts 文件有疑问，所以本篇文章就来介绍一下如何在 VSCode 中运行 ts 文件，以及回到最初的问题，如何在 code runner 中运行 ts 文件。\n\n## 如何运行 ts 文件\n\n我们准备一个简单的的 ts 文件，命名为 index.ts，来作为测试的文件。\n\n``` typescript\nconst a: number = 1;  \nconst b: number = 2;\nconst c: number = a + b;\nconsole.log(c);\n```\n\n### bun 运行 ts 文件（目前最推荐）\n\n``` shell\nbun index.ts\n```\n\n![alt text](<https://s2.loli.net/2025/03/06/FOLdGi1ST9Wo4wA.png>)\n\n### 使用 tsc 将 ts 编译为 js，然后 node 运行\n\nTypeScript Compiler (tsc) 是 TypeScript 的编译器，它可以将 TypeScript 代码编译为 JavaScript 代码。我们可以使用 tsc 命令来编译 TypeScript 文件。\n\n``` shell\ntsc index.ts\nnode index.js\n```\n\n![alt text](<https://s2.loli.net/2025/03/06/eCA2hNItTwjxrG9.png>)\n\n### tsx (TypeScript Executer) 运行 ts 文件\n\n``` shell\nnpx tsx index.ts\n```\n\n![alt text](<https://s2.loli.net/2025/03/06/POMlTqEnaJkbDr8.png>)\n\n### Node.js V22.7.0 直接运行文件\n\n``` shell\nnode --experimental-strip-types index.ts \n```\n\n![alt text](<https://s2.loli.net/2025/03/06/imBgjLsvEVblytO.png>)\n\n### ts-node 运行 ts 文件（不推荐）\n\n``` shell\nts-node index.ts\n```\n\n![alt text](<https://s2.loli.net/2025/03/06/Qm5Rn6jVTSMUGrX.png>)\n\n这个问题频繁出现于 ts-node 的 issues 中，有一个讨论甚至到了 70+ 也没有关闭\n\n![alt text](<https://s2.loli.net/2025/03/06/F9Bx6AgVjbD5GLl.png>)\n\n要解决这里的报错，需要做几件事情：\n\n1. 必须要有 package.json 并且 \"type\": \"module\"\n 1. 如果没有 package.json, 运行 `npm init -y` 生成 package.json\n2. tsconfig.json 中 \"module\" 不能是 \"commonjs\" ，必须要有 'module': 'ESNext' 或者 'module': 'ES6'。\n 1. 如果没有 tsconfig.json, 运行 `npx tsc --init` 生成 tsconfig.json\n3. 运行的时候必须要有 --loader ts-node/esm\n\n``` shell\nnode --loader ts-node/esm index.ts\n```\n\n![alt text](<https://s2.loli.net/2025/03/06/N5IO21BzCTxktA7.png>)\n\n## 如何在 coder runner 中运行 ts 文件\n\n最简单的方法：在 code-runner.executorMap 中修改 typescript 的配置：\n\n``` json\n{\n    \"typescript\": \"cd $dir && bun $fileName\",\n}\n```\n\n也可以这样写，然后会生成一个 js 文件，然后运行 js 文件：\n\n``` json\n{\n  \"typescript\": \"cd $dir && tsc $fullFileName && node $fileNameWithoutExt.js\"\n}\n```\n\n不过这样的速度是比较慢的\n\n![alt text](<https://s2.loli.net/2025/03/06/59HrEdRhp24iWKw.png>)\n\n- 使用 `bun $fullFileName`：\n  耗时：0.295 秒\n\n- 使用 tsc `tsc $fullFileName && node $fileNameWithoutExt.js`：\n\n  耗时：2.523 秒\n\n## 总结\n\n无论是运行 ts 文件还是在 code runner 中运行 ts 文件，最推荐的方式是使用 bun 来运行 ts 文件。它的速度和开箱即用的特性都非常好。\n\n最不推荐的是 ts-node，需要有很严格的配置，且官方没有提供明确的文档来说明如何配置，更多的是靠开源社区的讨论来解决问题。\n\n<!-- issues-blog:source=d1:post.how-to-run-ts-files -->\n<!-- issues-blog:published-at=2025-03-06T00:00:00.000Z -->\n",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/54",
+  "state": "OPEN",
+  "createdAt": "2026-07-24T10:20:17Z",
+  "updatedAt": "2026-07-24T10:20:17Z",
+  "author": "KazooTTT",
+  "labels": [
+    "blog:publish",
+    "笔记",
+    "typescript",
+    "bun",
+    "code",
+    "runner",
+    "ts-node",
+    "vscode"
+  ],
+  "labelEvents": [
+    {
+      "label": "blog:publish",
+      "createdAt": "2026-07-24T10:20:19Z"
+    },
+    {
+      "label": "笔记",
+      "createdAt": "2026-07-24T10:20:19Z"
+    },
+    {
+      "label": "typescript",
+      "createdAt": "2026-07-24T10:20:19Z"
+    },
+    {
+      "label": "bun",
+      "createdAt": "2026-07-24T10:20:19Z"
+    },
+    {
+      "label": "code",
+      "createdAt": "2026-07-24T10:20:19Z"
+    },
+    {
+      "label": "runner",
+      "createdAt": "2026-07-24T10:20:20Z"
+    },
+    {
+      "label": "ts-node",
+      "createdAt": "2026-07-24T10:20:20Z"
+    },
+    {
+      "label": "vscode",
+      "createdAt": "2026-07-24T10:20:20Z"
+    }
+  ],
+  "reactions": [],
+  "comments": []
+}

@@ -1,0 +1,41 @@
+{
+  "number": 32,
+  "title": "微信读书网页版复制快捷键",
+  "body": "\n# 微信读书网页版复制快捷键\n\n![cover](<https://pictures.kazoottt.top/2024/06/20240605-f9f1fd7eec262178e50fb61695d12535.png>)\n\n[微信读书网页版中新增复制快捷键 \\[油猴脚本\\]\\_哔哩哔哩\\_bilibili](<https://www.bilibili.com/video/BV1L93qeQEFW/>)\n\n这是一个油猴脚本，用于在微信读书的网页端新增复制快捷键。\n\n在 windows 下，快捷键为 `Ctrl + C`，在 mac 下，快捷键为 `Cmd + C`。\n\n## 相关地址\n\n[下载地址](<https://greasyfork.org/zh-CN/scripts/497102-weread-copy-keymap>)\n\n[源代码](<https://github.com/KazooTTT/weread-copy-keymap>)\n\n---\n\n本项目使用模板为 [vite-plugin-monkey](<https://github.com/lisonge/vite-plugin-monkey>)\n\n<!-- issues-blog:source=d1:post.wechat-reading-web-version-copy-shortcut -->\n<!-- issues-blog:published-at=2024-07-30T00:00:00.000Z -->\n",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/32",
+  "state": "OPEN",
+  "createdAt": "2026-07-24T10:17:37Z",
+  "updatedAt": "2026-07-24T10:17:37Z",
+  "author": "KazooTTT",
+  "labels": [
+    "blog:publish",
+    "项目",
+    "油猴脚本",
+    "前端",
+    "微信读书"
+  ],
+  "labelEvents": [
+    {
+      "label": "blog:publish",
+      "createdAt": "2026-07-24T10:17:39Z"
+    },
+    {
+      "label": "项目",
+      "createdAt": "2026-07-24T10:17:39Z"
+    },
+    {
+      "label": "油猴脚本",
+      "createdAt": "2026-07-24T10:17:39Z"
+    },
+    {
+      "label": "前端",
+      "createdAt": "2026-07-24T10:17:39Z"
+    },
+    {
+      "label": "微信读书",
+      "createdAt": "2026-07-24T10:17:39Z"
+    }
+  ],
+  "reactions": [],
+  "comments": []
+}

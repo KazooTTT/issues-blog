@@ -1,0 +1,36 @@
+{
+  "number": 13,
+  "title": "2023年度总结",
+  "body": "\n![IMG-20240902220155824](<https://pictures.kazoottt.top/2024/10/20241010-747a24e5899b357928a58beafaa22faa.png>)\n\n# 2023 总结\n\n感觉时间过得好快，一年又过去了，还是像以往一样做一个总结吧。\n\n## 时间轴\n\n5 月 参加 aigc 比赛  \n7 月 第二次去 bw  \n10 月 终于去了厦门  \n12 月\n\n- 机缘巧合转岗，开始做 ai agent 的研究与开发\n- 和群友在成都跨年\n\n## 一些值得纪念的事情\n\n### 终于开始面试\n\n面试指两个方面，一个是我作为面试官面试他人（被迫的），另一个是我投简历面试其他公司。\n\n我面试他人：由于部门很缺前端，更资深的前端都已离职，于是只能我被迫开始面试招人，在我自己面试别人的过程中，也能感受到自己的不足之处，比如对方回答了某问题之后，我很难接下去深入聊。也就是说其实我本身对于那个问题的了解也是比较浅的。\n\n我被面试：投了几家公司，比较意外的是小公司投了后就没有下文了，但大厂的简历都过了，并且约了面试。结果以我目前的水平来说自然不用讲了，还有很多东西要学习准备，不过我觉得起码我迈出了第一步，也知道自己的不足之处在哪里了。面试官都是很不错的人，面试过程中有很好地引导回答，并且面完之后给出了很多有用的建议。\n\n### 热力图终于绿了起来\n\n因为自己的做项目以及给开源项目提 pr,github 的绿格子终于多了起来，虽然还是有很多空白的地方，但我觉得这是一个好的开始。希望 2024 年继续保持，并且做出真正能够解决自己痛点，同时也能帮助他人的项目。\n\n![IMG-20240902220155904](<https://pictures.kazoottt.top/2024/10/20241010-c89c4acd4044c20f36eebf6700691788.png>)  \n之前写的一个油猴脚本，收到了他人的反馈，感觉这样的反馈很能激励自己做更多的产出。\n\n![IMG-20240902220155937](<https://pictures.kazoottt.top/2024/10/20241010-7c87bb96de213bef044b67bd466b5960.png>)  \n除此之外还对一些开源项目提了 pr，虽然大多数都是很简单的 pr（例如 typo fix），但总算是迈出了第一步。\n\n![IMG-20240902220155971](<https://pictures.kazoottt.top/2024/10/20241010-870362102e36444878d13477590e8569.png>)\n\n### 和朋友一起参加了 Ai 相关的比赛\n\n起因是去年 5 月的时候，大学的一位学长突然找我，问我有没有做过安卓相关的开发，他们要参加一个 aigc 的比赛，需要有人开发安卓的应用。再到后来方案改成了直接做 web 的 demo 就可以，于是我就很爽快的答应了。\n\n从前期的开会讨论，后期的设计对接，都很愉快。那段时间的时间安排差不多都是白天工作，晚上回家继续写比赛的代码，虽然比较累但是觉得很快乐，在最后也拿了奖，同时也有一笔奖金。这应该是我第一次在工作外用自己的能力挣钱，感觉很快乐。\n\n![IMG-20240902220156003](<https://pictures.kazoottt.top/2024/10/20241010-e6323006da6f86aa1ac30cc2a6738ec6.png>)\n\n下面详细聊一下这个 demo 的开发相关的感受以及不足之处。\n\n框架使用的是 nextjs（app router)，这个时候才意识到，原来我最顺手的框架是 nextjs，而不是工作里用得最多的 umi、cra、vite 之类的东西，后面的这几个框架对我来说其实都不是开箱即用的。\n\n后面要做的事情应该是针对这几个常见的框架自己另外几个适用于自己以及公司的脚手架，而不是每次用都重新配一次配置。\n\n- [ ] [[常见框架脚手架]]\n\n然后就是在写这个项目的过程中，充分体会到 chatgpt 的便捷之处了。在早期，设计老师还没有提供素材给我的时候，我使用是 [Beautiful Free Images & Pictures | Unsplash](<https://unsplash.com/>) 的 api，\n\n像下文这样随机生成图片，以及打乱顺序的 dirty work 就可以交给 chatgpt 来完成，减少了很多重复的工作量。\n\n```javascript\nconst imagesList = [\n  [\n    \"https://source.unsplash.com/128x128/?architecture\",\n    \"https://source.unsplash.com/128x128/?travel\",\n    \"https://source.unsplash.com/128x128/?books\",\n    \"https://source.unsplash.com/128x128/?dogs\",\n    \"https://source.unsplash.com/128x128/?beach\",\n    \"https://source.unsplash.com/128x128/?food\",\n    \"https://source.unsplash.com/128x128/?music\",\n    \"https://source.unsplash.com/128x128/?nature\",\n    \"https://source.unsplash.com/128x128/?fashion\",\n    \"https://source.unsplash.com/128x128/?cars\",\n    \"https://source.unsplash.com/128x128/?wildlife\",\n    \"https://source.unsplash.com/128x128/?art\",\n    \"https://source.unsplash.com/128x128/?sports\",\n    \"https://source.unsplash.com/128x128/?mountains\",\n    \"https://source.unsplash.com/128x128/?technology\",\n    \"https://source.unsplash.com/128x128/?city\",\n    \"https://source.unsplash.com/128x128/?cats\",\n    \"https://source.unsplash.com/128x128/?sunsets\",\n    \"https://source.unsplash.com/128x128/?animals\",\n    \"https://source.unsplash.com/128x128/?fitness\",\n  ],\n  [\n    \"https://source.unsplash.com/360x640/?technology\",\n    \"https://source.unsplash.com/360x640/?music\",\n    \"https://source.unsplash.com/360x640/?sports\",\n    \"https://source.unsplash.com/360x640/?art\",\n    \"https://source.unsplash.com/360x640/?fashion\",\n    \"https://source.unsplash.com/360x640/?cars\",\n    \"https://source.unsplash.com/360x640/?books\",\n    \"https://source.unsplash.com/360x640/?architecture\",\n    \"https://source.unsplash.com/360x640/?fitness\",\n    \"https://source.unsplash.com/360x640/?nature\",\n    \"https://source.unsplash.com/360x640/?city\",\n    \"https://source.unsplash.com/360x640/?food\",\n    \"https://source.unsplash.com/360x640/?animals\",\n    \"https://source.unsplash.com/360x640/?mountains\",\n    \"https://source.unsplash.com/360x640/?beach\",\n    \"https://source.unsplash.com/360x640/?dogs\",\n    \"https://source.unsplash.com/360x640/?travel\",\n  ],\n  [\n    \"https://source.unsplash.com/360x640/?nature\",\n    \"https://source.unsplash.com/360x640/?city\",\n    \"https://source.unsplash.com/360x640/?food\",\n    \"https://source.unsplash.com/360x640/?animals\",\n    \"https://source.unsplash.com/360x640/?mountains\",\n    \"https://source.unsplash.com/360x640/?beach\",\n    \"https://source.unsplash.com/360x640/?dogs\",\n    \"https://source.unsplash.com/360x640/?travel\",\n    \"https://source.unsplash.com/360x640/?architecture\",\n    \"https://source.unsplash.com/360x640/?technology\",\n    \"https://source.unsplash.com/360x640/?music\",\n    \"https://source.unsplash.com/360x640/?sports\",\n    \"https://source.unsplash.com/360x640/?art\",\n    \"https://source.unsplash.com/360x640/?fashion\",\n    \"https://source.unsplash.com/360x640/?cars\",\n    \"https://source.unsplash.com/360x640/?books\",\n    \"https://source.unsplash.com/360x640/?fitness\",\n  ],\n]\n```\n\n### 去了 Bw2023\n\n具体的内容可以看这篇汇报  \n[2023 bw汇报](/posts/bw2023)\n\n### 去了厦门\n\n具体的内容可以看这篇游记  \n[2023 国庆厦门和杭州之行](/posts/national-day-trip-to-xiamen-and-hangzhoupicture-bed-version)\n\n### 转岗开启 AI Agent 开发 + 父母来上海看我\n\n具体的内容可以看这篇周报  \n[2023年度总结](/posts/summary-of-fy2023)\n\n### 和朋友一起在成都跨年\n\n[2023 跨年](/posts/2023-crossing)\n\n## 技术栈的偏向性\n\n前端：nextjs + shadcn/ui + jotai  \n后端：nextjs / flask  \n设计：figma + canva\n\n## 一些数据\n\n### 微信读书\n\n2020 122h  \n2021 32h  \n2022 29h  \n2023 23h\n\n### Wakatime\n\n2023 484h  \n2022 237h  \n2021 322h  \n2020 594h  \n2019 195h  \n2018 327h  \n2017 30h  \nwakatime 的数据查看：[Code stats for all users in 2023 - WakaTime](<https://wakatime.com/a-look-back-at-2023>)  \n![IMG-20240902220156039](<https://pictures.kazoottt.top/2024/10/20241010-60743ea1e38816464883d4a77add6485.png>)\n\n### 音乐\n\n听歌时间明显变少了。\n\n## 去年目标完成情况\n\n[2022年度总结#5. 今年计划](/posts/y3-2022-annual-summary#5. 今年计划)\n\n1. [ ] 【工作】拿一个 base 地是成都的 offer\n2. [ ] 【开源】把主站重构项目写完并上线\n3. [ ] 【设计】继续学习 blender\n4. [ ] 【设计】学习 UI/UX，熟悉 ps、figma\n5. [x] 【学习】重拾阅读习惯\n\n## 今年的计划\n\n1. [ ] 【工作】拿一个 base 地是成都的 offer\n2. [ ] 【设计】继续学习 blender\n3. [ ] 【学习】每周至少有一个技术向博客/视频的产出\n4. [ ] 【学习】学习 vue3，了解更多的前端框架\n\n<!-- issues-blog:source=d1:post.summary-of-fy2023 -->\n<!-- issues-blog:published-at=2024-01-07T00:00:00.000Z -->\n",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/13",
+  "state": "OPEN",
+  "createdAt": "2026-07-24T10:15:07Z",
+  "updatedAt": "2026-07-24T10:15:07Z",
+  "author": "KazooTTT",
+  "labels": [
+    "blog:publish",
+    "年报",
+    "2023",
+    "2023年度总结"
+  ],
+  "labelEvents": [
+    {
+      "label": "blog:publish",
+      "createdAt": "2026-07-24T10:15:08Z"
+    },
+    {
+      "label": "年报",
+      "createdAt": "2026-07-24T10:15:08Z"
+    },
+    {
+      "label": "2023",
+      "createdAt": "2026-07-24T10:15:08Z"
+    },
+    {
+      "label": "2023年度总结",
+      "createdAt": "2026-07-24T10:15:08Z"
+    }
+  ],
+  "reactions": [],
+  "comments": []
+}

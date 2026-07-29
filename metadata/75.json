@@ -1,0 +1,51 @@
+{
+  "number": 75,
+  "title": "bug-form 回填错误",
+  "body": "## 问题现象\r\n\r\n在图表配置详情页中，后端返回的配置值已经是“B”，但前端下拉框却显示成了“A”。\r\n\r\n简化后的返回数据示例：\r\n\r\n```json\r\n{\r\n  \"entityId\": \"legacy-id\",\r\n  \"configValue\": \"B\",\r\n  \"extraConfig\": [\"...\"]\r\n}\r\n```\r\n\r\n## 根因\r\n\r\n问题出在同一业务对象在回填链路中使用了两种不同的标识格式。\r\n\r\n- 一部分详情回填数据使用旧格式，例如 `legacy-id`\r\n- 前端在重建对应对象时使用新格式，例如 `normalized-id`\r\n\r\n由于这两种格式没有被当成同一个对象处理，前端在同步配置时无法复用原有项，只能按默认值新建一份配置。结果就是界面最终显示成了错误的文案。\r\n\r\n## 修复\r\n\r\n核心做法是增加一层 identity 归一化逻辑，把旧格式和新格式统一映射到同一个内部标识。\r\n\r\n也就是\r\n\r\n- 统一托管 key 的生成逻辑\r\n- 在依赖对象匹配的读取逻辑中兼容两种格式\r\n- 增加回归测试，确保旧格式和新格式都能命中同一个对象\r\n\r\n修复后：\r\n\r\n- `legacy-id` 和 `normalized-id` 会被视为同一个对象\r\n- 详情回填时可以正确复用原有配置\r\n- “B” 不会再被默认值覆盖成 “A”\r\n\r\n## 总结\r\n\r\n当系统经历过字段格式演进时或者说前端先行然后再对接后端的时候，详情回填、表单托管状态、二次计算逻辑之间必须共享同一套 identity 规则。否则即使返回值本身正确，也可能在重建过程中被默认值覆盖。\n\n<!-- issues-blog:source=d1:a83cacf4-6df1-462e-afac-7ba8f2ee7367 -->\n<!-- issues-blog:published-at=2026-04-08T00:00:00.000Z -->\n",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/75",
+  "state": "OPEN",
+  "createdAt": "2026-07-24T10:23:00Z",
+  "updatedAt": "2026-07-24T10:23:00Z",
+  "author": "KazooTTT",
+  "labels": [
+    "blog:publish",
+    "笔记",
+    "bugfix",
+    "chart",
+    "frontend",
+    "public",
+    "sort"
+  ],
+  "labelEvents": [
+    {
+      "label": "blog:publish",
+      "createdAt": "2026-07-24T10:23:01Z"
+    },
+    {
+      "label": "笔记",
+      "createdAt": "2026-07-24T10:23:01Z"
+    },
+    {
+      "label": "bugfix",
+      "createdAt": "2026-07-24T10:23:02Z"
+    },
+    {
+      "label": "chart",
+      "createdAt": "2026-07-24T10:23:02Z"
+    },
+    {
+      "label": "frontend",
+      "createdAt": "2026-07-24T10:23:02Z"
+    },
+    {
+      "label": "public",
+      "createdAt": "2026-07-24T10:23:02Z"
+    },
+    {
+      "label": "sort",
+      "createdAt": "2026-07-24T10:23:02Z"
+    }
+  ],
+  "reactions": [],
+  "comments": []
+}

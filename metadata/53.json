@@ -1,0 +1,46 @@
+{
+  "number": 53,
+  "title": "2025-W09 工作流升级",
+  "body": "日期范围：2025-02-24 - 2025-03-02\n## 1. 工作流的变化\n### 1.1. 内容记录的位置\n\n之前更换了 astro 的 template 之后，内容的 type 分为了 post 和 note 这两类，其中 post 主要指的是比较长和花心思写了的内容，而 note 就是一些比较碎片化的记录。  \n我之前的内容输出是通过 quick add + template 快速添加一个文档来实现的，所以即使是碎片化的内容，也是单独的文档。  \n![IMG-27E57C2F932F03BA78332F527ABECC3C](</mdImages/IMG-27E57C2F932F03BA78332F527ABECC3C.png>)  \n\n也就是下图这种。\n\n![IMG-9C72E80EE99057103B55DCD293201880](</mdImages/IMG-9C72E80EE99057103B55DCD293201880.png>)  \n\n所以只能自己去写 dataview 来方便检索。  \n\n不过这周又重新使用了 [thino](<https://github.com/Quorafind/Obsidian-Thino>) 插件，这个插件与 flomo 或者开源的 memo 类似，它把碎片化的记录写入到 obsidian 的日记中，这样既可以在插件中进行单独查看，也可以在日记中查看。  \n\n然后当需要发布到其他平台的时候，才会把内容单独提取到一个文档里面，再修改 frontmatter 的信息。\n\n### 1.2. 内容记录的方式\n\n然后内容记录的方式也发生了改变，之前在 [Gingko Writer：在 AI 随便生成 20 万字的时代，“生而为人”该如何写作？](<https://blog.jimmylv.info/gingko-writer-human-writing-ai-generation-era/>) 这篇博文中第一次了解到 Gingko 这个软件。  \n\n它使用树桩的视图来展示笔记内部的层级。让写作者专注于当前的这一个小节，从而提升输出的效率和专注率。  \n\n我体验了一下，觉得确实有效果。不过我的主力编辑器还是 milanote + obsidian + vscode like ide, 不打算再使用其他的笔记软件记录增加管理负担，所以在体验之后就没有下文了。  \n\n不过有一天心血来潮在网络上搜索了 obsidian + Gingko 的关键词，在论坛中搜索到了 [GitHub - ycnmhd/obsidian-lineage: Gingko-like interface in obsidian](<https://github.com/ycnmhd/obsidian-lineage>) 这个插件。  \n\n它的完成度很高，在 obsidian 中实现了和 Gingko 一样的效果。\n\n大致的介绍如下：  \n\n- 类 Gingko 视图：提供了一种类似 Gingko 的编辑界面，使得在 Obsidian 中进行结构化的 Markdown 编辑更加直观。适合编写长文的适合使用。\n  - ![IMG-CFC7256A2D7BC1D6C014F1BED8A455CB](</mdImages/IMG-CFC7256A2D7BC1D6C014F1BED8A455CB.png>)\n- 大纲视图：支持根据层级展示不同模块卡片。\n  - ![IMG-6819ED4AC0DA9B9CF3D106BE71AAADD3](</mdImages/IMG-6819ED4AC0DA9B9CF3D106BE71AAADD3.png>)\n- 支持自定义键盘快捷键，快速创建、删除、编辑卡片\n\n在 obsidian 的第三方插件中可以直接搜索到 lineage\n\n![IMG-88633EA7BDD10531AFF07602F1A5D072](</mdImages/IMG-88633EA7BDD10531AFF07602F1A5D072.png>)\n\n# obsidian﻿ ﻿#gingko﻿ ﻿#笔记软件﻿ ﻿#写作\n\n在安装后，lineage 已经成为了我经常使用的插件。  \n\n不过它默认的快捷键不太符合我的使用习惯。我修改了一下这个按键，在按下 esc 的时候自动保存，避免我无意中丢掉变更。\n\n![IMG-F6EAF822377F64DB27E99C394FDAFDBC](</mdImages/IMG-F6EAF822377F64DB27E99C394FDAFDBC.png>)\n\n### 1.3. 重新梳理的输出的工作流\n\n在 [建立人生仪表盘：2025 年你将强的可怕！\\_哔哩哔哩、_bilibili](<https://www.bilibili.com/video/BV1qe6HYhEBm/>) 还有数字游牧人的安利下，我购买了 milanote 这个白板工具。不过之前只是存放一些零散的资料，没有真的用起来。  \n\n这周刚好比较有动力，所以就重新梳理了一下。  \n\n以下是各大软件的之间的数据是如何流转的。  \n\n大体思路社交平台作为最随意的入口，通过 n8n + rss 定时获取内容调接口写入到 raindrop 和 子弹笔记里面（目前用 thino 比较多），然后用 milanote 筛选一层，然后记录比较详细的个人的脑洞和想法，然后输出为项目或者企划，做进一步详细规划。\n\n如果输出的形式是项目的话，就按照项目管理的形式去走。\n\n如果输出的形式是长文，那么还是放到 obsidian 里面去写（搭配 lineage 插件），最后 git 提交后触发 github actions 部署到 cloudflare，另外如果要录视频就在长文的基础上改一版视频稿。\n\n我个人感觉主动筛选这一层比较重要，如果碎片化的记录太多或者随手收集的东西太多，其实不容易留下印象，有效的信息太少了。\n\n``` mermaid\ngraph LR\n    A[Weibo] & C[Telegram] --> B(n8n);\n    B --> D[滴答清单];\n    B --> E[Raindrop];\n    B --> F[Flomo / Dinox / Thino];\n    D & E & F --> H(Milanote);\n    H --> I[Obsidian];\n    H --> J[Cursor];\n    I & J --> K[Astro];\n\n    style B fill:#ccf,stroke:#000,stroke-width:2px\n    style H fill:#ccf,stroke:#000,stroke-width:2px\n    style K fill:#ccf,stroke:#000,stroke-width:2px\n\n```\n\n![IMG-745FC8CBCFE1B784E4EEB2F74860A255](</mdImages/IMG-745FC8CBCFE1B784E4EEB2F74860A255.png>)  \n\n然后这是 milanote 中的大致目录结构。  \n\n![IMG-0D6BB6964D19AF5A39633F63A46EE430](</mdImages/IMG-0D6BB6964D19AF5A39633F63A46EE430.png>)\n## 2. 使用大模型处理 `git diff` 生成 commit msg\n\n流程如下：\n\n1. **获取 git diff 信息：**\n - 可以使用 `git diff > git.diff` 将 diff 信息写入文件。\n - 可以使用 `git diff | clip` (Windows) 将 diff 信息复制到剪贴板。\n2. **准备提示词：**\n - 提示词需要包含 commit 规则 [^1]。例子如下：\n\n```\n用户会输入 git diff，请你生成 commit msg，可以根据更改内容生成一些备注\n\n我的 commit 规则：\nmodule.exports = {\n rules: {\n  'type-enum': [\n   2,\n   'always',\n   [\n    'feat', // 新功能\n    'fix', // 修复\n    'docs', // 文档变更\n    'style', // 代码格式\n    'refactor', // 重构\n    'perf', // 性能优化\n    'test', // 增加测试\n    'chore', // 构建过程或辅助工具的变动\n    'revert', // 回退\n    'build', // 打包\n   ],\n  ],\n  'type-case': [2, 'always', 'lower-case'],\n  'type-empty': [2, 'never'],\n  'scope-empty': [0],\n  'scope-case': [0],\n  'subject-full-stop': [0],\n  'subject-case': [0],\n  'header-max-length': [0],\n },\n};\n```\n\n1. **发送给大模型：** 将 `git diff` 信息和提示词一起发送给大模型，获取 commit msg。\n2. **使用 Cherry Studio （可选）:**\n - 可以使用 Cherry Studio 创建 commit msg 生成助手\n\n![IMG-BF22CA923126747336FA047AD2FFE0B3](</mdImages/IMG-BF22CA923126747336FA047AD2FFE0B3.png>)  \n具体效果\n\n![IMG-42E5510D67C42284041E3402E4D459AD](</mdImages/IMG-42E5510D67C42284041E3402E4D459AD.png>)\n## 3. 收藏夹\n### 3.1. Stripe Press\n\n[Stripe Press — Ideas for progress](<https://press.stripe.com/>)  \n\n一个很有设计感的网站，截图无法体现具体的细节，可以直接访问网站查看。\n\n![IMG-A057E6D98847314E2A2742FB44382803](</mdImages/IMG-A057E6D98847314E2A2742FB44382803.png>)  \n\n![IMG-C4F896C16386AFFB89F1ED856D4D8319](</mdImages/IMG-C4F896C16386AFFB89F1ED856D4D8319.png>)\n### 3.2. [Cherry Studio 官方网站 - 全能的 AI 助手](<https://cherry-ai.com/>)\n\nCherry Studio 已经成我的主力大模型客户端了，该有的体验都有，更新也很快。  \n\n可以针对不同的场景定义系统提示词创建助手，也支持知识库、网络搜索等。\n\n![IMG-F2941F88FBABE4EDDABB80C1DFED62EB](</mdImages/IMG-F2941F88FBABE4EDDABB80C1DFED62EB.png>)  \n\n不过目前不太好的一点是同步的功能不太完善，可以通过网盘或者 webdav 同步，但是网盘只能手动备份和恢复。  \n\n另外一个比较火的 chatwise 我还没有进行体验，有时间的时候会下载下来体验对比一下。\n\n<!-- issues-blog:source=d1:post.2025-W09 -->\n<!-- issues-blog:published-at=2025-03-02T00:00:00.000Z -->\n",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/53",
+  "state": "OPEN",
+  "createdAt": "2026-07-24T10:20:11Z",
+  "updatedAt": "2026-07-24T10:20:11Z",
+  "author": "KazooTTT",
+  "labels": [
+    "blog:publish",
+    "周报",
+    "obsidian",
+    "笔记软件",
+    "写作",
+    "gingko"
+  ],
+  "labelEvents": [
+    {
+      "label": "blog:publish",
+      "createdAt": "2026-07-24T10:20:13Z"
+    },
+    {
+      "label": "周报",
+      "createdAt": "2026-07-24T10:20:13Z"
+    },
+    {
+      "label": "obsidian",
+      "createdAt": "2026-07-24T10:20:13Z"
+    },
+    {
+      "label": "笔记软件",
+      "createdAt": "2026-07-24T10:20:13Z"
+    },
+    {
+      "label": "写作",
+      "createdAt": "2026-07-24T10:20:13Z"
+    },
+    {
+      "label": "gingko",
+      "createdAt": "2026-07-24T10:20:13Z"
+    }
+  ],
+  "reactions": [],
+  "comments": []
+}

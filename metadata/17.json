@@ -1,0 +1,36 @@
+{
+  "number": 17,
+  "title": "2024-W08",
+  "body": "\n# 2024-W08 推荐一些软件\n\n## AltTab\n\n可以替代 mac 的 tab，个人感觉是比原始的 tab 更方便和舒适的。\n\n官网地址：[AltTab - Windows alt-tab on macOS](<https://alt-tab-macos.netlify.app/>)\n\n![Pasted image 20240223211618](<https://pictures.kazoottt.top/2024/03/20240325-7864a099b4db48ca82ab17edf250943b.png>)\n\n## Tickeys\n\n[Tickeys | 找对打字的感觉 | YingDev](<https://www.yingdev.com/projects/tickeys>)\n\n![Pasted image 20240225140312](<https://pictures.kazoottt.top/2024/03/20240325-b244b3ec8e2c306837993f91eebe3cfe.png>)\n\n让打字带上炫酷的音效\n\n<!-- issues-blog:source=d1:post.2024-W08 -->\n<!-- issues-blog:published-at=2024-02-23T00:00:00.000Z -->\n",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/17",
+  "state": "OPEN",
+  "createdAt": "2026-07-24T10:15:34Z",
+  "updatedAt": "2026-07-24T10:15:34Z",
+  "author": "KazooTTT",
+  "labels": [
+    "blog:publish",
+    "周报",
+    "软件推荐",
+    "项目推荐"
+  ],
+  "labelEvents": [
+    {
+      "label": "blog:publish",
+      "createdAt": "2026-07-24T10:15:34Z"
+    },
+    {
+      "label": "周报",
+      "createdAt": "2026-07-24T10:15:35Z"
+    },
+    {
+      "label": "软件推荐",
+      "createdAt": "2026-07-24T10:15:35Z"
+    },
+    {
+      "label": "项目推荐",
+      "createdAt": "2026-07-24T10:15:35Z"
+    }
+  ],
+  "reactions": [],
+  "comments": []
+}

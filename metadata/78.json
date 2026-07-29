@@ -1,0 +1,36 @@
+{
+  "number": 78,
+  "title": "衬线、字重与可变字体",
+  "body": "字体不只是“长得好不好看”。在前端和设计里，字体至少会影响三件事：阅读体验、品牌气质、以及页面渲染是否稳定。\n\n## 基础概念\n\n先分清几组最容易混在一起的概念：字体风格、字体家族、字重和字体文件。\n\n### 衬线体和无衬线体\n\n字体最常见的分类是衬线体和无衬线体。\n\n![衬线体和无衬线体对比](https://pictures.kazoottt.top/2026/06/20260622-294814286b1d62019ad59e679fd6b589.svg)\n\n> 图中红色部分就是 serif，也就是衬线。图片来源：[Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Serif_and_sans-serif_03.svg)。\n\n**衬线体**是笔画末端带装饰的字体，比如宋体、Times New Roman。它通常更有书籍感、传统感，适合长文、正式出版物、标题排版。\n\n**无衬线体**是笔画末端没有明显装饰的字体，比如黑体、苹方、思源黑体、阿里巴巴普惠体。它更干净、现代，屏幕显示更常见，适合网页、App、后台系统和数据看板。\n\n简单判断：\n\n- 宋体、Times New Roman：衬线体。\n- 黑体、苹方、思源黑体、阿里巴巴普惠体：无衬线体。\n\n### 字体家族、字重和字体文件\n\n我们平时说“一个字体”，其实可能包含多个字体文件。比如一个字体家族里可能有：\n\n- Regular：常规字重。\n- Medium：中等字重。\n- Semibold：半粗。\n- Bold：粗体。\n\n在 CSS 里，常见写法是：\n\n```css\n.title {\n  font-family: \"Some Font\";\n  font-weight: 500;\n}\n```\n\n但这句话是否真的会切到 Medium，取决于字体文件是怎么注册的。\n\n## 可变字体与静态字体\n\n字体文件的组织方式，大体可以分成可变字体和静态字体。这里的关键问题是：一个文件能不能覆盖连续变化的字重或字宽。\n\n### 可变字体\n\n**可变字体**是一种把多个字重、字宽、倾斜等变化能力放进一个字体文件里的字体格式。\n\n![可变字体的多个设计轴](https://pictures.kazoottt.top/2026/06/20260622-5e2f5842da32696ad5df0659f4e68fa3.svg)\n\n> 自制示意图。这张图把可变字体的几个常见轴画出来了：`optical size`、`weight`、`width`。同一个字母 `a` 可以沿着不同轴连续变化。相关概念可参考 [Variable fonts on the web](https://web.dev/articles/variable-fonts)。\n\n如果一个字体是可变字体，通常可以用一个文件连续调节字重：\n\n```css\n@font-face {\n  font-family: \"Some Variable Font\";\n  src: url(\"./SomeVariableFont.woff2\") format(\"woff2\");\n  font-weight: 300 800;\n}\n\n.title {\n  font-family: \"Some Variable Font\";\n  font-weight: 642;\n}\n```\n\n这里的 `642` 是可以成立的，因为可变字体内部支持连续变化。\n\n### 静态字体\n\n**不可变字体**也可以叫静态字体。它通常是多个固定文件：\n\n```text\nSomeFont-Regular.woff2\nSomeFont-Medium.woff2\nSomeFont-Bold.woff2\n```\n\n这种字体不能靠一个文件连续变化。浏览器只能在已注册的固定字重之间选择，或者在缺少目标字重时做“伪加粗”。\n\n从网页加载角度看，两者的差异也很直观：\n\n![静态字体和可变字体的文件数量差异](https://pictures.kazoottt.top/2026/06/20260622-b82704060547131782b346ee744f6eb4.svg)\n\n> 自制示意图。静态字体往往需要多个字体文件来覆盖不同字重和样式；可变字体可以把更多变化能力收进一个文件里。相关概念可参考 [Variable font - Wikipedia](https://en.wikipedia.org/wiki/Variable_font)。\n\n### 阿里巴巴普惠体是哪一种\n\n阿里巴巴普惠体通常是**不可变字体**，也就是静态字体家族。它提供多个固定字重文件，比如 Regular、Medium、Semibold、Bold 等。\n\n所以它不是“一个文件里连续调节所有字重”的可变字体。要让 `font-weight` 正确工作，需要把不同字重文件正确注册给浏览器。\n\n## 前端里的 `font-weight` 坑\n\n到前端实现里，真正容易出问题的是：`font-weight` 看起来是字重语义，但它必须配合正确的 `@font-face` 注册才可靠。\n\n### `font-weight` 不一定等于切到对应字体文件\n\n这是最容易踩坑的地方。\n\n如果只加载了 Regular 文件：\n\n```css\n@font-face {\n  font-family: \"PuHuiTi-Regular\";\n  src: url(\"./AlibabaPuHuiTi-3-45-Light.woff2\") format(\"woff2\");\n  font-weight: 400;\n}\n```\n\n然后写：\n\n```css\n.title {\n  font-family: \"PuHuiTi-Regular\";\n  font-weight: 500;\n}\n```\n\n浏览器并不会凭空找到 Medium 文件。它可能会：\n\n- 继续使用 Regular。\n- 对 Regular 做伪加粗。\n- 根据浏览器和系统策略做近似匹配。\n\n这就是为什么 computed style 里看到 `font-weight: 500`，视觉上却不像真正的 Medium。\n\n### 更推荐的注册方式\n\n更理想的方式是：同一个字体家族下注册多个字重。\n\n```css\n@font-face {\n  font-family: \"Alibaba PuHuiTi\";\n  src: url(\"./AlibabaPuHuiTi-3-45-Light.woff2\") format(\"woff2\");\n  font-weight: 400;\n  font-style: normal;\n}\n\n@font-face {\n  font-family: \"Alibaba PuHuiTi\";\n  src: url(\"./AlibabaPuHuiTi-3-65-Medium.woff2\") format(\"woff2\");\n  font-weight: 500;\n  font-style: normal;\n}\n\n@font-face {\n  font-family: \"Alibaba PuHuiTi\";\n  src: url(\"./AlibabaPuHuiTi-3-75-SemiBold.woff2\") format(\"woff2\");\n  font-weight: 600;\n  font-style: normal;\n}\n```\n\n这样组件里就可以只写语义：\n\n```css\n.body {\n  font-family: \"Alibaba PuHuiTi\", \"Helvetica Neue\", Arial, sans-serif;\n  font-weight: 400;\n}\n\n.title {\n  font-family: \"Alibaba PuHuiTi\", \"Helvetica Neue\", Arial, sans-serif;\n  font-weight: 500;\n}\n```\n\n浏览器会在同一个 `font-family` 下，根据 `font-weight` 自动选择对应文件。\n\n### 不太推荐的注册方式\n\n有些项目会把不同字重注册成不同字体族：\n\n```css\n@font-face {\n  font-family: \"PuHuiTi-Regular\";\n  src: url(\"./AlibabaPuHuiTi-3-45-Light.woff2\") format(\"woff2\");\n  font-weight: 400;\n}\n\n@font-face {\n  font-family: \"PuHuiTi-Medium\";\n  src: url(\"./AlibabaPuHuiTi-3-65-Medium.woff2\") format(\"woff2\");\n  font-weight: 500;\n}\n```\n\n这时如果想用 Medium，就必须同时切换 `font-family`：\n\n```css\n.title {\n  font-family: \"PuHuiTi-Medium\", \"PuHuiTi-Regular\", \"Helvetica Neue\", Arial, sans-serif;\n  font-weight: 500;\n}\n```\n\n这种写法不是不能用，但它会让组件层知道太多字体文件细节。长期看，最好还是收敛成同一个字体家族，靠 `font-weight` 表达字重语义。\n\n### 验证字体是否真的生效\n\n验证字体时，不要只看：\n\n```js\ngetComputedStyle(el).fontWeight;\n```\n\n还要看：\n\n```js\ngetComputedStyle(el).fontFamily;\n```\n\n如果视觉要求很严格，还需要实际截图或肉眼对比。因为 computed style 只能告诉你 CSS 结果，不一定能直接告诉你浏览器最终用了哪个字体文件。\n\n## 总结\n\n可变字体是“一个字体文件里有连续变化能力”；不可变字体是“多个固定字重文件组成一个字体家族”。\n\n阿里巴巴普惠体通常属于不可变字体。使用它时，`font-weight: 500` 是否真的等于 Medium，取决于项目有没有把 Medium 文件正确注册到同一个 `font-family` 下。\n\n## 参考资料\n\n- [Serif - Wikipedia](https://en.wikipedia.org/wiki/Serif)：解释 serif 是附着在笔画末端的小线条或笔画。\n- [Sans-serif - Wikipedia](https://en.wikipedia.org/wiki/Sans-serif)：解释 sans-serif 是没有 serif 的字形分类，也提到它常用于屏幕显示。\n- [Variable font - Wikipedia](https://en.wikipedia.org/wiki/Variable_font)：解释可变字体可以在一个字体文件里存储连续范围的设计变体。\n- [Variable fonts on the web](https://web.dev/articles/variable-fonts)：可变字体在网页中的使用说明。\n\n<!-- issues-blog:source=d1:ae66b276-dab4-4b2b-963f-08c22ac35d5d -->\n<!-- issues-blog:published-at=2026-06-22T00:00:00.000Z -->\n",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/78",
+  "state": "OPEN",
+  "createdAt": "2026-07-24T10:23:22Z",
+  "updatedAt": "2026-07-24T10:23:22Z",
+  "author": "KazooTTT",
+  "labels": [
+    "blog:publish",
+    "frontend",
+    "font",
+    "typography"
+  ],
+  "labelEvents": [
+    {
+      "label": "blog:publish",
+      "createdAt": "2026-07-24T10:23:23Z"
+    },
+    {
+      "label": "frontend",
+      "createdAt": "2026-07-24T10:23:24Z"
+    },
+    {
+      "label": "font",
+      "createdAt": "2026-07-24T10:23:24Z"
+    },
+    {
+      "label": "typography",
+      "createdAt": "2026-07-24T10:23:24Z"
+    }
+  ],
+  "reactions": [],
+  "comments": []
+}

@@ -1,0 +1,46 @@
+{
+  "number": 43,
+  "title": "how to generate the path like router config in vite + react + react-router project",
+  "body": "\nwhen i use react-router and vite, i want to config my router in the router.config.ts file and also generate some config for the target path dir. (like the nextjs router which is automatically generated based on the file structure)\n\nconfig the router in the router.config.ts file is easy, but how to generate the path like router config for the target path dir? and combine the self config and automatically generated config together, finally use it in the react router?\n\nwe can split the problem into these parts:\n\n1. generate the path like router config for the target path dir\n2. combine the self config and automatically generated config together\n3. use it in the react router\n\n## 1. generate the path like router config for the target path dir\n\nthere is one package called [`vite-plugin-pages`](<https://github.com/hannoeru/vite-plugin-pages>), which can help us generate the path like router config for the target path dir.\n\nhow to use it?\n\nstep 1. in the vite + react + react-router project, install the `vite-plugin-pages` package.\n\n```shell\npnpm install vite-plugin-pages --save-dev\n```\n\nstep 2. add the `vite-plugin-pages` plugin in the vite config file.\n\n```ts\nimport Pages from \"vite-plugin-pages\"\nimport { defineConfig } from \"vite\"\n\n// https://vite.dev/config/\nexport default defineConfig({\n  plugins: [\n    // ...\n    Pages({\n      dirs: \"src/views\",\n    }),\n    // ...\n  ],\n})\n```\n\nthe default dirs of the `vite-plugin-pages` plugin is `src/pages`, you can change it by the `dir` option.\n\nwe set it to `src/views` in the example.\n\n![api docs](<https://pictures.kazoottt.top/2025/01/20250114-58239a4616583a9f4659dcfb8dd5dba8.png>)\n\nit has some other options, you can see the [official docs](<https://github.com/hannoeru/vite-plugin-pages>).\n\nstep 3. get the path like router config for the target path dir.\n\n```tsx\nimport routes from \"~react-pages\"\n\nfunction App() {\n  const routeElements = useRoutes(routes)\n  return <MainLayout>{routeElements}</MainLayout>\n}\n```\n\nthen we can view the target path which is related to the target path dir.\n\nstep 4. (optional) generate the sidebar to show the levels of the path.\n\n```tsx\nimport { useState } from \"react\"\nimport { RouteObject, useLocation, useNavigate } from \"react-router-dom\"\nimport routes from \"~react-pages\"\n\nfunction Sidebar() {\n  const [isCollapsed, setIsCollapsed] = useState(false)\n  const navigate = useNavigate()\n  const location = useLocation()\n\n  const renderMenuItem = (route: RouteObject) => {\n    const isActive = location.pathname === \"/\" + route.path\n\n    return (\n      <div\n        key={route.path}\n        onClick={() => {\n          if (route.path) {\n            navigate(route.path)\n          }\n        }}\n        className={`p-2 cursor-pointer ${\n          isActive ? \"bg-blue-100 text-blue-600\" : \"bg-transparent text-black\"\n        } transition-all duration-300`}\n      >\n        {route.path}\n      </div>\n    )\n  }\n\n  return (\n    <div\n      className={`flex flex-col ${\n        isCollapsed ? \"w-12\" : \"w-52\"\n      } h-full bg-white border-r border-gray-200 transition-width duration-300 relative`}\n    >\n      <button\n        onClick={() => setIsCollapsed(!isCollapsed)}\n        className=\"absolute right-[-12px] top-5 w-6 h-6 rounded-full border border-gray-200 bg-white cursor-pointer z-10\"\n      >\n        {isCollapsed ? \">\" : \"<\"}\n      </button>\n\n      {!isCollapsed && (\n        <>\n          <div className=\"py-4 flex-1\">{routes.map(renderMenuItem)}</div>\n        </>\n      )}\n    </div>\n  )\n}\n\nexport default Sidebar\n```\n\n## 2. combine the self config and automatically generated config together\n\nsince the dirs of the `vite-plugin-pages` plugin is `src/views` (we config it in the step 2), so we can combine the self config and automatically generated config together.\n\nwe need to create a dir which is not in the `src/views` dir(such as `src/pages`)\n\n```tsx\nimport routes from \"~react-pages\"\nimport HomePage from \"src/pages/home/index.tsx\"\n\nconst pathsRouterConfig = routes\nconst pathsManualConfig = [\n  {\n    path: \"/home\",\n    component: <HomePage />,\n  },\n]\n\nconst finalRouterConfig = [...pathsRouterConfig, ...pathsManualConfig]\n```\n\n## 3. use it in the react router\n\nthe use way is the same as the react-router\n\n```tsx\nimport routes from \"~react-pages\"\n\nfunction App() {\n  const routeElements = useRoutes(routes)\n  return <MainLayout>{routeElements}</MainLayout>\n}\n```\n\n## summary\n\nthis is a simple way to generate the path like router config for the target path dir in the vite + react + react-router project.\n\nif you want to see a demo, you can see the [demo repo](<https://github.com/KazooTTT/vtkjs-react-demos>).\n\nif you want to know more about the `vite-plugin-pages` plugin, you can see the [github repo](<https://github.com/hannoeru/vite-plugin-pages>).\n\n<!-- issues-blog:source=d1:post.how-to-generate-the-path-like-router-config-in-vite-react-react-router-project -->\n<!-- issues-blog:published-at=2025-01-14T00:00:00.000Z -->\n",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/43",
+  "state": "OPEN",
+  "createdAt": "2026-07-24T10:19:04Z",
+  "updatedAt": "2026-07-24T10:19:04Z",
+  "author": "KazooTTT",
+  "labels": [
+    "blog:publish",
+    "笔记",
+    "react",
+    "react-router",
+    "vite",
+    "vite-plugin-pages"
+  ],
+  "labelEvents": [
+    {
+      "label": "blog:publish",
+      "createdAt": "2026-07-24T10:19:05Z"
+    },
+    {
+      "label": "笔记",
+      "createdAt": "2026-07-24T10:19:05Z"
+    },
+    {
+      "label": "react",
+      "createdAt": "2026-07-24T10:19:05Z"
+    },
+    {
+      "label": "react-router",
+      "createdAt": "2026-07-24T10:19:05Z"
+    },
+    {
+      "label": "vite",
+      "createdAt": "2026-07-24T10:19:05Z"
+    },
+    {
+      "label": "vite-plugin-pages",
+      "createdAt": "2026-07-24T10:19:06Z"
+    }
+  ],
+  "reactions": [],
+  "comments": []
+}

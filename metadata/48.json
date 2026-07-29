@@ -1,0 +1,46 @@
+{
+  "number": 48,
+  "title": "不引入astro wiki plugin实现链接跳转的思路",
+  "body": "\n![IMG-2F53DF7357EC28522945C58351B62D96](</mdImages/IMG-2F53DF7357EC28522945C58351B62D96.png>)\n\n## 背景\n\nobsidian 是我的进行笔记编辑的主力软件，并且 wiki 语法，也就是 `[[某个笔记]]` 的语法使用的频率很高。\n\n与此同时，我还需要将笔记发布到基于 astro 框架搭建的个人博客上, 由于以下原因，实现起来比较困难。\n\n1. astro 本身不支持 wiki 语法，wiki 语法需要引入 remark 插件，对 wiki 语法进行解析。\n2. 在 astro 中，我使用 slug 字段作为笔记的唯一标识，而 wiki 语法中，`[[某个笔记]]` 的语法，实际上是使用笔记的 title 作为唯一标识的。如果使用插件，它的处理方式是把名称中的空格转化为下划线，并且将 title 转换为小写。\n\n以下是 [GitHub - landakram/remark-wiki-link: Parse and render wiki links.](<https://github.com/landakram/remark-wiki-link>) 的文档。\n\n![alt text](<https://pictures.kazoottt.top/2025/02/2025029-e06e4053dfcf4575af0552231407d192.png>)\n\n所以这与我的需求不符合，我需要的是使用 slug 字段作为笔记的唯一标识，并且使用 wiki 语法进行链接跳转。\n\n也就是 `[[Test Page]]` 转化为了 `/page/test_page`。\n\n假设我的中文笔记的信息是：\n\n于是目前开源的插件不满足我的要求，我需要自己实现 wiki 语法的转化或者解析。\n\n## 实现\n\n这是我之前的输出和部署工作流，首先在 obsidian 中编辑，笔记有一个属性叫做 toAstro，值为 true 的时候表示需要输出到 astro 中。\n\n![IMG-BDEFC1C365AE18FDB400CF95414BEFD2](<https://pictures.kazoottt.top/2025/02/2025029-bdefc1c365ae18fdb400cf95414befd2.png>)\n\n那么实现的方式有两种，一种是从 obsidian 中输出到 astro 的时候，对于要输出到 astro 的笔记中的 wiki 做预处理 (即转化为普通的 md 语法)，另一种是使用 remark 插件，在 astro 中解析 wiki 语法。\n\n由于比较赶时间，我首先选择了第一种方式，后续再考虑引入 remark 插件。\n\n于是流程就变成了下图。\n\n![alt text](<https://pictures.kazoottt.top/2025/02/2025029-8aeaf70b4c3febe368b443ce860293dc.png>)\n\n对于预处理 link，具体操作是：\n\n![Pasted image 20250209190633](<https://pictures.kazoottt.top/2025/02/2025029-6657f231d26772962812e8370b4a6bc4.png>)\n\n这样在输出的到 astro 的笔记中，wiki 语法就变成了普通的 md 语法，同时也保留了 title。\n\n## 效果展示\n\n在 obsidian 中使用了 wiki link 写法\n\n![IMG-D4D0136CE577530F2CA29510B83DF689](<https://pictures.kazoottt.top/2025/02/2025029-d4d0136ce577530f2ca29510b83df689.png>)\n\n经过转化：\n\n![IMG-1E36E72DE9CBDBB8D880E4B31D136342](<https://pictures.kazoottt.top/2025/02/2025029-1e36e72de9cbdbb8d880e4b31d136342.png>)\n\n在 astro 中的效果\n\n![IMG-6B67FFDA95C7E30D1A1139F5E390F6F3](<https://pictures.kazoottt.top/2025/02/2025029-6b67ffda95c7e30d1a1139f5e390f6f3.gif>)\n\n<!-- issues-blog:source=d1:post.redirect-links-without-astro-wiki-plugin -->\n<!-- issues-blog:published-at=2025-02-09T00:00:00.000Z -->\n",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/48",
+  "state": "OPEN",
+  "createdAt": "2026-07-24T10:19:34Z",
+  "updatedAt": "2026-07-24T10:19:34Z",
+  "author": "KazooTTT",
+  "labels": [
+    "blog:publish",
+    "笔记",
+    "obsidian",
+    "astro",
+    "remark",
+    "wiki-link"
+  ],
+  "labelEvents": [
+    {
+      "label": "blog:publish",
+      "createdAt": "2026-07-24T10:19:36Z"
+    },
+    {
+      "label": "笔记",
+      "createdAt": "2026-07-24T10:19:36Z"
+    },
+    {
+      "label": "obsidian",
+      "createdAt": "2026-07-24T10:19:36Z"
+    },
+    {
+      "label": "astro",
+      "createdAt": "2026-07-24T10:19:36Z"
+    },
+    {
+      "label": "remark",
+      "createdAt": "2026-07-24T10:19:36Z"
+    },
+    {
+      "label": "wiki-link",
+      "createdAt": "2026-07-24T10:19:36Z"
+    }
+  ],
+  "reactions": [],
+  "comments": []
+}

@@ -1,0 +1,51 @@
+{
+  "number": 22,
+  "title": "2024-W16",
+  "body": "\n![2024-04-20-19-19-39 (1)](<https://pictures.kazoottt.top/2024/04/20240420-5449c27ccc85a12d0a1446f35d2c0cbd.jpeg>)\n\n日期范围：2024/04/15 - 2024/04/21\n\n[[信息源]]\n\n# 编程相关\n\n这周没有这么收集资讯，基本等于没有。\n\n## Nitro\n\n[Getting Started - Nitro](<https://nitro.unjs.io/guide>)\n\nNitro 可独立使用，也可作为 Nuxt 等全栈框架的服务器引擎使用。\n\n![Pasted image 20240420153222](<https://pictures.kazoottt.top/2024/04/20240420-646bfaae1c6d4632d4999c40daa7c7a4.png>)\n\n![Pasted image 20240420153158](<https://pictures.kazoottt.top/2024/04/20240420-70eda1053e7a6eafb76f0953f79f3e52.png>)\n\n## 【AI 女友】开源聊天虚拟人项目 - ChatGPT+Unity+Live2D+Azure\n\n介绍视频：[【AI 女友】开源聊天虚拟人项目 - ChatGPT+Unity+Live2D+Azure\\_哔哩哔哩、_bilibili](<https://www.bilibili.com/video/BV1CW4y1X7PK/>)\n\n项目地址：[GitHub - Navi-Studio/Virtual-Human-for-Chatting: Live2D Virtual Human for Chatting based on Unity](<https://github.com/Navi-Studio/Virtual-Human-for-Chatting>)\n\n之前我对于 llm api 的使用更多的是用于文本，感觉可以从这个项目中学习一下如何与其他的项目（live2d unity) 之类的联动。\n\n# 关于自身\n\n最近恢复了打卡，打卡的内容主要分为：\n\n1. 工作\n2. 编程\n3. 日常\n   三个部分，恢复打卡的原因是：\n\n> 感觉自己太颓废，进步速度很慢。想以此激励自己，并记录生活。\n> 我是一个表达欲很强且喜欢以碎片化方式记录的人，以前是发到微博和推特，现在是发到 flomo。\n> 而打卡的内容主要就是整理自已经记录的内容，所以对我来说也不算很大的负担。希望可以坚持下去\n\n以下是每天打卡的内容\n\n# 打卡 2024-04-17 星期三 day1\n\n关于工作：\n\n今天的工作感悟：\n\n自己无法把控的内容先做、先了解，不然等自己完全掌握的部分做完再去做无法把控的，可能会有不可预知的风险，并且告知他人修改的时候，他人改好的时间也会延后。\n\n目前的服务在并发量极低的情况下都出现了性能问题，有些担忧后续上线的情况，但我对后端确实不太了解，想去排查和优化有些无从下手。还是先学习吧。 #后端 #python #flask #todo\n\npython 写 typing 是对自己负责也是对别人负责，对于毫无章法的后端数据定义搭配灵活的 js 简直是灾难级别的维护难度。\n\n关于编程：\n\n之前思考问题总是想设想一个场景然后去看别人的项目的源代码，然后参考他们的写到自己 i 的项目，最近发现其实这样挺束手束脚和低效的。因为这些代码并不是我要做的功能的最小实现，如果我要去参考，首先需要找到入口然后去抽离非线性的关系。所以打算也后遇到新的需求先自己做，遇到问题了再去参考别人的解决方案，这样对自己也有帮助。\n\n今天完成了一篇关于 abortcontroller 的笔记以及 chainforge 的调研。\n\n关于生活：\n\n手长倒刺了，效率减半，现在还有点痛。\n\n自己按照时间段把日程规划好，真的效率高很多。（p1）\n\n![Pasted image 20240417234255](<https://pictures.kazoottt.top/2024/04/20240417-1d4478ac57e44c15984522aa169c6011.png>)\n\n其他：\n\n论 nextjs 开发对于性能的要求 (p2)\n\n![Pasted image 20240417234305](<https://pictures.kazoottt.top/2024/04/20240417-45f2279559a2fe72e430d38242eeef7a.png>)\n\n最近听的最多的歌应该是《梦中人》\n\n# 打卡 2024-04-18 星期四 day2\n\n工作：\n\n今天完成了新版的界面编写，感觉项目中的数据实在太混乱了。我要找个时间重新梳理一下，然后用 ts 重构。\n\n然后感觉目前的框架太重了，想要去看一下别的框架例如 langchain 的案例，作为参考。\n\n前端：\n\n如何管理状态？state 如何拆分？哪些是全局的哪些是组件内的。感觉这部分的内容我掌握的比较差。\n\n生活：\n\n在小红书上和 yihong 老师互关了 2333。\n\n注意力实在无法集中，先睡了，明天 7 点起来好好看一下资料，准备要讲的内容。\n\n不要与趋势做对。\n\n很喜欢各自努力，然后偶尔交流、见面的感觉。\n\n今天的午饭在盒马吃的，花了 19.62\n\n感觉盒马又香了👍\n\n![852E2EF2-CE90-4B17-BE89-949D448AF2DD_1_105_c](<https://pictures.kazoottt.top/2024/04/20240420-23751abb6ce94943f3733424c793d20c.jpeg>)\n\n今天喝了一杯 dirty 和一杯冰拿铁。感觉冰拿铁更容易入口？\n\n![C6A8198B-FDF0-4871-BB25-260F2A922DAC_1_105_c](<https://pictures.kazoottt.top/2024/04/20240420-2df2d041a0fff2789512256c1d56c4f5.jpeg>)\n\n# 打卡 2024-04-19 星期五 day3\n\n关于工作和编程：\n\n今天分享了 chainforge。我突然发现我的公众演讲能力还是在的。.. 拿起一个项目虽然没有做什么准备也能讲很久。有点惊喜。\n\n下午演示了新版的交互。\n\n在做这版交互的时候意识到了自己很多的不足，第一个是 react 没有属于自己的在公司内部开箱即用的脚手架，所以创建一个新的项目的时候效率很低。\n\n并且对于 ts 的支持不友好，导致我赶时间选择了 js，到后来低于数据结构越来越不可控。\n\n然后对于 python 的熟悉程度不够，有时候写后端或者排查后端的问题会花费很长的时间，现在的性能也不好。\n\n然后实在太累了，延迟了周报的发布。周六写好再发群里吧。\n\n关于生活和其他：\n\n切换了解码策略，看直播的卡顿次数少了一点。\n\n最近都在食堂吃饭了，能省下不少钱。等吃腻了再换到外面的餐馆。\n\n![7A1BAED5-E79C-4AFA-A8F3-E5D5ED9C73DB_1_105_c](<https://pictures.kazoottt.top/2024/04/20240420-4a6433c4f6a897be4c68b25a6d4ea9ab.jpeg>)\n\nSQQQ 大涨，昨天期权卖飞了。.. 虽然可惜，但觉得自己确实还没有能力做更准确的判断。\n\n![7F1E47D5-256E-4DDC-83F7-5F1EE73FF422_1_102_o](<https://pictures.kazoottt.top/2024/04/20240420-9b69dd248d50cd1a0e6b7e465c63936b.jpeg>)\n\n周六要做的事情\n\n1. 整理资讯周报\n2. 催一下 w 的需求清单\n3. 完成社区的需求\n4. 测试外部接口的稳定性\n\n# 打卡 2024 年 04 月 20 日 星期六 day4\n\n完成了资讯周报的整理\n\n看了下 w 反馈的问题，无法复现，只能晚上远程他电脑看了。（我们俩时差有点大，基本只能快 0 点的时候聊😂那时候我快睡觉，他才起来。）\n\n今天吃了点都德的红米肠、虾饺、炒面，最近特别地馋红米肠 T T，两周内点了三次了！下次去广州的时候一定要大吃特吃。\n\n之前安可安利了库迪的五常米乳拿铁，才知道这个牌子，之后尝试了一下 ta 家其他的，都还不错。今天喝了两杯生酪拿铁。\n\n![Pasted image 20240420190546](<https://pictures.kazoottt.top/2024/04/20240420-a90142a73b9cc1dc3d38ce2c8192a6dc.png>)\n\n这周要把需求 1 做完，不能再拖了，后面更没有时间做。\n\n<!-- issues-blog:source=d1:post.2024-W16 -->\n<!-- issues-blog:published-at=2024-04-12T00:00:00.000Z -->\n",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/22",
+  "state": "OPEN",
+  "createdAt": "2026-07-24T10:16:22Z",
+  "updatedAt": "2026-07-24T10:16:22Z",
+  "author": "KazooTTT",
+  "labels": [
+    "blog:publish",
+    "周报",
+    "打卡",
+    "后端",
+    "flask",
+    "python",
+    "todo"
+  ],
+  "labelEvents": [
+    {
+      "label": "blog:publish",
+      "createdAt": "2026-07-24T10:16:23Z"
+    },
+    {
+      "label": "周报",
+      "createdAt": "2026-07-24T10:16:23Z"
+    },
+    {
+      "label": "打卡",
+      "createdAt": "2026-07-24T10:16:23Z"
+    },
+    {
+      "label": "后端",
+      "createdAt": "2026-07-24T10:16:23Z"
+    },
+    {
+      "label": "flask",
+      "createdAt": "2026-07-24T10:16:24Z"
+    },
+    {
+      "label": "python",
+      "createdAt": "2026-07-24T10:16:24Z"
+    },
+    {
+      "label": "todo",
+      "createdAt": "2026-07-24T10:16:24Z"
+    }
+  ],
+  "reactions": [],
+  "comments": []
+}

@@ -1,0 +1,41 @@
+{
+  "number": 46,
+  "title": "试试 action5 pro 推流到本地 rtmp 和有线连接的效果",
+  "body": "\nb 站：\n\n[试试 action5 pro 推流到本地 rtmp 和有线连接的效果](<https://www.bilibili.com/video/BV13L17YdE9f/>)\n\nyoutube:\n\n<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/S0y06TkFC_A\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>\n\n<!-- issues-blog:source=d1:post.action5-pro-obs-rtmp -->\n<!-- issues-blog:published-at=2025-02-06T00:00:00.000Z -->\n",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/46",
+  "state": "OPEN",
+  "createdAt": "2026-07-24T10:19:24Z",
+  "updatedAt": "2026-07-24T10:19:24Z",
+  "author": "KazooTTT",
+  "labels": [
+    "blog:publish",
+    "笔记",
+    "action5pro",
+    "dji",
+    "rtmp"
+  ],
+  "labelEvents": [
+    {
+      "label": "blog:publish",
+      "createdAt": "2026-07-24T10:19:26Z"
+    },
+    {
+      "label": "笔记",
+      "createdAt": "2026-07-24T10:19:26Z"
+    },
+    {
+      "label": "action5pro",
+      "createdAt": "2026-07-24T10:19:26Z"
+    },
+    {
+      "label": "dji",
+      "createdAt": "2026-07-24T10:19:26Z"
+    },
+    {
+      "label": "rtmp",
+      "createdAt": "2026-07-24T10:19:26Z"
+    }
+  ],
+  "reactions": [],
+  "comments": []
+}

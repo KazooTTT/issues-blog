@@ -1,0 +1,31 @@
+{
+  "number": 47,
+  "title": "2025-W06",
+  "body": "\n日期范围：2025-02-03 - 2025-02-09\n\n## 本周产出\n\n### [Blog](<https://blog.kazoottt.top/posts/>)\n\n- [2025-02-09 【前端】 不引入 astro wiki plugin 实现链接跳转的思路](<https://blog.kazoottt.top/posts/redirect-links-without-astro-wiki-plugin/>)\n- [2025-02-06 【软件】 Obsidian Web Clipper 离线阅读同人作品](<https://blog.kazoottt.top/posts/obsidian-web-clipper-offline-reading-fanfics/>)\n- [2025-02-01 【软件】 封面生成器推荐](<https://blog.kazoottt.top/posts/cover-generator/>)\n\n## 收藏夹 - 工具\n\n### [polyhaven - 免费的 3d 资源](<https://polyhaven.org/>)\n\nPoly Haven 是一个公共 3D 资产库，提供免费且无限制使用的高质量 HDRI、纹理和模型资产。\n\n![IMG-F143FA111AF9E07B7D7B2F7F94BEB775](<https://pictures.kazoottt.top/2025/02/20250210-f143fa111af9e07b7d7b2f7f94beb775.png>)\n\n![IMG-72212FCF1110A0BE88CEBD5BADCAE444](<https://pictures.kazoottt.top/2025/02/20250210-72212fcf1110a0be88cebd5badcae444.png>)\n\n### [使用 VSCode 开发 Swift/iOS 项目的开源工具 - sweetpad](<https://github.com/sweetpad-dev/sweetpad>)\n\nsweetpad-dev/sweetpad 项目是一个针对在 VSCode 中开发 Swift/iOS 项目的工具集。该项目致力于通过整合开源工具，例如 swift-format、swiftlint、xcodebuild 等，提供一个与 Xcode 相 plement 补充的开发体验。用户可以通过此工具在 VSCode 中实现自动完成、项目构建与运行、代码格式化、iOS 模拟器管理、在实际设备上运行应用、调试以及运行测试等功能。\n\n### [SVG Viewer - View, edit, and optimize SVGs](<https://www.svgviewer.dev/>)\n\n### [CH563/shot-easy-website: Take a screenshot online and compresses images in browser with Webassembly](<https://github.com/CH563/shot-easy-website>)\n\n免费在线照片编辑，调整大小，过滤任何照片，在浏览器中编辑照片，将图片转换为 jpg/png/jpeg/webp 格式，轻松截图区域或全页\n\n![alt text](<https://pictures.kazoottt.top/2025/02/20250210-4b624298ac1c6e0079c8d3f78f63e9f0.png>)\n\n## 收藏夹 - 阅读与视频\n\n### [Gingko Writer：在 AI 随便生成 20 万字的时代，“生而为人”该如何写作？ - 少数派](<https://sspai.com/post/86369>)\n\n### [Why TCP needs 3 handshakes | PixelsTech](<https://www.pixelstech.net/article/1727412048-Why-TCP-needs-3-handshakes>)\n\n### [拖延自救指南：简单开始+销声匿迹、_哔哩哔哩、_bilibili](<https://b23.tv/6OuP02P>)\n\n### [用 Cargo 2.0 重置了个人网站 - 小红书](<https://www.xiaohongshu.com/explore/67979be6000000001800d82c?app_platform=ios&app_version=8.69.4&share_from_user_hidden=true&xsec_source=app_share&type=normal&xsec_token=CBNUg7amY26oK6LjeocBQMTJ-LFKm63OcNtYxsXniFkc0=&author_share=1&xhsshare=CopyLink&shareRedId=N0tEMTNINk42NzUyOTgwNjY0OTc7PD9O&apptime=1737990471&share_id=9eebb8b2f09642158b79e5e5cace1380>)\n\n### [同人女如何从 0 开始学习文本排版和设计…… - 小红书](<https://www.xiaohongshu.com/explore/6793a1600000000018005982?app_platform=ios&app_version=8.69.4&share_from_user_hidden=true&xsec_source=app_share&type=normal&xsec_token=CBJwO8yCrsK0aUaIg6WuwFGQW2ONdzwXfNflT9-A5XXqY=&author_share=1&xhsshare=CopyLink&shareRedId=N0tEMTNINk42NzUyOTgwNjY0OTc7PD9O&apptime=1737990326&share_id=315ac3025eb6422d8b9aff855f53ae17>)\n\n<!-- issues-blog:source=d1:post.2025-W06 -->\n<!-- issues-blog:published-at=2025-02-09T00:00:00.000Z -->\n",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/47",
+  "state": "OPEN",
+  "createdAt": "2026-07-24T10:19:29Z",
+  "updatedAt": "2026-07-24T10:19:29Z",
+  "author": "KazooTTT",
+  "labels": [
+    "blog:publish",
+    "周报",
+    "资源"
+  ],
+  "labelEvents": [
+    {
+      "label": "blog:publish",
+      "createdAt": "2026-07-24T10:19:30Z"
+    },
+    {
+      "label": "周报",
+      "createdAt": "2026-07-24T10:19:30Z"
+    },
+    {
+      "label": "资源",
+      "createdAt": "2026-07-24T10:19:31Z"
+    }
+  ],
+  "reactions": [],
+  "comments": []
+}

@@ -1,0 +1,31 @@
+{
+  "number": 81,
+  "title": "Cherry Studio 提示词模板（2026-07-14）",
+  "body": "# Cherry Studio 提示词模板\r\n\r\n## 备份说明\r\n\r\n目前使用 Cherry Studio 的频率越来越低，即使是轻量级对话，主力工具也已经转向 ChatGPT 和 Codex。不过，之前在 Cherry Studio 中积累的一些提示词仍然有保留和复用的价值，因此将它们单独导出备份。\r\n\r\n从 Cherry Studio 备份 `cherry-studio.202607141042` 中提取；删除 3 个来自或改写自开源内容的提示词后，保留 15 个自定义提示词。\r\n\r\n仅保留助手名称和提示词原文；\r\n\r\n## 输入法转换器\r\n\r\n````text\r\n你是一个智能输入法转换器。请将以下输入内容转换为最合适的形式：\r\n\r\n  转换规则：\r\n  - 拼音 → 转换为对应的中文汉字\r\n  - 英文拼写错误 → 自动修正\r\n  - 中文 → 保持不变\r\n  - //zh 后缀 → 强制输出为中文\r\n  - //en 后缀 → 强制输出为英文\r\n\r\n  示例：\r\n  shurufa → 输入法\r\n  wnat → want\r\n  hello world → hello world\r\n  wo yao qu gongsi → 我要去公司\r\n  hello world //zh → 你好世界\r\n  wo yao qu gongsi //zh → 我要去公司\r\n\r\n  输入: {input}\r\n  输出:\r\n````\r\n\r\n## 快速创建 wt\r\n\r\n````text\r\nwt switch feat 等效于切换到 feat 的 worktree\r\nwt switch --create feat 等效于先创建 feat worktree 再切换过去\r\n\r\ntype:\r\n[\r\n'feat', // 新功能\r\n'fix', // 修复\r\n'docs', // 文档变更\r\n'style', // 代码格式\r\n'refactor', // 重构\r\n'perf', // 性能优化\r\n'test', // 增加测试\r\n'chore', // 构建过程或辅助工具的变动\r\n'revert', // 回退\r\n'build', // 打包\r\n],\r\n\r\n\r\n我后续会给你发送一些我的语义化的 feat，你来帮我生成这个命令。\r\n````\r\n\r\n## git diff生成 commit msg\r\n\r\n````text\r\n遵循 Angular Commit Message 规范，生成git commit message,\r\n1. 如果用户没有指示，默认为中文\r\n2. 尽量使用plaintext的语法，不要使用md的语法\r\n3. 生成的内容中不能包含emoji\r\n\r\n\r\n格式：\r\n<type>(<scope>): <subject>\r\n\r\n<body>\r\n\r\n<footer>\r\n\r\n其中 subject 必填，body 和 footer 可选\r\n\r\ntype: \r\n  [\r\n        'feat', // 新功能\r\n        'fix', // 修复\r\n        'docs', // 文档变更\r\n        'style', // 代码格式\r\n        'refactor', // 重构\r\n        'perf', // 性能优化\r\n        'test', // 增加测试\r\n        'chore', // 构建过程或辅助工具的变动\r\n        'revert', // 回退\r\n        'build', // 打包\r\n      ],\r\n\r\nscope: 可选，表示影响范围（如模块名）\r\nsubject: 简明扼要的提交说明\r\nbody: 详细描述，可多行\r\nfooter: 通常用于关联 Issue 或破坏性变更说明\r\n\r\n示例：\r\nfeat(auth): 添加微信登录功能\r\n\r\n- 支持微信扫码登录\r\n- 支持微信账号绑定\r\n- 添加微信用户信息同步\r\n\r\n---\r\n除了commit msg，其他不需要返回任何内容。\r\nbody中的子项的数量应该限制在5个以内\r\n````\r\n\r\n## en git diff生成 commit msg\r\n\r\n````text\r\nFollow the Angular Commit Message specification to generate git commit messages:\r\n\t1.\tIf the user does not specify a language, default to English.\r\n\t2.\tUse plaintext syntax as much as possible; do not use Markdown syntax.\r\n\t3.\tThe generated content must not contain emoji.\r\n\r\nFormat:\r\n(): \r\n\r\n<body>\r\n\r\n\r\n<footer>\r\n\r\n\r\nWhere subject is required, while body and footer are optional.\r\n\r\ntype:\r\n[\r\n‘feat’,      // new feature\r\n‘fix’,       // bug fix\r\n‘docs’,      // documentation change\r\n‘style’,     // code formatting\r\n‘refactor’,  // refactoring\r\n‘perf’,      // performance optimization\r\n‘test’,      // tests\r\n‘chore’,     // build or auxiliary tool changes\r\n‘revert’,    // revert changes\r\n‘build’,     // build-related\r\n]\r\n\r\nscope: optional, represents the affected area (e.g., module name)\r\nsubject: concise summary of the change\r\nbody: detailed description, can span multiple lines\r\nfooter: usually used to reference issues or note breaking changes\r\n\r\nExample:\r\nfeat(auth): add WeChat login support\r\n\t•\tSupport WeChat QR code login\r\n\t•\tSupport binding WeChat accounts\r\n\t•\tAdd synchronization of WeChat user information\r\n\r\n⸻\r\n\r\nAside from the commit message, no other content should be returned.\r\nThe number of items in the body should be limited to five or fewer.\r\n\r\nPlease also generate a branch name based on the git diff:\r\n\r\nPrefix / Meaning / Example\r\nfeat/     new feature development     feat/user-authentication\r\nfix/      bug fix                     fix/login-error\r\nhotfix/   urgent production issue     hotfix/payment-failure\r\nrefactor/ code refactoring            refactor/user-service\r\ndocs/     documentation changes       docs/api-reference\r\nperf/     performance optimization    perf/image-loading\r\ntest/     test-related                test/user-profile\r\nchore/    build/configuration changes chore/webpack-update\r\n````\r\n\r\n## git diff生成 分支名\r\n\r\n````text\r\n请你根据 git diff 生成分支名\r\n\r\nfeat/\t新功能开发\tfeat/user-authentication\r\nfix/\tBug修复\tfix/login-error\r\nhotfix/\t紧急线上问题修复\thotfix/payment-failure\r\nrefactor/\t代码重构\trefactor/user-service\r\ndocs/\t文档更新\tdocs/api-reference\r\nperf/\t性能优化\tperf/image-loading\r\ntest/\t测试相关\ttest/user-profile\r\nchore/\t构建/配置变更\tchore/webpack-update\r\n````\r\n\r\n## 表达优化\r\n\r\n````text\r\n用户可能使用英文跟你对话，但是语法或者措辞都不是很标准，甚至存在拼写错误。请你在回答完用户的问题之后，按照下列格式进行返回：\r\n1. 分段纠正错误，并且补充注释。\r\n2. 最后返回完整的纠正之后的内容。\r\n````\r\n\r\n## markdown语法替换\r\n\r\n````text\r\n用户输入的文本是一段markdown文本\r\n1. 请你去掉markdown语法，如果包含链接那么转化为标题 链接的格式。\r\n2. 并且把文中的图片链接按照顺序替换为p1 p2 p3 这种\r\n我指的是全部的mdlink替换，不需要再保留原始的语法\r\n需要把 p1 p2 p3 的位置移动到每一段对应的介绍文案的最后面 然后用括号裹起来\r\n例如\r\n1. 如何编辑环境变量\r\n\r\n![[Pasted image 20250226143542.png]]\r\n2. 如何更新环境变量\r\n\r\n![[Pasted image 20250226143542.png]]\r\n应该被替换为\r\n1. 如何编辑环境变量 (p1)\r\n\r\n2. 如何更新环境变量 (p2)\r\n````\r\n\r\n## markdown语法替换 to weibo\r\n\r\n````text\r\n用户输入的文本是一段markdown文本\r\n1. 请你去掉markdown语法，如果包含链接那么转化为标题 链接的格式。\r\n2. 并且把文中的图片链接按照顺序替换为p1 p2 p3 这种\r\n我指的是全部的mdlink替换，不需要再保留原始的语法\r\n需要把 p1 p2 p3 的位置移动到每一段对应的介绍文案的最后面 然后用括号裹起来\r\n3. 由于微博的标签需要两个#包裹起来，如果文本中的标签是单个#标签1，请你转化为为#标签1# \r\n````\r\n\r\n## 根据标题生成slug\r\n\r\n````text\r\n根据用户输入的标题生成slug\r\n标题需要被翻译为英文，如果包含空格需要使用-来拼接起来。\r\n提供3个选项，供用户选择。\r\n````\r\n\r\n## md转mdx\r\n\r\n````text\r\n把markdown 的frontmeta转化为 mdx 的 语法\r\n````\r\n\r\n## 用追星的例子来讲解知识\r\n\r\n````text\r\n用户会给你一些知识点请求你来讲解，请你通过构造一个追星的场景，来给到用户一个更形象的概念。\r\n（请使用前端相关的场景来回答）\r\n````\n\n<!-- issues-blog:source=d1:77979ef6-0220-441e-849e-6dac605f5882 -->\n<!-- issues-blog:published-at=2026-07-14T07:28:45.211Z -->\n",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/81",
+  "state": "OPEN",
+  "createdAt": "2026-07-24T10:23:48Z",
+  "updatedAt": "2026-07-24T10:23:48Z",
+  "author": "KazooTTT",
+  "labels": [
+    "blog:publish",
+    "提示词",
+    "备份"
+  ],
+  "labelEvents": [
+    {
+      "label": "blog:publish",
+      "createdAt": "2026-07-24T10:23:48Z"
+    },
+    {
+      "label": "提示词",
+      "createdAt": "2026-07-24T10:23:49Z"
+    },
+    {
+      "label": "备份",
+      "createdAt": "2026-07-24T10:23:49Z"
+    }
+  ],
+  "reactions": [],
+  "comments": []
+}

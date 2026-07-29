@@ -1,0 +1,41 @@
+{
+  "number": 36,
+  "title": "使用github action定时同步obsidian内容到astro博客仓库",
+  "body": "\n## github action\n\n目标仓库以及具体目录可以根据自己的项目来定\n\n```yaml\nname: Update Docs\n\non:\n  push:\n    paths:\n      - \"content/**\"\n      - \"scripts/build_docs.cjs\"\n  workflow_dispatch:\n\njobs:\n  build-and-deploy:\n    runs-on: ubuntu-latest\n\n    steps:\n      - name: Checkout source repository\n        uses: actions/checkout@v2\n        with:\n          token: ${{ secrets.PAT_TOKEN }}\n\n      - name: Set up Node.js\n        uses: actions/setup-node@v2\n        with:\n          node-version: \"20\"\n\n      - name: Install dependencies\n        run: |\n          echo \"Installing dependencies in source repository...\"\n          npm install\n          echo \"Dependencies installed successfully\"\n\n      - name: Build docs\n        run: |\n          echo \"Starting docs build...\"\n          npm run build:docs:server\n          echo \"Docs built successfully\"\n\n      - name: Checkout target repository\n        uses: actions/checkout@v2\n        with:\n          repository: kazoottt/kazoottt-blog\n          path: kazoottt-blog\n          token: ${{ secrets.PAT_TOKEN }}\n\n      - name: Copy built docs to target repository\n        run: |\n          echo \"Starting copy process...\"\n          echo \"Content of astroContent before copy:\"\n          cp -rv astroContent/* kazoottt-blog/src/content/post/\n          echo \"Content of astroContent copy done\"\n\n      - name: Setup target repository\n        run: |\n          cd kazoottt-blog\n          echo \"Configuring git...\"\n          git config --global user.name 'github-actions[bot]'\n          git config --global user.email 'github-actions[bot]@users.noreply.github.com'\n          echo \"Installing dependencies in target repository...\"\n          npm install\n          echo \"Running sort...\"\n          npm run sort\n\n      - name: Check for changes and commit\n        run: |\n          cd kazoottt-blog\n          if [[ -n $(git status -s) ]]; then\n            git add .\n            git commit -m \"Update docs and sort content\"\n            git push\n          else\n            echo \"No changes to commit\"\n          fi\n        env:\n          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}\n```\n\nPAT_TOKEN 申请  \n[Sign in to GitHub · GitHub](<https://github.com/settings/tokens>)\n\n需要权限：repo, workflow\n\n![image.png](<https://pictures.kazoottt.top/2024/11/20241129-d27ae43fa5ad1344d66dff2e9d79c70e.png>)\n\n## obsidian 模板\n\npublished 是 true 且 notAstro 不为 true 的时候，会被发布到另外一个仓库\n\n```\n---\ntitle: {{title}}\ndate: {{date}}\nauthor: KazooTTT\ntype: Post\nstatus: Published\ntags: []\nfinished: false\npublished: false\ncategory:\nslug:\ndescription:\nnotAstro:\n---\n\n```\n\n## 脚本 scripts/build_docs.cjs\n\n依赖安装\n\n```\nnpm install gray-matter\n```\n\n可以配置一些不想同步的文件夹\n\n```js\nconst fs = require(\"fs\").promises\nconst fsSync = require(\"fs\")\nconst path = require(\"path\")\nconst matter = require(\"gray-matter\")\nconst { execSync } = require(\"child_process\")\n\nconst CONFIG = {\n  outputDir: \"astroContent\",\n  inputDir: \"./content\",\n  ignoreList: [\n    \".github\",\n    \".obsidian\",\n    \"草稿箱\",\n    \"模板\",\n    \"attachment\",\n    \"记录\",\n    \"导航用\",\n    \"微信读书\",\n  ],\n  validExtensions: [\".md\"],\n  // Local specific config\n  localDestinationRoot: \"\", // to edit\n  localDestination: \"\", // to edit\n}\n\n/**\n * Ensures output directory exists\n */\nfunction initializeOutputDir() {\n  if (!fsSync.existsSync(CONFIG.outputDir)) {\n    fsSync.mkdirSync(CONFIG.outputDir, { recursive: true })\n  }\n}\n\n/**\n * Validates if a file should be processed based on its metadata\n */\nfunction shouldProcessFile(frontMatter) {\n  return frontMatter.published === true && !frontMatter.notAstro\n}\n\n/**\n * Processes a single markdown file\n */\nasync function processMarkdownFile(fullPath, outputPath) {\n  try {\n    const fileContent = await fs.readFile(fullPath, \"utf8\")\n    const { data } = matter(fileContent)\n\n    if (shouldProcessFile(data)) {\n      await fs.copyFile(fullPath, outputPath)\n      console.log(`✓ Copied: ${path.relative(CONFIG.inputDir, fullPath)}`)\n    }\n  } catch (error) {\n    console.error(`Error processing file ${fullPath}:`, error.message)\n  }\n}\n\n/**\n * Recursively processes directories and files\n */\nasync function processDirectory(dir) {\n  try {\n    const files = await fs.readdir(dir)\n\n    await Promise.all(\n      files.map(async (file) => {\n        const fullPath = path.join(dir, file)\n        const relativePath = path.relative(CONFIG.inputDir, fullPath)\n        const outputPath = path.join(CONFIG.outputDir, relativePath)\n\n        const stats = await fs.stat(fullPath)\n\n        if (stats.isDirectory()) {\n          if (CONFIG.ignoreList.includes(file)) return\n          await fs.mkdir(outputPath, { recursive: true })\n          await processDirectory(fullPath)\n        } else if (path.extname(file) === \".md\" && file !== \"index.md\") {\n          await processMarkdownFile(fullPath, outputPath)\n        }\n      }),\n    )\n  } catch (error) {\n    console.error(`Error processing directory ${dir}:`, error.message)\n  }\n}\n\n/**\n * Copies processed files to final destination and commits changes\n */\nasync function copyToLocalDestination() {\n  try {\n    // Remove existing content\n    if (fsSync.existsSync(CONFIG.localDestination)) {\n      await fs.rm(CONFIG.localDestination, { recursive: true })\n    }\n\n    // Create destination directory\n    await fs.mkdir(CONFIG.localDestination, { recursive: true })\n\n    // Copy files\n    const files = await fs.readdir(CONFIG.outputDir)\n    await Promise.all(\n      files.map(async (file) => {\n        const sourcePath = path.join(CONFIG.outputDir, file)\n        const destPath = path.join(CONFIG.localDestination, file)\n        await fs.rename(sourcePath, destPath)\n      }),\n    )\n\n    console.log(\"Content has been successfully copied to the local destination.\")\n\n    // Commit changes\n    execSync(`cd ${path.dirname(CONFIG.localDestination)} && npm run sort`)\n    execSync(`git add ${CONFIG.localDestination} && git commit -m \"update content\"`)\n    // push changes\n    // execSync(`git push`)\n  } catch (error) {\n    console.error(\"Error copying to destination:\", error.message)\n  }\n}\n\n/**\n * Cleans up the temporary output directory\n */\nasync function cleanupOutputDir() {\n  try {\n    if (fsSync.existsSync(CONFIG.outputDir)) {\n      await fs.rm(CONFIG.outputDir, { recursive: true })\n    }\n    console.log(\"Cleaned up temporary directory.\")\n  } catch (error) {\n    console.error(\"Error cleaning up:\", error.message)\n  }\n}\n\n/**\n * Main execution\n */\nasync function main() {\n  try {\n    const isLocalBuild = process.argv.includes(\"--local\")\n    console.log(`Starting document processing... (${isLocalBuild ? \"local\" : \"server\"} build)`)\n\n    initializeOutputDir()\n    await processDirectory(CONFIG.inputDir)\n\n    if (isLocalBuild) {\n      await copyToLocalDestination()\n      await cleanupOutputDir()\n    }\n\n    console.log(\"Document processing completed successfully!\")\n  } catch (error) {\n    console.error(\"Fatal error:\", error.message)\n  }\n}\n\nmain()\n```\n\n<!-- issues-blog:source=d1:post.synchronize-profiles-to-remote-and-local-on-a-regular-basis -->\n<!-- issues-blog:published-at=2024-11-29T00:00:00.000Z -->\n",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/36",
+  "state": "OPEN",
+  "createdAt": "2026-07-24T10:18:07Z",
+  "updatedAt": "2026-07-24T10:18:07Z",
+  "author": "KazooTTT",
+  "labels": [
+    "blog:publish",
+    "笔记",
+    "build docs",
+    "github action",
+    "obsidian模板"
+  ],
+  "labelEvents": [
+    {
+      "label": "blog:publish",
+      "createdAt": "2026-07-24T10:18:07Z"
+    },
+    {
+      "label": "笔记",
+      "createdAt": "2026-07-24T10:18:08Z"
+    },
+    {
+      "label": "build docs",
+      "createdAt": "2026-07-24T10:18:08Z"
+    },
+    {
+      "label": "github action",
+      "createdAt": "2026-07-24T10:18:08Z"
+    },
+    {
+      "label": "obsidian模板",
+      "createdAt": "2026-07-24T10:18:08Z"
+    }
+  ],
+  "reactions": [],
+  "comments": []
+}

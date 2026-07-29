@@ -1,0 +1,51 @@
+{
+  "number": 8,
+  "title": "2023-W11",
+  "body": "\n# 2023-W11\n\n时间范围：2023-03-12-2023-03-19  \n来源：github、twitter、微博、b 站\n\n## 一、浏览器插件&油猴脚本\n\n### 沉浸式双语网页翻译扩展\n\n关键词：翻译，浏览器插件\n\n好用好用，强烈安利  \n[https://github.com/immersive-translate/immersive-translate/](<https://github.com/immersive-translate/immersive-translate/>)  \n官方文档 [介绍 - 沉浸式翻译 (owenyoung.com)](<https://immersive-translate.owenyoung.com/>)\n\n![Pasted image 20230319151544](<https://pictures.kazoottt.top/2024/01/20240115-0373f4faa448dac5a45d7bef577b01e8.webp>)  \n使用效果图，可自定义多种翻译样式。\n\n### 隐藏你的 Twitter 信息\n\n关键词：witter，油猴脚本\n\n（自己写的）\n\n在公共场合不太想别人知道自己的 twitter 账号，于是写了一个油猴脚本，屏蔽 twitter 中自己的 id、昵称、头像。（只写了针对首页的）\n\n[greasyfork 安装](<https://greasyfork.org/scripts/461892-hide-your-twitter-info>)\n\n[源代码](<https://github.com/KazooTTT/hide-your-twitter-info>)\n\n## 二、ChatGPT 相关\n\n### Cursor\n\n[Cursor | Build Fast](<https://www.cursor.so/>)  \n基于 GPT-4 帮你写代码，试了一下效果很好。\n\n![Pasted image 20230319151925](<https://pictures.kazoottt.top/2024/01/20240115-97e618e05e167aead5b7140ed17ca834.webp>)\n\n### ChatGPT 资料汇总学习\n\n[dalinvip/Awesome-ChatGPT: ChatGPT 资料汇总学习，持续更新。..... (github.com)](<https://github.com/dalinvip/Awesome-ChatGPT>)\n\n关键词：chatgpt\n\n![image.png](<https://pictures.kazoottt.top/2024/04/20240407-88d8b2b12c87a39528188de9b8efaede.png>)\n\n### 基于 ChatGPT 的 Telegram 机器人 🤖\n\n介绍推特：[𝐁𝐢𝐭𝐰𝐮.𝐞𝐭𝐡 在 Twitter](<https://twitter.com/BTW0205/status/1636734688659398656>)  \ntelegram [Telegram: Contact @samantha_x64_bot](<https://t.me/samantha_x64_bot>)\n\n关键词：chatgpt, telegram\n\n![twitter.com_kzt2022cd (1)](<https://pictures.kazoottt.top/2024/01/20240115-92f4df67bea77552c801cfc9d4506535.webp>)\n\n### BibiGPT 音视频内容一键总结\n\n[JimmyLv/BibiGPT: BibiGPT · One-click summary for video & audio content: Bilibili | YouTube | Websites 丨 Podcasts | Meetings | Local files, etc. 音视频内容一键总结：哔哩哔哩丨 YouTube 丨网页丨播客丨会议丨本地文件等 （原 BiliGPT 省流神器 & 课代表） (github.com)](<https://github.com/JimmyLv/BibiGPT>)\n\n关键词：chatgpt, 音视频总结\n\n![BibiGPT](<https://github.com/JimmyLv/BibiGPT/raw/main/public/BibiGPT.gif>)\n\n### Vercel Edge Function 支持 Chatgpt Api 加速\n\n介绍 twitter [Barret 李靖 在 Twitter](<https://twitter.com/Barret_China/status/1636763051839082497>)\n\n关键词：vercel, chatgpt\n\n![Pasted image 20230319150609](<https://pictures.kazoottt.top/2024/01/20240115-3dd80204bcbb1707d598bbafd5039630.webp>)\n\n## 三、设计相关\n\n### Figma 结合 GPT 进行设计\n\n介绍 twitter [倪爽 在 Twitter](<https://twitter.com/nishuang/status/1636150416609099778>)  \n官网链接 [Magician for Figma](<https://magician.design/>)\n\n关键词：figma, chatgpt\n\n![Pasted image 20230319150116](<https://pictures.kazoottt.top/2024/01/20240115-4c3c28ce6eb2ce9201555a1735457e6d.webp>)\n\n### 柔和主题库「Catppuccin」\n\n介绍 twitter: [Tw93 在 Twitter: \"#工程师工具 看到一个柔和主题库 「 Catppuccin 」](<https://twitter.com/HiTw93/status/1635793934864531456>)  \ngithub: [catppuccin/catppuccin: 😸 Soothing pastel theme for the high-spirited! (github.com)](<https://github.com/catppuccin/catppuccin>)\n\n关键词：主题库，设计，Catppuccin\n\n![Pasted image 20230319150700](<https://pictures.kazoottt.top/2024/01/20240115-c6188a6c502ea98b640e876860339722.webp>)\n\n### 一个炫酷的网站\n\n[Zihan Chen - The web designer and builder 🚀 Zihan](<https://zihan.pages.dev/>)  \n开发者才十几岁，555。\n\n关键词：网站\n\n![Pasted image 20230319151838](<https://pictures.kazoottt.top/2024/01/20240115-b551c0f863fd5f031915d273b2fbc542.webp>)\n\n### 博物馆素材 Unsplash\n\n[既然最近都在推荐博物。.. - @Simon\\_阿文的微博 - 微博 (weibo.com)](<https://weibo.com/1757693565/4707096794761640>)\n\n关键词：upsplash，素材\n\n![weibo.com_1757693565_4707096794761640](<https://pictures.kazoottt.top/2024/01/20240115-5199ce53fe29ee6eace2298d57e0ad58.webp>)\n\n### 零基础学 Figma【酸梅干超人出品】\n\n关键词：figma，教程\n\nfigma 入门教程，目前跟着学了 3 个案例，对新手很友好  \n[零基础学 Figma【酸梅干超人出品】\\_哔哩哔哩、_bilibili](<https://www.bilibili.com/video/BV1fg411G7cs/>)\n\n<!-- issues-blog:source=d1:post.2023-W11 -->\n<!-- issues-blog:published-at=2023-11-14T00:00:00.000Z -->\n",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/8",
+  "state": "OPEN",
+  "createdAt": "2026-07-24T10:14:31Z",
+  "updatedAt": "2026-07-24T10:14:31Z",
+  "author": "KazooTTT",
+  "labels": [
+    "blog:publish",
+    "周报",
+    "资料收集",
+    "设计",
+    "chatgpt",
+    "figma",
+    "vercel"
+  ],
+  "labelEvents": [
+    {
+      "label": "blog:publish",
+      "createdAt": "2026-07-24T10:14:33Z"
+    },
+    {
+      "label": "周报",
+      "createdAt": "2026-07-24T10:14:33Z"
+    },
+    {
+      "label": "资料收集",
+      "createdAt": "2026-07-24T10:14:33Z"
+    },
+    {
+      "label": "设计",
+      "createdAt": "2026-07-24T10:14:33Z"
+    },
+    {
+      "label": "chatgpt",
+      "createdAt": "2026-07-24T10:14:33Z"
+    },
+    {
+      "label": "figma",
+      "createdAt": "2026-07-24T10:14:33Z"
+    },
+    {
+      "label": "vercel",
+      "createdAt": "2026-07-24T10:14:34Z"
+    }
+  ],
+  "reactions": [],
+  "comments": []
+}

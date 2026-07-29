@@ -1,0 +1,46 @@
+{
+  "number": 40,
+  "title": "值得一看的博客",
+  "body": "# 值得一看的 blog\r\n\r\n## [GitHub - mqyqingfeng/Blog: 冴羽写博客的地方，预计写四个系列：JavaScript 深入系列、JavaScript 专题系列、ES6 系列、React 系列。](<https://github.com/mqyqingfeng/Blog>)\r\n\r\n![image.png](<https://pictures.kazoottt.top/2024/03/20240304-02e4fe9eb0c65dbe714e7244a0f7799a.png>)\r\n\r\n## [LogRocket Blog - Resources to Help Product Teams Ship Amazing Digital Experiences](<https://blog.logrocket.com/>)\r\n\r\n![Pasted image 20240221094931](<https://pictures.kazoottt.top/2024/03/20240304-5bde95ee6d3a1cd87cd5a8881296f8b0.png>)\r\n\r\n## [React Blog – React](<https://react.dev/blog>)\r\n\r\n![Pasted image 20240221095008](<https://pictures.kazoottt.top/2024/03/20240304-6b3aa1eefa55decdf3e5a62db52ad39d.png>)\r\n\r\n## [Blog - Socket](<https://socket.dev/blog>)\r\n\r\n![Pasted image 20240214141407](<https://pictures.kazoottt.top/2024/03/20240304-3172530ec4fde4f6a2f1fe13c6b5dfc0.png>)\r\n\r\n## [Developer, writer and speaker | Stefan Judis Web Development](<https://www.stefanjudis.com/>)\r\n\r\n![Pasted image 20240214141457](<https://pictures.kazoottt.top/2024/03/20240304-78248ebb37443c26e9ca1fd814896084.png>)\r\n\r\n## [Builder.io Blog](<https://www.builder.io/blog>)\r\n\r\n![Pasted image 20240304211216](<https://pictures.kazoottt.top/2024/03/20240304-95552f9d23c19a0dcf3d507ff45738c6.png>)\r\n\r\n## [overreacted — A blog by Dan Abramov](<https://overreacted.io/>)\r\n\r\n![IMG-20250104114646395](<https://pictures.kazoottt.top/2025/02/20250206-IMG-20250104114646395.png>)\r\n\r\n# AI 相关\r\n\r\n## github 的博客 (AI 相关）\r\n\r\ngithub 的官方博客中有一个标签是 ai, 里面有一些 ai 与工程化结合的分享\r\n\r\n[AI Archives - The GitHub Blog](<https://github.blog/tag/ai/>)\r\n\r\n![Pasted image 20240301182741](<https://pictures.kazoottt.top/2024/03/20240304-9627da3f1dca5ed6e296546de462ec38.png>)\r\n\r\n## Ak 每日论文推荐\r\n\r\n[akhaliq (AK)](<https://huggingface.co/akhaliq>)\r\n\r\n[Daily Papers - Hugging Face](<https://huggingface.co/papers>)\r\n\r\n![Pasted image 20240301173033](<https://pictures.kazoottt.top/2024/03/20240304-828e36a950270f76a40de0069d4e7ec5.png>)\r\n\r\n## AssemblyAI 的博客\r\n\r\n[AssemblyAI Blog | News, Tutorials, AI Research, and Industry](<https://www.assemblyai.com/blog>)\r\n\r\n![Pasted image 20240301173008](<https://pictures.kazoottt.top/2024/03/20240304-0d0451d2f271a9bb813bfd526db26b20.png>)\r\n\r\n他们是一家专注于 AI 语音的公司，同时比较注重知识传播，在油管上也有一些科普教程。\r\n\r\n## Dale 的博客\r\n\r\nGoogle Labs 员工，会分享一些与 AI 相关的文章，同时也在维护自己的油管频道。\r\n\r\n[Dale on AI](<https://daleonai.com/>)\r\n\r\n![Pasted image 20240301172453](<https://pictures.kazoottt.top/2024/03/20240304-eeeb52e8a56934f8afbc47b453f7c768.png>)\r\n\r\n## Dify 的博客\r\n\r\ndify 是一家做大模型应用生成平台的公司，他们的 [产品 dify](<https://github.com/langgenius/dify>) 是开源的，与此同时在官网也会定期产出技术博客。\r\n\r\n[Dify Blog](<https://dify.ai/blog>)\r\n\r\n![Pasted image 20240301172653](<https://pictures.kazoottt.top/2024/03/20240304-d6e89fd993f70e1f2bb99d3e050a4e0c.png>)\r\n\r\n## [机器之心 | 企业人工智能服务](<https://www.jiqizhixin.com/>)\r\n\r\n![Pasted image 20240301181953](<https://pictures.kazoottt.top/2024/03/20240304-ef47f398612f6abacd7bdf91e611a56d.png>)\r\n\r\n## 独立开发者\r\n\r\n[61’s life](<https://61.life/>)\r\n\r\n![image.png](<https://pictures.kazoottt.top/2024/12/20241219-becc8ce103c6d13489fc327ef77c3363.png>)\r\n\r\n## [MacTalk-池建强的随想录 \\| 让创作成为一种生活方式](<https://macshuo.com/>)\r\n\r\n![alt text](<https://pictures.kazoottt.top/2025/02/20250206-CleanShot2025-02-0613.03.58@2x.png>)\n\n<!-- issues-blog:source=d1:post.blogs-worth-reading -->\n<!-- issues-blog:published-at=2024-12-19T00:00:00.000Z -->\n",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/40",
+  "state": "OPEN",
+  "createdAt": "2026-07-24T10:18:40Z",
+  "updatedAt": "2026-07-24T10:18:40Z",
+  "author": "KazooTTT",
+  "labels": [
+    "blog:publish",
+    "随笔",
+    "前端",
+    "ai",
+    "博客",
+    "推荐"
+  ],
+  "labelEvents": [
+    {
+      "label": "blog:publish",
+      "createdAt": "2026-07-24T10:18:41Z"
+    },
+    {
+      "label": "随笔",
+      "createdAt": "2026-07-24T10:18:41Z"
+    },
+    {
+      "label": "前端",
+      "createdAt": "2026-07-24T10:18:42Z"
+    },
+    {
+      "label": "ai",
+      "createdAt": "2026-07-24T10:18:42Z"
+    },
+    {
+      "label": "博客",
+      "createdAt": "2026-07-24T10:18:42Z"
+    },
+    {
+      "label": "推荐",
+      "createdAt": "2026-07-24T10:18:42Z"
+    }
+  ],
+  "reactions": [],
+  "comments": []
+}

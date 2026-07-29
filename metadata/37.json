@@ -1,0 +1,46 @@
+{
+  "number": 37,
+  "title": "raycast + imessage 2fa，messauto的半平替",
+  "body": "\n很久之前做过一个 messauto 的安利\n\n[messAuto + iMessage 实现iPhone和mac信息同步和自动复制验证码](/posts/messauto-imessage)\n\n但是最近收到评论才发现作者在前段时间删库了\n\n![image.png](<https://pictures.kazoottt.top/2024/12/20241211-20241211203702.png>)\n\n目前找到另一个快速获取验证码的方法，就是 raycast + imessage 2fa 插件。\n\n![image.png](<https://pictures.kazoottt.top/2024/12/20241211-20241211203735.png>)\n\n使用方法：\n\n1. 在获取到验证码之后，访问 imessage 2fa 插件。\n   ![image.png](<https://pictures.kazoottt.top/2024/12/20241211-20241211204526.png>)\n\n2. 可以看到目前接收到的含有验证码的消息，敲回车复制验证码到粘贴板。\n\n![image.png](<https://pictures.kazoottt.top/2024/12/20241211-20241211204132.png>)\n\n缺点：没有 messauto 方便，多了访问 imessage 2fa 插件和敲回车复制验证码的步骤。\n\n<!-- issues-blog:source=d1:post.raycast-imessage-2fa -->\n<!-- issues-blog:published-at=2024-12-11T00:00:00.000Z -->\n",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/37",
+  "state": "OPEN",
+  "createdAt": "2026-07-24T10:18:17Z",
+  "updatedAt": "2026-07-24T10:18:17Z",
+  "author": "KazooTTT",
+  "labels": [
+    "blog:publish",
+    "笔记",
+    "验证码",
+    "messauto",
+    "macos",
+    "raycast"
+  ],
+  "labelEvents": [
+    {
+      "label": "blog:publish",
+      "createdAt": "2026-07-24T10:18:18Z"
+    },
+    {
+      "label": "笔记",
+      "createdAt": "2026-07-24T10:18:18Z"
+    },
+    {
+      "label": "验证码",
+      "createdAt": "2026-07-24T10:18:19Z"
+    },
+    {
+      "label": "messauto",
+      "createdAt": "2026-07-24T10:18:19Z"
+    },
+    {
+      "label": "macos",
+      "createdAt": "2026-07-24T10:18:19Z"
+    },
+    {
+      "label": "raycast",
+      "createdAt": "2026-07-24T10:18:19Z"
+    }
+  ],
+  "reactions": [],
+  "comments": []
+}

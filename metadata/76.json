@@ -1,0 +1,56 @@
+{
+  "number": 76,
+  "title": "Axios 全局 json-bigint 解析导致空原型对象渲染崩溃",
+  "body": "## 问题现象\n\n在 React 表单详情页中,页面加载时突然崩溃:\n\n```text\nreact-router-dom.js?v=cdf9f56e:6232 Error handled by React Router default ErrorBoundary: TypeError: Cannot convert object to primitive value\n    at String (<anonymous>)\n    at chunk-3GKRE62E.js?v=cdf9f56e:9785:69\n    at Object.react_stack_bottom_frame (chunk-Z3WXWQW3.js?v=cdf9f56e:18509:20)\n    at renderWithHooks (chunk-Z3WXWQW3.js?v=cdf9f56e:5654:24)\n    at updateForwardRef (chunk-Z3WXWQW3.js?v=cdf9f56e:7198:21)\n    at beginWork (chunk-Z3WXWQW3.js?v=cdf9f56e:8735:20)\n    at runWithFiberInDEV (chunk-Z3WXWQW3.js?v=cdf9f56e:997:72)\n    at performUnitOfWork (chunk-Z3WXWQW3.js?v=cdf9f56e:12561:98)\n    at workLoopSync (chunk-Z3WXWQW3.js?v=cdf9f56e:12424:43)\n    at renderRootSync (chunk-Z3WXWQW3.js?v=cdf9f56e:12408:13)\nDefaultErrorComponent\t@\treact-router-dom.js?v=cdf9f56e:6232\nreact_stack_bottom_frame\t@\tchunk-Z3WXWQW3.js?v=cdf9f56e:18509\nrenderWithHooks\t@\tchunk-Z3WXWQW3.js?v=cdf9f56e:5654\nupdateFunctionComponent\t@\tchunk-Z3WXWQW3.js?v=cdf9f56e:7475\nbeginWork\t@\tchunk-Z3WXWQW3.js?v=cdf9f56e:8525\nrunWithFiberInDEV\t@\tchunk-Z3WXWQW3.js?v=cdf9f56e:997\nperformUnitOfWork\t@\tchunk-Z3WXWQW3.js?v=cdf9f56e:12561\nworkLoopSync\t@\tchunk-Z3WXWQW3.js?v=cdf9f56e:12424\nrenderRootSync\t@\tchunk-Z3WXWQW3.js?v=cdf9f56e:12408\nperformWorkOnRoot\t@\tchunk-Z3WXWQW3.js?v=cdf9f56e:11827\nperformWorkOnRootViaSchedulerTask\t@\tchunk-Z3WXWQW3.js?v=cdf9f56e:13505\nperformWorkUntilDeadline\t@\tchunk-Z3WXWQW3.js?v=cdf9f56e:36\nreact-router-dom.js?v=cdf9f56e:6232 Error handled by React Router default ErrorBoundary: TypeError: Cannot convert object to primitive value\n    at String (<anonymous>)\n    at chunk-3GKRE62E.js?v=cdf9f56e:9785:69\n    at Object.react_stack_bottom_frame (chunk-Z3WXWQW3.js?v=cdf9f56e:18509:20)\n    at renderWithHooks (chunk-Z3WXWQW3.js?v=cdf9f56e:5654:24)\n    at updateForwardRef (chunk-Z3WXWQW3.js?v=cdf9f56e:7198:21)\n    at beginWork (chunk-Z3WXWQW3.js?v=cdf9f56e:8735:20)\n    at runWithFiberInDEV (chunk-Z3WXWQW3.js?v=cdf9f56e:997:72)\n    at performUnitOfWork (chunk-Z3WXWQW3.js?v=cdf9f56e:12561:98)\n    at workLoopSync (chunk-Z3WXWQW3.js?v=cdf9f56e:12424:43)\n    at renderRootSync (chunk-Z3WXWQW3.js?v=cdf9f56e:12408:13)\nDetailForm.tsx:1273 TypeError: Cannot convert object to primitive value\n    at String (<anonymous>)\n\nThe above error occurred in the <ForwardRef> component.\n\nReact will try to recreate this component tree from scratch using the error boundary you provided, AppErrorBoundary.\nreact-router-dom.js?v=cdf9f56e:6271 React Router caught the following error during render TypeError: Cannot convert object to primitive value\n```\n\n```text\nTypeError: Cannot convert object to primitive value\n    at String (<anonymous>)\n```\n\n错误最终落在 Ant Design 的 `<Input />` 渲染链路中。业务代码中存在一个隐藏表单项,用来保存联动配置对象:\n\n```tsx\n<Form.Item name={[...formPrefix, configName, \"nextConfig\"]} hidden>\n  <Input />\n</Form.Item>\n```\n\n`nextConfig` 并不是字符串,而是一整个对象。此前页面可以正常运行,为什么突然开始报错?\n\n## 背景: 为了解决大整数 ID 精度丢失\n\n后端部分业务 ID 可能超过 JavaScript 的安全整数范围:\n\n```text\nNumber.MAX_SAFE_INTEGER = 9007199254740991\n```\n\n例如:\n\n```json\n{\n  \"groupId\": 9223372036854775807\n}\n```\n\n如果使用浏览器原生 `JSON.parse`,这个 ID 会在解析时丢失精度。事后复盘,其实最合理的做法是让后端直接将这类 ID 序列化为字符串,前端就完全不需要特殊处理了。但当时后端短期内无法调整接口,只能前端兜底,于是我在 Axios 实例中全局启用了 `json-bigint`:\n\n```ts\nconst JSONbigParser = JSONbig({ storeAsString: true });\n\nexport const AXIOS_INSTANCE = Axios.create({\n  transformResponse: [\n    (data: string) => {\n      try {\n        return JSONbigParser.parse(data);\n      } catch {\n        return data;\n      }\n    },\n  ],\n});\n```\n\n这个改动看起来很合理:\n\n- 超出精度范围的整数会保存为字符串\n- 普通数字仍然保持数字类型\n- 所有接口自动获得大整数兼容能力\n\n但是正是这种全部接口的出参都替换导致了 bug\n\n## 根因:json-bigint 返回空原型对象\n\n这两种对象很像,但并不等价。\n\n这不是推测,而是 `json-bigint` 在解析 JSON 对象的时候，[sidorares/json-bigint](https://github.com/sidorares/json-bigint) 的 [`lib/parse.js`](https://github.com/sidorares/json-bigint/blob/master/lib/parse.js) 中, `object()` 在解析每个 `{ ... }` 时显式写入:\n\n```js\nobject = function () {\n  // Parse an object value.\n\n  var key,\n    object = Object.create(null);\n\n  if (ch === '{') {\n    next('{');\n    // ...\n```\n\n所以经过 json-bigint 的对象，是通过 Object.create(null) 创建的。\n\n然后普通对象继承了 `Object.prototype`:\n\n```ts\nconst normal = {};\n\nString(normal);\n// \"[object Object]\"\n```\n\n空原型对象没有继承 `toString`、`valueOf` 等方法:\n\n```ts\nconst parsed = Object.create(null);\n\nString(parsed);\n// TypeError: Cannot convert object to primitive value\n```\n\n因此,全局替换 Axios 响应解析器后,不只是超大整数发生了变化,所有接口返回的普通 JSON 对象也悄悄变成了空原型对象。\n\n当 Ant Design 的 `<Input />` 尝试将隐藏表单项中的 `nextConfig` 对象转换成字符串时,由于原型没有 toString() 就崩溃了。\n\n```tsx\n<Form.Item name={[...formPrefix, configName, \"nextConfig\"]} hidden>\n  <Input />  {/* value 会被注入为 nextConfig 对象本身 */}\n</Form.Item>\n```\n\n然后由于 nextConfig 对应的 value 是一个对象，通过受控组件的写法注入了 input。此时 `<Input />` 收到的 `value` 就是 `nextConfig` 这个对象 , 且是由 `json-bigint` 解析出来的**空原型对象**。\n\n### `<Input />` 内部发生了什么？\n\nAnt Design 的 `Input` 底层是对原生 `<input>` 元素的封装。当它处理 `value` 时,内部大致会经过这样的路径:\n\n1. **将 value 写入 DOM**: React 将 `value` 赋给原生 `<input>` 元素的 `.value` 属性。DOM API 要求 `.value` 必须是字符串,因此浏览器会隐式调用 `String(value)` 进行转换。\n2. **`String()` 的类型转换规则**: 当 `String()` 遇到一个对象时,JavaScript 引擎按 [`ToPrimitive`](https://tc39.es/ecma262/#sec-toprimitive) 尝试:\n   - 先调用 `obj[Symbol.toPrimitive](\"string\")`（如果有的话）\n   - 再调用 `obj.toString()` —— 期望返回一个 primitive\n   - 再调用 `obj.valueOf()` —— 期望返回一个 primitive\n   - 如果以上都失败或返回的不是 primitive,抛出 `TypeError`（见 [`String`](https://tc39.es/ecma262/#sec-tostring)）\n\n3. **空原型对象的致命问题**: 通过 `Object.create(null)` 创建的对象,原型链是空的。它没有继承 `Object.prototype` 上的 `toString()` 和 `valueOf()` 方法:\n\n   ```\n   普通对象:        obj → Object.prototype → null\n                    ✅ toString() 可用 → \"[object Object]\"\n\n   空原型对象:       obj → null\n                    ❌ 没有 toString(), 没有 valueOf()\n   ```\n\n4. **崩溃点**: 浏览器调用 `String(nextConfig)` → 找不到 `toString()` → 找不到 `valueOf()` → 抛出 `TypeError: Cannot convert object to primitive value`。\n\n### 为什么此前页面可以正常运行？\n\n虽然把对象塞进 `<Input />` 本身就不是规范的做法,但之前因为普通对象能隐式转换为字符串,所以 \" 巧合地 \" 没出问题。引入 `json-bigint` 后,所有接口返回的嵌套对象都变成了空原型对象,这个隐藏的隐患才被触发。\n\n在引入 `json-bigint` 之前,Axios 使用浏览器原生的 `JSON.parse` 解析响应。原生 `JSON.parse` 返回的是普通对象（继承自 `Object.prototype`）,因此:\n\n```js\n// 原生 JSON.parse 返回的普通对象\nString({ a: 1 });  // \"[object Object]\"  ✅ 正常\n\n// json-bigint 返回的空原型对象\nString(Object.create(null));  // TypeError ❌ 崩溃\n```\n\n## 修复思路\n\n### 最好的方法：后端 ID 字段返回 string\n\n推动后端将超出 JS 安全整数范围的 ID 直接序列化为字符串:\n\n```json\n{\n  \"groupId\": \"9223372036854775807\"\n}\n```\n\n收益:\n\n- 前端不需要 `json-bigint`,也没有空原型对象的副作用\n- 字段语义明确,Web / 移动端 / 小程序一致,不依赖路由表或启发式\n- 后端通常只需调整序列化配置,改动成本低\n\n这是唯一真正「字段层面」且没有精度竞态的方案。下文过渡方案仅在后端尚未配合时使用。\n\n### 过渡方案: 按响应内容启用 json-bigint\n\n需要去判断 **原始 JSON 字符串里是否可能出现超大整数**。\n\n#### 解析工具\n\n```ts\nimport JSONbig from \"json-bigint\";\n\nconst JSONbigParser = JSONbig({ storeAsString: true });\n\n/** 启发式: JSON 中出现 16 位及以上的整数,可能超出 Number.MAX_SAFE_INTEGER */\nconst MAY_HAVE_UNSAFE_INT = /:\\s*-?\\d{16,}(?:[,}\\]\\s]|$)/;\n\nexport function needsBigIntParse(raw = \"\"): boolean {\n  return MAY_HAVE_UNSAFE_INT.test(raw);\n}\n\n/** json-bigint 解析,并将空原型对象恢复为普通对象 */\nexport function parseBigIntResponse(data: unknown): unknown {\n  if (typeof data !== \"string\") return data;\n\n  try {\n    return JSONbigParser.parse(data, (_key: string, value: unknown) => {\n      if (value && typeof value === \"object\" && !Array.isArray(value)) {\n        return { ...value };\n      }\n      return value;\n    });\n  } catch {\n    return data;\n  }\n}\n\nexport function parseJsonResponse(data: unknown): unknown {\n  if (typeof data !== \"string\") return data;\n\n  try {\n    if (needsBigIntParse(data)) {\n      return parseBigIntResponse(data);\n    }\n    return JSON.parse(data);\n  } catch {\n    return data;\n  }\n}\n```\n\n`reviver` 中的 `{ ...value }` 必不可少: 只要走了 `json-bigint`,嵌套 object 就是 null 原型,必须还原,否则仍可能触发隐式 `String()` 崩溃。\n\n## 总结\n\n这次问题的核心是: **引入中间件或者做出会影响全局的变更的时候需要谨慎。**\n\nURL 白名单、字段层面特殊处理以及全局 `json-bigint` 都只是后端未改前的临时手段,不应该长期使用。\n\n<!-- issues-blog:source=d1:post.axios-global-json-bigint-null-prototype-object-render-crash -->\n<!-- issues-blog:published-at=2026-06-01T00:00:00.000Z -->\n",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/76",
+  "state": "OPEN",
+  "createdAt": "2026-07-24T10:23:07Z",
+  "updatedAt": "2026-07-24T10:23:07Z",
+  "author": "KazooTTT",
+  "labels": [
+    "blog:publish",
+    "javascript",
+    "笔记",
+    "react",
+    "bugfix",
+    "frontend",
+    "axios",
+    "json-bigint"
+  ],
+  "labelEvents": [
+    {
+      "label": "blog:publish",
+      "createdAt": "2026-07-24T10:23:08Z"
+    },
+    {
+      "label": "javascript",
+      "createdAt": "2026-07-24T10:23:08Z"
+    },
+    {
+      "label": "笔记",
+      "createdAt": "2026-07-24T10:23:08Z"
+    },
+    {
+      "label": "react",
+      "createdAt": "2026-07-24T10:23:09Z"
+    },
+    {
+      "label": "bugfix",
+      "createdAt": "2026-07-24T10:23:09Z"
+    },
+    {
+      "label": "frontend",
+      "createdAt": "2026-07-24T10:23:09Z"
+    },
+    {
+      "label": "axios",
+      "createdAt": "2026-07-24T10:23:09Z"
+    },
+    {
+      "label": "json-bigint",
+      "createdAt": "2026-07-24T10:23:09Z"
+    }
+  ],
+  "reactions": [],
+  "comments": []
+}

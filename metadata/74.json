@@ -1,0 +1,41 @@
+{
+  "number": 74,
+  "title": "ClaudeCode三种扩展方式的区别",
+  "body": "# ClaudeCode 三种扩展方式的区别\n\n## 核心结论\n\n其实 Claude Code 有三种扩展方式，但它们的本质区别是：Skills 是面对场景时的解决方案，Commands 是用户主动调用的快捷操作，Plugins 则是完整的扩展功能包。\n\n简单来说：\n\n- Skills 告诉 AI 遇到某个问题时应该怎么工作\n- Commands 提供一键完成的快捷操作\n- Plugins 安装别人写好的完整功能\n\n## 三种方式的本质区别\n\n### Skills：场景解决方案\n\nSkills 的核心是告诉 AI 遇到特定场景时应该怎么工作。或者说，它是 AI 的 \" 工作指南 \"。\n\n当你开始写测试时，AI 读取到 TDD Skill，就知道应该建议你先写失败的测试，然后写最小实现，最后重构。整个过程是 AI 主动触发的，不需要你输入任何命令。\n\nSkills 可以做的事情很多：\n\n- 配合你完成某个任务\n- 调度其他 AI 协作（比如 subagent）\n- 按照流程独立处理信息\n- 或者说 AI 在某些场景下应该采取什么行动\n\n### Commands：快捷操作\n\nCommands 是你主动调用的快捷操作。通过 `/command` 触发，执行一个预定义的任务。\n\n比如你输入 `/commit`，AI 就按照规范化提交的流程帮你整理提交信息。Commands 更像是 \" 脚本 \" 或 \" 快捷方式 \"，你什么时候用就什么时候调。\n\n和 Skills 的区别是：Commands 需要你主动触发，Skills 是 AI 自动判断。\n\n### Plugins：完整的扩展功能包\n\nPlugins 是别人写好的完整功能，通过 marketplace 安装后直接可用。它是 \" 功能集成 \" 或 \" 扩展包 \"。\n\n比如 superpowers plugin 就是一整套开发工作流框架，包含 brainstorming、TDD、debugging 等多个技能。你不需要自己写，安装后就能用。\n\n和 Skills/Commands 的区别是：Plugins 是完整的、多功能的解决方案，而 Skills 和 Commands 通常只解决一个具体问题。\n\n其实 Plugins 就是 Skills 和 Commands 的组合包。Plugin 是一个 \" 容器 \"，里面可以包含多个 Skills 和 Commands。\n\n比如 superpowers 这个 Plugin，内部就包含了：\n\n- brainstorming skill\n- TDD skill\n- debugging skill\n- writing-plans skill\n- 等等...\n\n你可以：\n\n- 单独写一个 Skill 文件，放在 `.claude/skills/` 下\n- 单独写一个 Command 文件，放在 `.claude/commands/` 下\n- 或者把它们打包成 Plugin，发布到 marketplace 让别人安装\n\n三者的关系：\n\n```\nPlugins (功能包)\n  ├── Skills (行为规范)\n  ├── Commands (快捷命令)\n  └── 其他配置\n```\n\n## 怎么打包 Plugins\n\n其实打包 Plugins 就是用固定的目录结构和配置文件。\n\n### 目录结构\n\n```\nmy-plugin/\n├── .claude-plugin/\n│   └── plugin.json          # 插件元数据\n├── skills/                   # Skills 放这里\n│   ├── tdd/\n│   │   └── SKILL.md\n│   └── debugging/\n│       └── SKILL.md\n├── commands/                 # Commands 放这里\n│   ├── commit.md\n│   └── release.md\n└── marketplace.json          # 发布到 marketplace 的配置\n```\n\n### plugin.json 示例\n\n```json\n{\n  \"name\": \"my-workflow-tools\",\n  \"version\": \"1.0.0\",\n  \"description\": \"我的开发工作流工具集\",\n  \"author\": {\n    \"name\": \"Your Name\"\n  },\n  \"skills\": \"./skills/\",\n  \"commands\": \"./commands/\"\n}\n```\n\n### 发布到 marketplace\n\n创建 `marketplace.json`：\n\n```json\n{\n  \"name\": \"my-marketplace\",\n  \"owner\": {\n    \"name\": \"Your Name\",\n    \"email\": \"you@example.com\"\n  },\n  \"plugins\": [\n    {\n      \"name\": \"my-workflow-tools\",\n      \"source\": \"./\",\n      \"description\": \"我的开发工作流工具集\",\n      \"version\": \"1.0.0\"\n    }\n  ]\n}\n```\n\n然后把这个仓库托管到 GitHub，用户就可以通过 `/plugin install my-workflow-tools@your-username` 安装了。\n\n## 什么时候用哪个\n\n### 用 Skills 的场景\n\n需要 AI 按照某种方式工作的时候：\n\n- 写代码时遵循 TDD 流程\n- 遇到 bug 时按调试规范排查\n- 代码审查时按标准检查\n- 或者说需要 AI 协调多个 subagent 协作\n\n### 决策流程\n\n```\n需要自动化执行？\n  ├─ 是 → Skills\n  └─ 否 → 需要完整功能？\n      ├─ 是 → Plugins\n      └─ 否 → Commands\n```\n\n你可以这样想：需要建议用 Skills，快捷操作用 Commands，完整功能用 Plugins。\n\n### 用 Commands 的场景\n\n需要快速执行某个操作的时候：\n\n- 规范化提交信息\n- 生成发布日志\n- 创建新文件模板\n\n你需要 \" 一键完成 \" 某个重复性操作。\n\n### 用 Plugins 的场景\n\n需要复杂功能或不想自己写的时候：\n\n- 完整的开发工作流框架（如 superpowers）\n- 第三方服务集成（如 GitHub、Jira）\n- 社区维护的通用功能\n\n\" 别人已经做好了，直接用就行 \"。\n\n## 快速上手\n\n### Command 示例\n\n告诉 AI 创建一个 Command，然后它会生成这样的文件：\n\n```markdown\n---\nname: my-commit\ndescription: 我的规范化提交命令\n---\n\n# 规范化提交\n\n按照以下格式提交：\n- 类型：feat/fix/docs/refactor\n- 范围：简短描述\n- 正文：详细说明（如有）\n```\n\n### Skill 示例\n\n告诉 AI 创建一个 Skill，然后它会生成这样的文件：\n\n```markdown\n---\nname: my-tdd\ndescription: 我的 TDD 工作流程\ntrigger:\n  - \"写测试\"\n  - \"TDD\"\n---\n\n# TDD 工作流程\n\n当用户说「写测试」或「TDD」时：\n1. 先写失败的测试\n2. 写最小实现\n3. 重构优化\n```\n\n### 安装 Plugin\n\n直接告诉 AI 你想安装什么插件，比如：\n\n- \" 安装 superpowers plugin\"\n- 或者 \"/plugin install superpowers@claude-plugins-official\"\n\n## 参考资料\n\n- [Claude Code 官方文档](<https://claude.ai/code>)\n- [superpowers GitHub 仓库](<https://github.com/obra/superpowers>)\n\n---\n\n结论：三种扩展方式各有优势。根据你的实际需求选择或组合使用，能最大化 Claude Code 的效率。\n\n<!-- issues-blog:source=d1:cf5594db-8e3d-4df8-9bd8-74579abc14c7 -->\n<!-- issues-blog:published-at=2026-04-07T00:00:00.000Z -->\n",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/74",
+  "state": "OPEN",
+  "createdAt": "2026-07-24T10:22:42Z",
+  "updatedAt": "2026-07-24T10:22:42Z",
+  "author": "KazooTTT",
+  "labels": [
+    "blog:publish",
+    "笔记",
+    "大模型",
+    "技术调研",
+    "skills"
+  ],
+  "labelEvents": [
+    {
+      "label": "blog:publish",
+      "createdAt": "2026-07-24T10:22:43Z"
+    },
+    {
+      "label": "笔记",
+      "createdAt": "2026-07-24T10:22:44Z"
+    },
+    {
+      "label": "大模型",
+      "createdAt": "2026-07-24T10:22:44Z"
+    },
+    {
+      "label": "技术调研",
+      "createdAt": "2026-07-24T10:22:44Z"
+    },
+    {
+      "label": "skills",
+      "createdAt": "2026-07-24T10:22:44Z"
+    }
+  ],
+  "reactions": [],
+  "comments": []
+}

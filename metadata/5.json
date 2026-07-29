@@ -1,0 +1,46 @@
+{
+  "number": 5,
+  "title": "隐藏你的twitter信息",
+  "body": "\n# Hide-your-twitter-info\n\nHide your Twitter information. Prevent others from seeing your ID, nickname, and profile picture in public places.\n\n在公共场合不太想别人知道自己的 twitter 账号，于是写了一个油猴脚本，屏蔽 twitter 中自己的 id、昵称、头像。（只写了针对首页的）\n\n[greasyfork 安装](<https://greasyfork.org/scripts/461892-hide-your-twitter-info>)\n\n[源代码](<https://github.com/KazooTTT/hide-your-twitter-info>)\n\nbefore:  \n![](<https://pictures.kazoottt.top/2024/04/20240407-489249e1ec6b72f2def595a925a68447.png>)\n\nafter:  \n![](<https://pictures.kazoottt.top/2024/04/20240407-85f6a65cb4696569bcac1a4377b05d6f.png>)\n\n<!-- issues-blog:source=d1:post.hide-your-twitter-messages -->\n<!-- issues-blog:published-at=2023-03-16T00:00:00.000Z -->\n",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/5",
+  "state": "OPEN",
+  "createdAt": "2026-07-24T10:14:07Z",
+  "updatedAt": "2026-07-24T10:14:07Z",
+  "author": "KazooTTT",
+  "labels": [
+    "blog:publish",
+    "开源",
+    "项目",
+    "油猴脚本",
+    "javascript",
+    "twitter"
+  ],
+  "labelEvents": [
+    {
+      "label": "blog:publish",
+      "createdAt": "2026-07-24T10:14:08Z"
+    },
+    {
+      "label": "开源",
+      "createdAt": "2026-07-24T10:14:08Z"
+    },
+    {
+      "label": "项目",
+      "createdAt": "2026-07-24T10:14:08Z"
+    },
+    {
+      "label": "油猴脚本",
+      "createdAt": "2026-07-24T10:14:08Z"
+    },
+    {
+      "label": "javascript",
+      "createdAt": "2026-07-24T10:14:09Z"
+    },
+    {
+      "label": "twitter",
+      "createdAt": "2026-07-24T10:14:09Z"
+    }
+  ],
+  "reactions": [],
+  "comments": []
+}

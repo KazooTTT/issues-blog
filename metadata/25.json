@@ -1,0 +1,26 @@
+{
+  "number": 25,
+  "title": "写一个油猴脚本，自动地选择最新微博",
+  "body": "\n# 写一个油猴脚本，自动地选择最新微博\n\n效果演示：\n\n![CleanShot 2024-06-24 at 12.02.21](<https://pictures.kazoottt.top/2024/06/20240626-7c865e7ad92efd6f2b352c7e25066eb9.gif>)\n\n[自动地将微博的浏览顺序切换为按时间排序 \\[油猴脚本\\]\\_哔哩哔哩\\_bilibili](<https://www.bilibili.com/video/BV1ji37eaEF8/?vd_source=2fb17edde94db73875894dd00309c394>)\n\n安装地址：short.kazoottt.top/wbtimeline\n\n<!-- issues-blog:source=d1:post.write-an-oil-monkey-script-that-automatically-selects-the-latest-tweets -->\n<!-- issues-blog:published-at=2024-06-26T00:00:00.000Z -->\n",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/25",
+  "state": "OPEN",
+  "createdAt": "2026-07-24T10:16:51Z",
+  "updatedAt": "2026-07-24T10:16:51Z",
+  "author": "KazooTTT",
+  "labels": [
+    "blog:publish",
+    "项目"
+  ],
+  "labelEvents": [
+    {
+      "label": "blog:publish",
+      "createdAt": "2026-07-24T10:16:51Z"
+    },
+    {
+      "label": "项目",
+      "createdAt": "2026-07-24T10:16:52Z"
+    }
+  ],
+  "reactions": [],
+  "comments": []
+}

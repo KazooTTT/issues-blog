@@ -1,0 +1,61 @@
+{
+  "number": 26,
+  "title": "如何自动同步某个文件夹的图片到某个相册中",
+  "body": "\n# 如何自动同步某个文件夹的图片到某个相册中\n\n场景描述：我使用的截图工具 Shottr 会把截图都保存在“截图”这个文件夹中，但我希望在保存的同时自动将其导入到 iCloud 相册中的“截图”文件夹中。\n\n![Pasted image 20240701160250](<https://pictures.kazoottt.top/2024/07/20240701-Pasted%20image%2020240701160250.png.png>)\n\n那么如何自动同步某个文件夹的图片到某个相册中？实现具体的做法如下：\n\n## 第一步：打开自动操作\n\n![Pasted image 20240701175005](<https://pictures.kazoottt.top/2024/07/20240701-Pasted%20image%2020240701175005.png.png>)\n\n## 第二步：点击 finder 左下角的新建文稿\n\n![Pasted image 20240701181819](<https://pictures.kazoottt.top/2024/07/20240701-Pasted%20image%2020240701181819.png>)\n\n## 第三步：选择文件夹操作\n\n![Pasted image 20240701175106](<https://pictures.kazoottt.top/2024/07/20240701-Pasted%20image%2020240701175106.png.png>)\n\n## 第四步：配置文件夹操作\n\n![Pasted image 20240701175211](<https://pictures.kazoottt.top/2024/07/20240701-Pasted%20image%2020240701175211.png.png>)\n\n1. 在资源库 - 照片 - 将文件导入到照片这个操作拖动到右边\n2. 选择你要同步的目标文件夹\n3. 选择添加到现有顶层相簿\n4. 选择你要同步到 iCloud 的哪个相册中\n5. 按下 `cmd + S` 保存这个文件夹操作\n\n![Pasted image 20240701175952](<https://pictures.kazoottt.top/2024/07/20240701-Pasted%20image%2020240701175952.png.png>)\n\n## 第六步：最终确认是否开启脚本\n\n找到之前的目标文件夹“截图”，右键这个文件夹并点击“文件夹操作设置⋯”\n\n![Pasted image 20240701180150](<https://pictures.kazoottt.top/2024/07/20240701-Pasted%20image%2020240701180150.png.png>)\n\n如果弹出确认服务提示，点击运行服务\n\n![Pasted image 20240701180344](<https://pictures.kazoottt.top/2024/07/20240701-Pasted%20image%2020240701180344.png.png>)\n\n---\n\n## 备注\n\n如果想要删除文件夹操作，可以前往以下路径：\n\n```shell\n/Users/{这里替换为你的用户名}/Library/Workflows/Applications/Folder Actions\n```\n\n<!-- issues-blog:source=d1:post.auto-sync-folder-to-album -->\n<!-- issues-blog:published-at=2024-07-01T00:00:00.000Z -->\n",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/26",
+  "state": "OPEN",
+  "createdAt": "2026-07-24T10:16:59Z",
+  "updatedAt": "2026-07-24T10:16:59Z",
+  "author": "KazooTTT",
+  "labels": [
+    "blog:publish",
+    "笔记",
+    "macos",
+    "文件管理",
+    "文件夹同步",
+    "相册",
+    "自动操作",
+    "icloud",
+    "shottr"
+  ],
+  "labelEvents": [
+    {
+      "label": "blog:publish",
+      "createdAt": "2026-07-24T10:17:00Z"
+    },
+    {
+      "label": "笔记",
+      "createdAt": "2026-07-24T10:17:01Z"
+    },
+    {
+      "label": "macos",
+      "createdAt": "2026-07-24T10:17:01Z"
+    },
+    {
+      "label": "文件管理",
+      "createdAt": "2026-07-24T10:17:01Z"
+    },
+    {
+      "label": "文件夹同步",
+      "createdAt": "2026-07-24T10:17:01Z"
+    },
+    {
+      "label": "相册",
+      "createdAt": "2026-07-24T10:17:01Z"
+    },
+    {
+      "label": "自动操作",
+      "createdAt": "2026-07-24T10:17:01Z"
+    },
+    {
+      "label": "icloud",
+      "createdAt": "2026-07-24T10:17:01Z"
+    },
+    {
+      "label": "shottr",
+      "createdAt": "2026-07-24T10:17:02Z"
+    }
+  ],
+  "reactions": [],
+  "comments": []
+}
