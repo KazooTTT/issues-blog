@@ -240,18 +240,5 @@ const trainingMetrics = [
       </section>
     )}
 
-    {trainingSections.length > 0 && (
-      <details class="workout-raw-details">
-        <summary>查看全部原始训练数据</summary>
-        {trainingSections.map(({ title, rows }) => (
-          <section>
-            <h4>{title}</h4>
-            <dl>
-              {rows.map(([label, value]) => <div><dt>{label}</dt><dd>{value}</dd></div>)}
-            </dl>
-          </section>
-        ))}
-      </details>
-    )}
-  </>
+      </>
 )}
