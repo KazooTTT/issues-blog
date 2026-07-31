@@ -1,5 +1,444 @@
 [
   {
+    "externalId": "622807118",
+    "name": "力量训练",
+    "activityDate": "2026-07-31",
+    "durationSeconds": 3311,
+    "caloriesKcal": 307,
+    "startTimeLocal": "2026-07-31 08:34:11",
+    "startTimeGmt": "2026-07-31 00:34:11",
+    "activityType": "strength_training",
+    "movingDurationSeconds": 2036.8929443359375,
+    "elapsedDurationSeconds": 3311.06298828125,
+    "distanceMeters": 0.0,
+    "averageSpeedMps": 0.0,
+    "averageHeartRateBpm": 154.0,
+    "maxHeartRateBpm": 182.0,
+    "bmrCaloriesKcal": 60.0,
+    "aerobicTrainingEffect": 3.5,
+    "anaerobicTrainingEffect": 2.5,
+    "trainingLoad": 197.88998413085938,
+    "trainingEffectLabel": "ANAEROBIC_CAPACITY",
+    "totalSets": 9,
+    "activeSets": 9,
+    "totalReps": 69,
+    "trainingDetails": {
+      "heartRateZones": [
+        {
+          "zoneNumber": 1,
+          "secsInZone": 148.002,
+          "zoneLowBoundary": 97
+        },
+        {
+          "zoneNumber": 2,
+          "secsInZone": 256.717,
+          "zoneLowBoundary": 116
+        },
+        {
+          "zoneNumber": 3,
+          "secsInZone": 1095.917,
+          "zoneLowBoundary": 135
+        },
+        {
+          "zoneNumber": 4,
+          "secsInZone": 1012.216,
+          "zoneLowBoundary": 154
+        },
+        {
+          "zoneNumber": 5,
+          "secsInZone": 743.659,
+          "zoneLowBoundary": 174
+        }
+      ],
+      "splits": {
+        "activityId": 622807118,
+        "lapDTOs": [
+          {
+            "startTimeGMT": "2026-07-31T00:34:11.0",
+            "distance": 0.0,
+            "duration": 3311.063,
+            "movingDuration": 2036.893,
+            "elapsedDuration": 3311.063,
+            "averageSpeed": 0.0,
+            "averageMovingSpeed": 0.0,
+            "calories": 307.0,
+            "bmrCalories": 60.0,
+            "averageHR": 154.0,
+            "maxHR": 182.0,
+            "trainingEffect": 3.5,
+            "waterEstimated": 882.0,
+            "lapIndex": 1,
+            "lengthDTOs": [],
+            "connectIQMeasurement": []
+          }
+        ],
+        "eventDTOs": [
+          {
+            "startTimeGMT": "2026-07-31T00:34:10.0",
+            "startTimeGMTDoubleValue": 1785458050000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-07-31T00:34:11.0",
+            "startTimeGMTDoubleValue": 1785458051000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          }
+        ]
+      },
+      "typedSplits": {
+        "activityId": 622807118,
+        "activityUUID": {
+          "uuid": "cbf9cee4-c66f-49b3-ad4a-a2892674eb55"
+        },
+        "splits": []
+      },
+      "splitSummaries": {
+        "activityId": 622807118,
+        "activityUUID": {
+          "uuid": "cbf9cee4-c66f-49b3-ad4a-a2892674eb55"
+        },
+        "splitSummaries": []
+      },
+      "exerciseSets": {
+        "activityId": 622807118,
+        "exerciseSets": [
+          {
+            "exercises": [
+              {
+                "category": "FLYE",
+                "name": "DUMBBELL_FLYE",
+                "probability": 51.5625
+              },
+              {
+                "category": "HIP_RAISE",
+                "name": "BARBELL_HIP_THRUST_ON_FLOOR",
+                "probability": 33.59375
+              },
+              {
+                "category": "SQUAT",
+                "name": null,
+                "probability": 14.0625
+              }
+            ],
+            "duration": 687.59,
+            "repetitionCount": 4,
+            "weight": 0.0,
+            "setType": "ACTIVE",
+            "startTime": "2026-07-31T00:34:11.0",
+            "wktStepIndex": null,
+            "messageIndex": 0
+          },
+          {
+            "exercises": [],
+            "duration": 118.19,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-07-31T00:45:38.0",
+            "wktStepIndex": null,
+            "messageIndex": 1
+          },
+          {
+            "exercises": [
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 99.609375
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              }
+            ],
+            "duration": 186.86,
+            "repetitionCount": 8,
+            "weight": 0.0,
+            "setType": "ACTIVE",
+            "startTime": "2026-07-31T00:47:37.0",
+            "wktStepIndex": null,
+            "messageIndex": 2
+          },
+          {
+            "exercises": [],
+            "duration": 130.625,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-07-31T00:50:43.0",
+            "wktStepIndex": null,
+            "messageIndex": 3
+          },
+          {
+            "exercises": [
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 99.609375
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              }
+            ],
+            "duration": 210.288,
+            "repetitionCount": 5,
+            "weight": 0.0,
+            "setType": "ACTIVE",
+            "startTime": "2026-07-31T00:52:54.0",
+            "wktStepIndex": null,
+            "messageIndex": 4
+          },
+          {
+            "exercises": [],
+            "duration": 160.119,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-07-31T00:56:24.0",
+            "wktStepIndex": null,
+            "messageIndex": 5
+          },
+          {
+            "exercises": [
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 99.609375
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              }
+            ],
+            "duration": 210.592,
+            "repetitionCount": 4,
+            "weight": 0.0,
+            "setType": "ACTIVE",
+            "startTime": "2026-07-31T00:59:04.0",
+            "wktStepIndex": null,
+            "messageIndex": 6
+          },
+          {
+            "exercises": [],
+            "duration": 185.4,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-07-31T01:02:35.0",
+            "wktStepIndex": null,
+            "messageIndex": 7
+          },
+          {
+            "exercises": [
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 99.609375
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              }
+            ],
+            "duration": 235.197,
+            "repetitionCount": 4,
+            "weight": 0.0,
+            "setType": "ACTIVE",
+            "startTime": "2026-07-31T01:05:40.0",
+            "wktStepIndex": null,
+            "messageIndex": 8
+          },
+          {
+            "exercises": [],
+            "duration": 163.942,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-07-31T01:09:36.0",
+            "wktStepIndex": null,
+            "messageIndex": 9
+          },
+          {
+            "exercises": [
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 99.609375
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              }
+            ],
+            "duration": 219.608,
+            "repetitionCount": 8,
+            "weight": 0.0,
+            "setType": "ACTIVE",
+            "startTime": "2026-07-31T01:12:20.0",
+            "wktStepIndex": null,
+            "messageIndex": 10
+          },
+          {
+            "exercises": [],
+            "duration": 124.045,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-07-31T01:15:59.0",
+            "wktStepIndex": null,
+            "messageIndex": 11
+          },
+          {
+            "exercises": [
+              {
+                "category": "OLYMPIC_LIFT",
+                "name": "CLEAN",
+                "probability": 39.453125
+              },
+              {
+                "category": "CURL",
+                "name": null,
+                "probability": 35.9375
+              },
+              {
+                "category": "OLYMPIC_LIFT",
+                "name": "SNATCH",
+                "probability": 23.828125
+              }
+            ],
+            "duration": 120.31,
+            "repetitionCount": 8,
+            "weight": 0.0,
+            "setType": "ACTIVE",
+            "startTime": "2026-07-31T01:18:03.0",
+            "wktStepIndex": null,
+            "messageIndex": 12
+          },
+          {
+            "exercises": [],
+            "duration": 212.688,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-07-31T01:20:04.0",
+            "wktStepIndex": null,
+            "messageIndex": 13
+          },
+          {
+            "exercises": [
+              {
+                "category": "OLYMPIC_LIFT",
+                "name": "CLEAN",
+                "probability": 41.40625
+              },
+              {
+                "category": "OLYMPIC_LIFT",
+                "name": "SNATCH",
+                "probability": 32.03125
+              },
+              {
+                "category": "CURL",
+                "name": null,
+                "probability": 25.390625
+              }
+            ],
+            "duration": 77.255,
+            "repetitionCount": 11,
+            "weight": 0.0,
+            "setType": "ACTIVE",
+            "startTime": "2026-07-31T01:23:36.0",
+            "wktStepIndex": null,
+            "messageIndex": 14
+          },
+          {
+            "exercises": [],
+            "duration": 171.49,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-07-31T01:24:54.0",
+            "wktStepIndex": null,
+            "messageIndex": 15
+          },
+          {
+            "exercises": [
+              {
+                "category": "OLYMPIC_LIFT",
+                "name": "CLEAN",
+                "probability": 51.171875
+              },
+              {
+                "category": "CURL",
+                "name": null,
+                "probability": 35.9375
+              },
+              {
+                "category": "OLYMPIC_LIFT",
+                "name": "SNATCH",
+                "probability": 11.71875
+              }
+            ],
+            "duration": 89.193,
+            "repetitionCount": 17,
+            "weight": 0.0,
+            "setType": "ACTIVE",
+            "startTime": "2026-07-31T01:27:45.0",
+            "wktStepIndex": null,
+            "messageIndex": 16
+          },
+          {
+            "exercises": [],
+            "duration": 7.671,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-07-31T01:29:14.0",
+            "wktStepIndex": null,
+            "messageIndex": 17
+          }
+        ]
+      }
+    }
+  },
+  {
     "externalId": "622218634",
     "name": "舞蹈健身",
     "activityDate": "2026-07-29",
