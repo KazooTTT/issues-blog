@@ -10,6 +10,7 @@
   "labels": [
     "blog:publish",
     "javascript",
+    "笔记",
     "前端",
     "博客开发",
     "cloudflare",
@@ -39,6 +40,10 @@
     {
       "label": "astro",
       "createdAt": "2026-07-31T06:33:10Z"
+    },
+    {
+      "label": "笔记",
+      "createdAt": "2026-07-31T06:37:21Z"
     }
   ],
   "reactions": [],
