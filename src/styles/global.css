@@ -315,14 +315,18 @@ main { min-height: 65vh; }
 .archive-month + .archive-month { padding-top: 24px; border-top: 1px solid var(--line); }
 .archive h3 { margin: 0; color: var(--muted); font-size: 14px; font-weight: 600; letter-spacing: .08em; }
 .archive ol { margin: 0; padding: 0; list-style: none; }
-.archive li { display: grid; grid-template-columns: 54px minmax(0, 1fr) auto; gap: 20px; align-items: baseline; padding: 10px 0; }
+.archive li { display: grid; grid-template-columns: 54px minmax(180px, 1fr) minmax(0, 280px); gap: 20px; align-items: baseline; padding: 10px 0; }
 .archive a { font-family: var(--serif); font-size: 18px; }
-.archive-tags { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
-.archive-tags a {
+.archive-tags { display: flex; justify-content: flex-end; gap: 6px; min-width: 0; }
+.archive-tag,
+.archive-tag-overflow {
+  min-width: 0; max-width: 84px; overflow: hidden; text-overflow: ellipsis;
+  white-space: nowrap;
   padding: 3px 7px; border: 1px solid var(--line); border-radius: 999px;
   color: var(--muted); font-family: var(--sans); font-size: 10px;
 }
-.archive-tags a:hover { border-color: var(--accent); color: var(--accent-dark); }
+.archive-tag-overflow { flex: 0 0 auto; }
+.archive-tag:hover { border-color: var(--accent); color: var(--accent-dark); }
 .about-body { padding-bottom: 100px; }
 .tools-intro { position: relative; margin-bottom: 10px; }
 .tools-count {

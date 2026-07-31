@@ -72,6 +72,18 @@ describe("static blog build", () => {
     expect(footer).not.toContain('class="tag"');
   });
 
+  it("summarizes tag-heavy posts in the archive without crowding their titles", () => {
+    const archive = readFileSync(resolve(root, "dist/archive/index.html"), "utf8");
+    const welcomeRow = archive.match(
+      /<li><time[^>]*>01日<\/time><a[^>]*>欢迎来到我的博客<\/a>[\s\S]*?<\/li>/,
+    )?.[0];
+
+    expect(welcomeRow).toBeTruthy();
+    expect(welcomeRow?.match(/class="archive-tag"/g)).toHaveLength(3);
+    expect(welcomeRow).toContain('class="archive-tag-overflow"');
+    expect(welcomeRow).toContain("+4");
+  });
+
   it("keeps the selected theme synchronized across page loads and tabs", () => {
     const home = readFileSync(resolve(root, "dist/index.html"), "utf8");
     const article = readFileSync(resolve(root, "dist/posts/101/index.html"), "utf8");

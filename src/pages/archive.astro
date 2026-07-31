@@ -43,19 +43,36 @@ const archive = Object.keys(postsByYear)
             <div class="archive-month">
               <h3>{month}月</h3>
               <ol>
-                {monthPosts.map(({ post, date }) => (
-                  <li>
-                    <time datetime={post.publishedAt}>{date.day}日</time>
-                    <a href={sitePath(post.permalink)}>{post.title}</a>
-                    <span class="archive-tags">
-                      {post.tags.map((tag) => (
-                        <a href={sitePath(`/tags/${encodeURIComponent(tag)}/`)}>
-                          {tag}
-                        </a>
-                      ))}
-                    </span>
-                  </li>
-                ))}
+                {monthPosts.map(({ post, date }) => {
+                  const visibleTags = post.tags.slice(0, 3);
+                  const hiddenTagCount = post.tags.length - visibleTags.length;
+
+                  return (
+                    <li>
+                      <time datetime={post.publishedAt}>{date.day}日</time>
+                      <a href={sitePath(post.permalink)}>{post.title}</a>
+                      <span class="archive-tags">
+                        {visibleTags.map((tag) => (
+                          <a
+                            class="archive-tag"
+                            href={sitePath(`/tags/${encodeURIComponent(tag)}/`)}
+                            title={tag}
+                          >
+                            {tag}
+                          </a>
+                        ))}
+                        {hiddenTagCount > 0 && (
+                          <span
+                            class="archive-tag-overflow"
+                            aria-label={`另有 ${hiddenTagCount} 个标签`}
+                          >
+                            +{hiddenTagCount}
+                          </span>
+                        )}
+                      </span>
+                    </li>
+                  );
+                })}
               </ol>
             </div>
           ))}

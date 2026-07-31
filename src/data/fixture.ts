@@ -26,6 +26,9 @@ export const fixtureIssues: SourceIssue[] = [
         "blog:publish",
         ...(index < 2 ? ["blog:featured"] : []),
         topics[index % topics.length]!,
+        ...(index === 0
+          ? ["JavaScript", "React", "TypeScript", "Cloudflare", "开源", "前端"]
+          : []),
       ],
       labelEvents: [{ label: "blog:publish", createdAt: publishedAt }],
       reactions:
