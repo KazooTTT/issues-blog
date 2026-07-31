@@ -101,7 +101,6 @@ const allDetails: Array<[string, string, string | undefined]> = [
   ["startTimeLocal", "本地开始", workout.startTimeLocal ? `${workout.startTimeLocal}（Asia/Shanghai）` : undefined],
   ["activityType", "Garmin 类型", workout.activityType ? formatEnum(workout.activityType, activityTypeNames) : undefined],
   ["durationSeconds", "总时长", formatDuration(workout.durationSeconds)],
-  ["movingDurationSeconds", "移动时长", workout.movingDurationSeconds === undefined ? undefined : formatDuration(workout.movingDurationSeconds)],
   ["elapsedDurationSeconds", "经过时长", workout.elapsedDurationSeconds === undefined ? undefined : formatDuration(workout.elapsedDurationSeconds)],
   ["caloriesKcal", "活动热量", `${formatNumber(workout.caloriesKcal, 0)} kcal`],
   ["bmrCaloriesKcal", "基础代谢热量", workout.bmrCaloriesKcal === undefined ? undefined : `${formatNumber(workout.bmrCaloriesKcal)} kcal`],

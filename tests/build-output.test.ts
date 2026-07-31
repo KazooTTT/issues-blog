@@ -200,6 +200,8 @@ describe("static blog build", () => {
     expect(workout).toContain("Asia/Shanghai");
     expect(workout).not.toContain("GMT 开始");
     expect(workout).not.toContain("startTimeGmt");
+    expect(workout).not.toContain("移动时长");
+    expect(workout).not.toContain("movingDurationSeconds");
     expect(workout).toContain("Garmin 类型（activityType）");
     expect(workout).toContain("室内有氧（indoor_cardio）");
     expect(workout).toContain("主要训练效果（trainingEffectLabel）");
