@@ -1,5 +1,132 @@
 [
   {
+    "externalId": "623574229",
+    "name": "舞蹈健身",
+    "activityDate": "2026-08-02",
+    "durationSeconds": 4351,
+    "caloriesKcal": 424,
+    "startTimeLocal": "2026-08-02 14:00:03",
+    "startTimeGmt": "2026-08-02 06:00:03",
+    "activityType": "dance",
+    "movingDurationSeconds": 0.0,
+    "elapsedDurationSeconds": 4351.3408203125,
+    "distanceMeters": 0.0,
+    "elevationGainMeters": 0.0,
+    "elevationLossMeters": 0.0,
+    "averageSpeedMps": 0.0,
+    "averageHeartRateBpm": 163.0,
+    "maxHeartRateBpm": 190.0,
+    "bmrCaloriesKcal": 79.0,
+    "aerobicTrainingEffect": 4.800000190734863,
+    "anaerobicTrainingEffect": 4.199999809265137,
+    "trainingLoad": 510.223388671875,
+    "trainingEffectLabel": "VO2MAX",
+    "averageRunningCadenceSpm": 27.921875,
+    "maxRunningCadenceSpm": 243.0,
+    "trainingDetails": {
+      "heartRateZones": [
+        {
+          "zoneNumber": 1,
+          "secsInZone": 155.991,
+          "zoneLowBoundary": 97
+        },
+        {
+          "zoneNumber": 2,
+          "secsInZone": 544.35,
+          "zoneLowBoundary": 116
+        },
+        {
+          "zoneNumber": 3,
+          "secsInZone": 439.001,
+          "zoneLowBoundary": 135
+        },
+        {
+          "zoneNumber": 4,
+          "secsInZone": 1294.0,
+          "zoneLowBoundary": 154
+        },
+        {
+          "zoneNumber": 5,
+          "secsInZone": 1913.999,
+          "zoneLowBoundary": 174
+        }
+      ],
+      "splits": {
+        "activityId": 623574229,
+        "lapDTOs": [
+          {
+            "startTimeGMT": "2026-08-02T06:00:03.0",
+            "distance": 0.0,
+            "duration": 4351.341,
+            "movingDuration": 0.0,
+            "elapsedDuration": 4351.341,
+            "elevationGain": 0.0,
+            "elevationLoss": 0.0,
+            "maxElevation": 499.6,
+            "minElevation": 496.8,
+            "averageSpeed": 0.0,
+            "calories": 424.0,
+            "bmrCalories": 79.0,
+            "averageHR": 163.0,
+            "maxHR": 190.0,
+            "averageRunCadence": 27.921875,
+            "maxRunCadence": 243.0,
+            "maxVerticalSpeed": 1.0,
+            "lapIndex": 1,
+            "lengthDTOs": [],
+            "connectIQMeasurement": [
+              {
+                "appID": "6583ba3c-6148-499a-9ab8-fdab1dec3359",
+                "developerFieldNumber": 2,
+                "value": "1.0"
+              }
+            ],
+            "intensityType": "ACTIVE",
+            "messageIndex": 0
+          }
+        ],
+        "eventDTOs": [
+          {
+            "startTimeGMT": "2026-08-02T06:00:02.0",
+            "startTimeGMTDoubleValue": 1785650402000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-08-02T06:00:03.0",
+            "startTimeGMTDoubleValue": 1785650403000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          }
+        ]
+      },
+      "typedSplits": {
+        "activityId": 623574229,
+        "activityUUID": {
+          "uuid": "88d0d378-2889-4473-b97a-fd08c4073b67"
+        },
+        "splits": []
+      },
+      "splitSummaries": {
+        "activityId": 623574229,
+        "activityUUID": {
+          "uuid": "88d0d378-2889-4473-b97a-fd08c4073b67"
+        },
+        "splitSummaries": []
+      },
+      "exerciseSets": {
+        "activityId": 623574229,
+        "exerciseSets": null
+      }
+    }
+  },
+  {
     "externalId": "623513993",
     "name": "力量训练",
     "activityDate": "2026-08-02",
