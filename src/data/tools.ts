@@ -130,7 +130,8 @@ export const deviceGroups: ToolGroup[] = [
     title: "LUMIX 全画幅",
     eyebrow: "CAMERA 02",
     items: [
-      { name: "LUMIX S9 + 18–40mm", description: "相机套机", iconDomain: "panasonic.com/global/consumer/lumix" },
+      { name: "LUMIX S9", description: "相机", iconDomain: "panasonic.com/global/consumer/lumix" },
+      { name: "LUMIX S 18–40mm", description: "变焦镜头", iconDomain: "panasonic.com/global/consumer/lumix" },
     ],
   },
   {
