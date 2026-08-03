@@ -28,6 +28,11 @@ interface Props {
 
 const { workout, review } = Astro.props;
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
+const workoutIndex = workouts.findIndex(
+  ({ externalId }) => externalId === workout.externalId,
+);
+const previousWorkout = workouts[workoutIndex + 1];
+const nextWorkout = workouts[workoutIndex - 1];
 const reviewIssueUrl = new URL("https://github.com/KazooTTT/issues-blog/issues/new");
 reviewIssueUrl.searchParams.set("template", "workout-review.md");
 reviewIssueUrl.searchParams.set("title", `运动复盘｜${workout.activityDate}｜${workout.name}`);
@@ -70,7 +75,6 @@ const reviewHtml = review ? await renderMarkdown(review.body) : undefined;
       </a>
     </header>
     <div class="workout-detail-content">
-      <WorkoutDetails workout={workout} />
       {review && reviewHtml && (
         <section class="workout-review" aria-labelledby="workout-review-title">
           <header>
@@ -85,6 +89,25 @@ const reviewHtml = review ? await renderMarkdown(review.body) : undefined;
           <div class="prose workout-review-body" set:html={reviewHtml} />
         </section>
       )}
+      <WorkoutDetails workout={workout} />
+      <nav class="workout-detail-navigation" aria-label="相邻运动">
+        {previousWorkout ? (
+          <a href={`${basePath}/workouts/${previousWorkout.externalId}/`} rel="prev">
+            <span>← 上一个运动</span>
+            <strong>{previousWorkout.name}</strong>
+            <small>{previousWorkout.activityDate}</small>
+          </a>
+        ) : (
+          <span aria-hidden="true"></span>
+        )}
+        {nextWorkout && (
+          <a href={`${basePath}/workouts/${nextWorkout.externalId}/`} rel="next">
+            <span>下一个运动 →</span>
+            <strong>{nextWorkout.name}</strong>
+            <small>{nextWorkout.activityDate}</small>
+          </a>
+        )}
+      </nav>
     </div>
   </article>
 </BaseLayout>

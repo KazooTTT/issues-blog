@@ -215,6 +215,23 @@ describe("static blog build", () => {
     expect(workout).toContain("主要训练收益偏向速度");
   });
 
+  it("places the review before the activity summary and links adjacent workouts", () => {
+    const workout = readFileSync(
+      resolve(root, "dist/workouts/622983356/index.html"),
+      "utf8",
+    );
+    const reviewIndex = workout.indexOf('class="workout-review"');
+    const summaryIndex = workout.indexOf("<h4>活动摘要</h4>");
+
+    expect(reviewIndex).toBeGreaterThan(-1);
+    expect(summaryIndex).toBeGreaterThan(reviewIndex);
+    expect(workout).toContain('class="workout-detail-navigation"');
+    expect(workout).toContain("上一个运动");
+    expect(workout).toContain("下一个运动");
+    expect(workout).toContain('rel="prev"');
+    expect(workout).toContain('rel="next"');
+  });
+
   it("keeps workout tooltips pointed at their trigger while avoiding viewport edges", () => {
     const workoutPage = readFileSync(resolve(root, "src/pages/workouts.astro"), "utf8");
     const styles = readFileSync(resolve(root, "src/styles/global.css"), "utf8");
