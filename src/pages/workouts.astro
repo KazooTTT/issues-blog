@@ -1,5 +1,5 @@
 ---
-import { workouts } from "@/data/workouts";
+import { sortWorkoutsChronologically, workouts } from "@/data/workouts";
 import WorkoutDetails from "@/components/WorkoutDetails.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 
@@ -238,7 +238,7 @@ const calendarMonths = [...new Set(workouts.map(({ activityDate }) => activityDa
               >
                 <span>{cell.day}</span>
                 <div class="workout-calendar-marks">
-                  {cell.workouts.map((workout) => {
+                  {sortWorkoutsChronologically(cell.workouts).map((workout) => {
                     const kind = workoutKind(workout.name);
                     const detailId = `workout-detail-${workout.externalId}`;
                     return (

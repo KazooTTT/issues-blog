@@ -43,6 +43,14 @@ function workoutStartKey(workout: Workout): string {
   return workout.startTimeLocal ?? `${workout.activityDate} 00:00:00`;
 }
 
+export function sortWorkoutsChronologically(input: readonly Workout[]): Workout[] {
+  return [...input].sort(
+    (left, right) =>
+      workoutStartKey(left).localeCompare(workoutStartKey(right)) ||
+      left.externalId.localeCompare(right.externalId),
+  );
+}
+
 export function normalizeWorkouts(input: unknown): Workout[] {
   const payload =
     input && typeof input === "object" && "workouts" in input
@@ -53,9 +61,8 @@ export function normalizeWorkouts(input: unknown): Workout[] {
 
   return [...unique.values()].sort(
     (left, right) =>
-      right.activityDate.localeCompare(left.activityDate) ||
-      workoutStartKey(left).localeCompare(workoutStartKey(right)) ||
-      left.externalId.localeCompare(right.externalId),
+      workoutStartKey(right).localeCompare(workoutStartKey(left)) ||
+      right.externalId.localeCompare(left.externalId),
   );
 }
 

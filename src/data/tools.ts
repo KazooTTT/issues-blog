@@ -114,7 +114,7 @@ export const deviceGroups: ToolGroup[] = [
     ],
   },
   {
-    title: "LUMIX 影像",
+    title: "LUMIX M43",
     eyebrow: "CAMERA 01",
     items: [
       { name: "LUMIX GX9", description: "相机", iconDomain: "panasonic.com/global/consumer/lumix" },
@@ -124,12 +124,18 @@ export const deviceGroups: ToolGroup[] = [
       { name: "LUMIX 25mm", description: "定焦镜头", iconDomain: "panasonic.com/global/consumer/lumix" },
       { name: "LUMIX 100–300mm", description: "长焦镜头", iconDomain: "panasonic.com/global/consumer/lumix" },
       { name: "永诺 42.5mm", description: "定焦镜头", iconDomain: "yongnuo.com.cn" },
+    ],
+  },
+  {
+    title: "LUMIX 全画幅",
+    eyebrow: "CAMERA 02",
+    items: [
       { name: "LUMIX S9 + 18–40mm", description: "相机套机", iconDomain: "panasonic.com/global/consumer/lumix" },
     ],
   },
   {
     title: "随身影像",
-    eyebrow: "CAMERA 02",
+    eyebrow: "CAMERA 03",
     items: [
       { name: "DJI Action 5 Pro", description: "运动相机", iconDomain: "dji.com" },
       { name: "DJI Osmo 360", description: "全景相机", iconDomain: "dji.com" },
