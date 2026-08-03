@@ -570,7 +570,7 @@ button.workout-kind, a.workout-kind { cursor: pointer; }
   display: grid; gap: 5px; padding: 16px; border-right: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
 }
-.workout-detail-content dt { color: var(--muted); font-size: 10px; letter-spacing: .08em; }
+.workout-detail-content dt { color: var(--muted); font-size: 13px; letter-spacing: .04em; }
 .workout-detail-content dd { margin: 0; overflow-wrap: anywhere; font: 600 16px/1.35 var(--serif); }
 .workout-training-effect, .workout-zone-section {
   padding: 28px; border: 1px solid var(--line); background: var(--card);
@@ -658,7 +658,8 @@ button.workout-kind, a.workout-kind { cursor: pointer; }
   .brand small { display: none; }
   .site-header { flex-wrap: wrap; }
   .site-header nav {
-    width: 100%; justify-content: space-between; gap: 10px;
+    flex: 0 0 100%; width: 100%; min-width: 0;
+    justify-content: space-between; gap: 10px;
     padding-top: 12px; font-size: 12px;
   }
   .nav-dropdown { left: 0; transform: none; }

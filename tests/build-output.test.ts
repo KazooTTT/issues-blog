@@ -190,22 +190,28 @@ describe("static blog build", () => {
     expect(tools).not.toContain("唯卓仕");
   });
 
-  it("explains Garmin workout fields without showing the redundant GMT time", () => {
+  it("keeps workout labels readable without exposing source field names", () => {
     const workout = readFileSync(
       resolve(root, "dist/workouts/612229533/index.html"),
       "utf8",
     );
 
-    expect(workout).toContain("本地开始（startTimeLocal）");
+    expect(workout).toContain("<dt>本地开始</dt>");
     expect(workout).toContain("Asia/Shanghai");
     expect(workout).not.toContain("GMT 开始");
     expect(workout).not.toContain("startTimeGmt");
     expect(workout).not.toContain("移动时长");
     expect(workout).not.toContain("movingDurationSeconds");
-    expect(workout).toContain("Garmin 类型（activityType）");
-    expect(workout).toContain("室内有氧（indoor_cardio）");
-    expect(workout).toContain("主要训练效果（trainingEffectLabel）");
-    expect(workout).toContain("速度（SPEED）");
+    expect(workout).not.toContain("<dt>距离</dt><dd>0 m</dd>");
+    expect(workout).not.toContain("<dt>平均速度</dt><dd>0 km/h</dd>");
+    expect(workout).toContain("<dt>Garmin 类型</dt>");
+    expect(workout).toContain("室内有氧</dd>");
+    expect(workout).toContain("<dt>主要训练效果</dt>");
+    expect(workout).toContain("速度</dd>");
+    expect(workout).not.toContain("查看 Garmin 原始字段名");
+    expect(workout).not.toContain("（startTimeLocal）");
+    expect(workout).not.toContain("（activityType）");
+    expect(workout).not.toContain("（trainingEffectLabel）");
     expect(workout).toContain("主要训练收益偏向速度");
   });
 

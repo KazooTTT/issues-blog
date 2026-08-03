@@ -53,8 +53,9 @@ export function normalizeWorkouts(input: unknown): Workout[] {
 
   return [...unique.values()].sort(
     (left, right) =>
-      workoutStartKey(right).localeCompare(workoutStartKey(left)) ||
-      right.externalId.localeCompare(left.externalId),
+      right.activityDate.localeCompare(left.activityDate) ||
+      workoutStartKey(left).localeCompare(workoutStartKey(right)) ||
+      left.externalId.localeCompare(right.externalId),
   );
 }
 

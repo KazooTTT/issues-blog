@@ -78,8 +78,7 @@ function bilingualLabel(name: string, key: string): string {
 }
 
 function formatEnum(value: string, names: Record<string, string>): string {
-  const translated = names[value];
-  return translated ? `${translated}（${value}）` : value;
+  return names[value] ?? value;
 }
 
 function flatten(value: unknown, path: string[] = []): Array<[string, string]> {
@@ -117,7 +116,7 @@ const allDetails: Array<[string, string, string | undefined]> = [
   ["aerobicTrainingEffect", "有氧训练效果", workout.aerobicTrainingEffect === undefined ? undefined : formatNumber(workout.aerobicTrainingEffect)],
   ["anaerobicTrainingEffect", "无氧训练效果", workout.anaerobicTrainingEffect === undefined ? undefined : formatNumber(workout.anaerobicTrainingEffect)],
   ["trainingLoad", "训练负荷", workout.trainingLoad === undefined ? undefined : formatNumber(workout.trainingLoad)],
-  ["trainingEffectLabel", "主要训练效果", workout.trainingEffectLabel ? `${trainingEffect?.name ?? workout.trainingEffectLabel}（${workout.trainingEffectLabel}）` : undefined],
+  ["trainingEffectLabel", "主要训练效果", workout.trainingEffectLabel ? trainingEffect?.name ?? workout.trainingEffectLabel : undefined],
   ["averageRunningCadenceSpm", "平均步频", workout.averageRunningCadenceSpm === undefined ? undefined : `${formatNumber(workout.averageRunningCadenceSpm)} 步/分`],
   ["maxRunningCadenceSpm", "最高步频", workout.maxRunningCadenceSpm === undefined ? undefined : `${formatNumber(workout.maxRunningCadenceSpm)} 步/分`],
   ["totalSets", "总组数", workout.totalSets === undefined ? undefined : formatNumber(workout.totalSets, 0)],
@@ -128,6 +127,7 @@ const allDetails: Array<[string, string, string | undefined]> = [
 ];
 const details = allDetails
   .filter((detail): detail is [string, string, string] => detail[2] !== undefined)
+  .filter(([key]) => workout[key as keyof Workout] !== 0)
   .filter(([key]) => !summary || ["activityDate", "durationSeconds", "caloriesKcal", "averageHeartRateBpm", "maxHeartRateBpm", "trainingEffectLabel"].includes(key));
 const trainingSections = summary
   ? []
@@ -148,7 +148,8 @@ const heartRateZones = Array.isArray(workout.trainingDetails?.heartRateZones)
         "zoneNumber" in zone &&
         "secsInZone" in zone &&
         typeof zone.zoneNumber === "number" &&
-        typeof zone.secsInZone === "number",
+        typeof zone.secsInZone === "number" &&
+        zone.secsInZone > 0,
     )
   : [];
 const totalZoneSeconds = heartRateZones.reduce(
@@ -159,13 +160,15 @@ const trainingMetrics = [
   { key: "aerobicTrainingEffect", label: "有氧效果", value: workout.aerobicTrainingEffect },
   { key: "anaerobicTrainingEffect", label: "无氧效果", value: workout.anaerobicTrainingEffect },
   { key: "trainingLoad", label: "训练负荷", value: workout.trainingLoad },
-].filter((metric): metric is { key: string; label: string; value: number } => metric.value !== undefined);
+].filter((metric): metric is { key: string; label: string; value: number } =>
+  metric.value !== undefined && metric.value > 0
+);
 ---
 
 <section class:list={["workout-data-section", { "is-summary": summary }]}>
   <h4>活动摘要</h4>
   <dl>
-    {details.map(([key, label, value]) => <div><dt>{summary ? label : bilingualLabel(label, key)}</dt><dd>{value}</dd></div>)}
+    {details.map(([, label, value]) => <div><dt>{label}</dt><dd>{value}</dd></div>)}
   </dl>
 </section>
 {!summary && (
@@ -176,7 +179,7 @@ const trainingMetrics = [
           <h2>训练效果</h2>
           {workout.trainingEffectLabel && (
             <div class="training-effect-summary">
-              <span>{trainingEffect?.name ?? workout.trainingEffectLabel}（{workout.trainingEffectLabel}）</span>
+              <span>{trainingEffect?.name ?? workout.trainingEffectLabel}</span>
               {trainingEffect && <p>{trainingEffect.description}</p>}
             </div>
           )}
@@ -185,7 +188,7 @@ const trainingMetrics = [
           {trainingMetrics.map(({ key, label, value }) => (
             <article>
               <strong>{formatNumber(value)}</strong>
-              <span>{bilingualLabel(label, key)}</span>
+              <span>{label}</span>
               {key !== "trainingLoad" && (
                 <i style={`--effect: ${Math.min(value / 5, 1) * 100}%`}></i>
               )}
@@ -200,10 +203,10 @@ const trainingMetrics = [
         <header>
           <div>
             <span class="eyebrow">HEART RATE</span>
-            <h2>心率区间（heartRateZones）</h2>
+            <h2>心率区间</h2>
           </div>
           <p>
-            平均（averageHeartRateBpm） {workout.averageHeartRateBpm ?? "—"} · 最高（maxHeartRateBpm） {workout.maxHeartRateBpm ?? "—"} bpm
+            平均 {workout.averageHeartRateBpm ?? "—"} · 最高 {workout.maxHeartRateBpm ?? "—"} bpm
           </p>
         </header>
         <div class="workout-zone-stack" aria-label="各心率区间时长占比">

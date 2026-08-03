@@ -34,7 +34,7 @@ describe("workout snapshots", () => {
     expect(workouts[1]?.name).toBe("跑步（已更新）");
   });
 
-  it("sorts same-day workouts by local start time", () => {
+  it("sorts dates newest first and same-day workouts chronologically", () => {
     const workouts = normalizeWorkouts([
       {
         externalId: "100",
@@ -54,7 +54,7 @@ describe("workout snapshots", () => {
       },
     ]);
 
-    expect(workouts.map((workout) => workout.externalId)).toEqual(["100", "200"]);
+    expect(workouts.map((workout) => workout.externalId)).toEqual(["200", "100"]);
   });
 
   it("rejects malformed records before they reach the static build", () => {
