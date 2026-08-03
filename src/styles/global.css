@@ -548,7 +548,18 @@ button.workout-kind, a.workout-kind { cursor: pointer; }
 }
 .workout-detail-page > header h1 { margin: 10px 0 8px; font: 600 clamp(36px, 6vw, 64px)/1.1 var(--serif); }
 .workout-detail-page > header p { margin: 0; color: var(--muted); }
+.workout-review-button { margin-top: 24px; }
 .workout-detail-content { display: grid; gap: 28px; padding-top: 34px; }
+.workout-review { padding: 30px; border: 1px solid var(--line); background: var(--card); }
+.workout-review > header {
+  display: flex; align-items: end; justify-content: space-between; gap: 24px;
+  padding-bottom: 20px; border-bottom: 1px solid var(--line);
+}
+.workout-review > header h2 { margin: 6px 0 0; font: 600 28px/1.25 var(--serif); }
+.workout-review > header p { margin: 0; color: var(--muted); font-size: 11px; }
+.workout-review-body { padding-top: 8px; }
+.workout-review-body > :first-child { margin-top: 1.4em; }
+.workout-review-body > :last-child { margin-bottom: 0; }
 .workout-detail-content > .workout-data-section {
   padding: 26px; border: 1px solid var(--line); background: var(--card);
 }
@@ -745,6 +756,8 @@ button.workout-kind, a.workout-kind { cursor: pointer; }
   .workout-detail-back { margin-bottom: 28px; }
   .workout-detail-page > header { padding-bottom: 26px; }
   .workout-detail-content { gap: 20px; padding-top: 26px; }
+  .workout-review { padding: 20px; }
+  .workout-review > header { align-items: flex-start; flex-direction: column; gap: 8px; }
   .workout-detail-content > .workout-data-section,
   .workout-training-effect, .workout-zone-section { padding: 20px; }
   .not-found { padding: 72px 0; }

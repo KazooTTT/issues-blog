@@ -69,9 +69,11 @@ pnpm migrate:d1 \
 
 ## 站点自有数据
 
-GitHub Issues 只负责文章、About 和评论。友链保存在
-`src/data/friends.ts`；运动记录保存在 `src/data/workouts.json`，构建时会执行
-Schema 校验。
+GitHub Issues 负责文章、About、评论和运动复盘。友链保存在
+`src/data/friends.ts`；Garmin 运动记录保存在 `src/data/workouts.json`，构建时会执行
+Schema 校验。运动详情页可以创建带 `workout:review` 标签的复盘 Issue，Issue
+正文中的 `workout-id` 会与 Garmin 的 `externalId` 匹配，并将 Markdown 正文渲染回
+对应详情页。Issue 新建或编辑后，现有部署工作流会自动重新构建网站。
 
 同步脚本使用 Python 从 Garmin 拉取最近 14 天的活动，并与现有快照合并：
 

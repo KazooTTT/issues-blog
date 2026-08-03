@@ -1,21 +1,56 @@
 ---
 import WorkoutDetails from "@/components/WorkoutDetails.astro";
+import { getSiteContent } from "@/data/site-content";
 import { workouts, type Workout } from "@/data/workouts";
+import type { WorkoutReview } from "@/domain/types";
+import { indexWorkoutReviews } from "@/domain/workout-reviews";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import { renderMarkdown } from "@/rendering/content";
+import { formatDate } from "@/utils/presentation";
 
-export function getStaticPaths() {
+export async function getStaticPaths() {
+  const { workoutReviews } = await getSiteContent();
+  const reviewsByWorkoutId = indexWorkoutReviews(
+    workoutReviews,
+    workouts.map((workout) => workout.externalId),
+  );
+
   return workouts.map((workout) => ({
     params: { id: workout.externalId },
-    props: { workout },
+    props: { workout, review: reviewsByWorkoutId.get(workout.externalId) },
   }));
 }
 
 interface Props {
   workout: Workout;
+  review?: WorkoutReview;
 }
 
-const { workout } = Astro.props;
+const { workout, review } = Astro.props;
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
+const reviewIssueUrl = new URL("https://github.com/KazooTTT/issues-blog/issues/new");
+reviewIssueUrl.searchParams.set("template", "workout-review.md");
+reviewIssueUrl.searchParams.set("title", `运动复盘｜${workout.activityDate}｜${workout.name}`);
+reviewIssueUrl.searchParams.set("labels", "workout:review");
+reviewIssueUrl.searchParams.set(
+  "body",
+  [
+    "<!-- workout-review:v1 -->",
+    `<!-- workout-id: ${workout.externalId} -->`,
+    "",
+    "## 这次完成得怎么样",
+    "",
+    "",
+    "## 做得好的地方",
+    "",
+    "",
+    "## 下次调整",
+    "",
+    "",
+  ].join("\n"),
+);
+const reviewActionUrl = review?.url ?? reviewIssueUrl;
+const reviewHtml = review ? await renderMarkdown(review.body) : undefined;
 ---
 
 <BaseLayout title={`${workout.name} · 运动详情`} description={`${workout.activityDate} ${workout.name}的完整训练详情`}>
@@ -25,9 +60,31 @@ const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
       <span class="eyebrow">WORKOUT / 运动详情</span>
       <h1>{workout.name}</h1>
       <p>{workout.activityDate} · Garmin #{workout.externalId}</p>
+      <a
+        class="button workout-review-button"
+        href={reviewActionUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {review ? "编辑复盘 ↗" : "新增复盘 ↗"}
+      </a>
     </header>
     <div class="workout-detail-content">
       <WorkoutDetails workout={workout} />
+      {review && reviewHtml && (
+        <section class="workout-review" aria-labelledby="workout-review-title">
+          <header>
+            <div>
+              <span class="eyebrow">REFLECTION / 复盘</span>
+              <h2 id="workout-review-title">复盘笔记</h2>
+            </div>
+            <p>
+              Issue #{review.number} · 更新于 {formatDate(review.updatedAt)}
+            </p>
+          </header>
+          <div class="prose workout-review-body" set:html={reviewHtml} />
+        </section>
+      )}
     </div>
   </article>
 </BaseLayout>

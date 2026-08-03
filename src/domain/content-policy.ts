@@ -1,6 +1,10 @@
 import type { Post, SiteContent, SourceIssue } from "./types";
 import { siteConfig } from "@/config";
 import { importedPublicationTime } from "@/migration/d1-post";
+import {
+  classifyWorkoutReviews,
+  WORKOUT_REVIEW_LABEL,
+} from "./workout-reviews";
 
 const SYSTEM_LABEL_PREFIX = "blog:";
 const PUBLISH_LABEL = "blog:publish";
@@ -52,7 +56,8 @@ export function classifyIssues(
     .filter(
       (issue) =>
         issue.labels.includes(PUBLISH_LABEL) &&
-        !issue.labels.includes(ABOUT_LABEL),
+        !issue.labels.includes(ABOUT_LABEL) &&
+        !issue.labels.includes(WORKOUT_REVIEW_LABEL),
     )
     .map(toPost)
     .sort((left, right) => right.publishedAt.localeCompare(left.publishedAt));
@@ -67,6 +72,7 @@ export function classifyIssues(
 
   return {
     posts,
+    workoutReviews: classifyWorkoutReviews(ownedIssues),
     about: aboutIssues[0],
     warnings,
   };

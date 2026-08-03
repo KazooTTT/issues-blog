@@ -48,6 +48,36 @@ export const fixtureIssues: SourceIssue[] = [
     };
   }),
   {
+    number: 202,
+    title: "运动复盘｜2026-07-31｜舞蹈健身",
+    body: `<!-- workout-review:v1 -->
+<!-- workout-id: 622983356 -->
+
+## 这次完成得怎么样
+
+整体状态不错，后半段体力有所下降，但完成度比上次更稳定。
+
+## 做得好的地方
+
+- 动作衔接更流畅
+- 高心率阶段仍保持了节奏
+
+## 下次调整
+
+热身增加 5 分钟，前半段稍微控制强度。`,
+    url: "https://github.com/kazoottt/issues-blog/issues/202",
+    author: "kazoottt",
+    state: "OPEN",
+    createdAt: "2026-08-01T08:00:00Z",
+    updatedAt: "2026-08-02T08:00:00Z",
+    labels: ["workout:review"],
+    labelEvents: [
+      { label: "workout:review", createdAt: "2026-08-01T08:00:00Z" },
+    ],
+    reactions: [],
+    comments: [],
+  },
+  {
     number: 1,
     title: "关于 KazooTTT",
     body: `我喜欢把复杂的东西拆开看看，也喜欢记录那些还没有答案的问题。\n\n这个博客以 GitHub Issues 为内容源，但最终想成为的是一个安静、耐读的个人空间。`,

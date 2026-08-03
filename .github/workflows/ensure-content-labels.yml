@@ -1,0 +1,22 @@
+name: Ensure content labels
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/ISSUE_TEMPLATE/**"
+      - ".github/workflows/ensure-content-labels.yml"
+
+permissions:
+  issues: write
+
+jobs:
+  labels:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Create or update workout review labels
+        run: |
+          gh label create "workout:review" --repo "$GITHUB_REPOSITORY" --color "8250df" --description "运动复盘内容" --force

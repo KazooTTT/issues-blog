@@ -41,9 +41,13 @@ export interface Post extends SourceIssue {
   permalink: string;
 }
 
+export interface WorkoutReview extends SourceIssue {
+  workoutId: string;
+}
+
 export interface SiteContent {
   posts: Post[];
+  workoutReviews: WorkoutReview[];
   about?: SourceIssue;
   warnings: string[];
 }
-
