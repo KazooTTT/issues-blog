@@ -34,6 +34,29 @@ describe("workout snapshots", () => {
     expect(workouts[1]?.name).toBe("跑步（已更新）");
   });
 
+  it("sorts same-day workouts by local start time", () => {
+    const workouts = normalizeWorkouts([
+      {
+        externalId: "100",
+        name: "晚间训练",
+        activityDate: "2026-07-02",
+        startTimeLocal: "2026-07-02 20:00:00",
+        durationSeconds: 600,
+        caloriesKcal: 80,
+      },
+      {
+        externalId: "200",
+        name: "早间训练",
+        activityDate: "2026-07-02",
+        startTimeLocal: "2026-07-02 08:00:00",
+        durationSeconds: 600,
+        caloriesKcal: 80,
+      },
+    ]);
+
+    expect(workouts.map((workout) => workout.externalId)).toEqual(["100", "200"]);
+  });
+
   it("rejects malformed records before they reach the static build", () => {
     expect(() =>
       normalizeWorkouts([

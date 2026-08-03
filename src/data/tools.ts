@@ -16,10 +16,7 @@ export const softwareGroups: ToolGroup[] = [
     title: "开发",
     eyebrow: "BUILD",
     items: [
-      { name: "Cursor", description: "AI 代码编辑器", href: "https://cursor.sh/" },
-      { name: "Claude Code", description: "命令行编程助手", href: "https://www.anthropic.com/claude-code" },
       { name: "Codex", description: "AI 编程助手", href: "https://openai.com/codex/" },
-      { name: "Antigravity", description: "AI 代码编辑器", href: "https://antigravity.com/" },
     ],
   },
   {
@@ -30,8 +27,6 @@ export const softwareGroups: ToolGroup[] = [
       { name: "Canva", description: "平面设计", href: "https://www.canva.com/" },
       { name: "Shottr", description: "截图与标注", href: "https://shottr.cc/" },
       { name: "OBS Studio", description: "直播与录制", href: "https://obsproject.com/" },
-      { name: "QuickRecorder", description: "轻量录屏", href: "https://lihaoyun6.github.io/quickrecorder/" },
-      { name: "FFmpeg", description: "影音处理", href: "https://ffmpeg.org/" },
     ],
   },
   {
@@ -39,11 +34,8 @@ export const softwareGroups: ToolGroup[] = [
     eyebrow: "THINK",
     items: [
       { name: "Dia Browser", description: "AI 浏览器", href: "https://www.diabrowser.com/" },
-      { name: "Arc Browser", description: "现代浏览器", href: "https://arc.net/" },
       { name: "Google Chrome", description: "网页浏览器", href: "https://www.google.com/chrome/" },
       { name: "Obsidian", description: "本地知识库", href: "https://obsidian.md/" },
-      { name: "Zotero", description: "文献管理", href: "https://www.zotero.org/" },
-      { name: "Notion", description: "协作笔记", href: "https://notion.so/" },
       { name: "Flomo", description: "快速笔记", href: "https://flomoapp.com/" },
     ],
   },
@@ -56,17 +48,6 @@ export const softwareGroups: ToolGroup[] = [
       { name: "n8n", description: "工作流自动化", href: "https://n8n.io/" },
       { name: "Follow", description: "RSS 阅读器", href: "https://app.follow.is/" },
       { name: "滴答清单", description: "任务管理", href: "https://dida365.com/" },
-    ],
-  },
-  {
-    title: "AI 助手",
-    eyebrow: "ASSIST",
-    items: [
-      { name: "Cherry Studio", description: "开源 AI 客户端", href: "https://www.cherry-ai.com/" },
-      { name: "ChatGPT", description: "AI 助手", href: "https://chatgpt.com/" },
-      { name: "Claude", description: "AI 助手", href: "https://claude.ai/" },
-      { name: "Poe", description: "AI 平台", href: "https://poe.com/" },
-      { name: "NotebookLM", description: "资料研究助手", href: "https://notebooklm.google.com/" },
     ],
   },
   {
@@ -89,7 +70,7 @@ export const softwareGroups: ToolGroup[] = [
     eyebrow: "HEALTH",
     items: [
       { name: "AutoSleep", description: "睡眠追踪", href: "https://autosleepapp.tantsissa.com/" },
-      { name: "Grow", description: "健康追踪", href: "https://apps.apple.com/cn/app/id1560604814" },
+      { name: "Garmin Connect", description: "运动与健康数据", href: "https://connect.garmin.com/" },
       { name: "Keep", description: "健身应用", href: "https://www.gotokeep.com/" },
     ],
   },
@@ -111,6 +92,7 @@ export const deviceGroups: ToolGroup[] = [
     eyebrow: "MOBILE",
     items: [
       { name: "iPhone 13", description: "手机 · 256GB", iconDomain: "apple.com/iphone" },
+      { name: "vivo X200 Pro mini", description: "手机", iconDomain: "vivo.com.cn" },
       { name: "iPad mini 5", description: "平板电脑", iconDomain: "apple.com/ipad" },
     ],
   },
@@ -118,7 +100,8 @@ export const deviceGroups: ToolGroup[] = [
     title: "阅读设备",
     eyebrow: "READING",
     items: [
-      { name: "Kindle Paperwhite 4", description: "电子阅读器", iconDomain: "amazon.cn/kindle" },
+      { name: "Kindle Paperwhite 4", description: "电子阅读器", iconDomain: "kindle.com" },
+      { name: "文石 Leaf5", description: "电子阅读器", iconDomain: "boox.com" },
     ],
   },
   {
@@ -126,17 +109,22 @@ export const deviceGroups: ToolGroup[] = [
     eyebrow: "WEARABLE",
     items: [
       { name: "Apple Watch S9", description: "智能手表", iconDomain: "apple.com/watch" },
+      { name: "佳明 Forerunner 265", description: "运动手表", iconDomain: "garmin.com" },
       { name: "AirPods Pro 2", description: "无线耳机", iconDomain: "apple.com/airpods" },
     ],
   },
   {
-    title: "Panasonic 影像",
+    title: "LUMIX 影像",
     eyebrow: "CAMERA 01",
     items: [
-      { name: "Panasonic GX9", description: "相机", iconDomain: "panasonic.com" },
-      { name: "Panasonic 14–140mm", description: "变焦镜头", iconDomain: "panasonic.com" },
-      { name: "Panasonic 25mm", description: "定焦镜头", iconDomain: "panasonic.com" },
-      { name: "Panasonic 100–300mm", description: "长焦镜头", iconDomain: "panasonic.com" },
+      { name: "LUMIX GX9", description: "相机", iconDomain: "panasonic.com/global/consumer/lumix" },
+      { name: "LUMIX G9M2", description: "相机", iconDomain: "panasonic.com/global/consumer/lumix" },
+      { name: "LUMIX 14–140mm", description: "变焦镜头", iconDomain: "panasonic.com/global/consumer/lumix" },
+      { name: "LUMIX DG 15mm", description: "定焦镜头", iconDomain: "panasonic.com/global/consumer/lumix" },
+      { name: "LUMIX 25mm", description: "定焦镜头", iconDomain: "panasonic.com/global/consumer/lumix" },
+      { name: "LUMIX 100–300mm", description: "长焦镜头", iconDomain: "panasonic.com/global/consumer/lumix" },
+      { name: "永诺 42.5mm", description: "定焦镜头", iconDomain: "yongnuo.com.cn" },
+      { name: "LUMIX S9 + 18–40mm", description: "相机套机", iconDomain: "panasonic.com/global/consumer/lumix" },
     ],
   },
   {
@@ -144,6 +132,7 @@ export const deviceGroups: ToolGroup[] = [
     eyebrow: "CAMERA 02",
     items: [
       { name: "DJI Action 5 Pro", description: "运动相机", iconDomain: "dji.com" },
+      { name: "DJI Osmo 360", description: "全景相机", iconDomain: "dji.com" },
       { name: "三星 ST90", description: "十多年前买的 CCD", iconDomain: "samsung.com" },
     ],
   },

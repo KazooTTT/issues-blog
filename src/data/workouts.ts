@@ -39,6 +39,10 @@ export const workoutSchema = z.object({
 
 export type Workout = z.infer<typeof workoutSchema>;
 
+function workoutStartKey(workout: Workout): string {
+  return workout.startTimeLocal ?? `${workout.activityDate} 00:00:00`;
+}
+
 export function normalizeWorkouts(input: unknown): Workout[] {
   const payload =
     input && typeof input === "object" && "workouts" in input
@@ -49,7 +53,7 @@ export function normalizeWorkouts(input: unknown): Workout[] {
 
   return [...unique.values()].sort(
     (left, right) =>
-      right.activityDate.localeCompare(left.activityDate) ||
+      workoutStartKey(right).localeCompare(workoutStartKey(left)) ||
       right.externalId.localeCompare(left.externalId),
   );
 }

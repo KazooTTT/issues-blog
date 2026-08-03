@@ -15,7 +15,13 @@ function toolIcon(group: string, name: string): string {
     if (name.includes("AirPods")) return "headphones";
     return "mobile";
   }
+  if (group === "READING") return "book";
+  if (group === "WEARABLE") {
+    if (name.includes("AirPods")) return "headphones";
+    return "wearable";
+  }
   if (group.startsWith("CAMERA")) {
+    if (name.includes("S9")) return "camera";
     return name.includes("mm") ? "lens" : "camera";
   }
   return "tool";
@@ -39,6 +45,51 @@ function faviconUrl(href: string): string {
   <section class="tools-section">
     <header class="tools-section-heading">
       <span>01</span>
+      <div>
+        <p>HARDWARE</p>
+        <h2>硬件设备</h2>
+      </div>
+    </header>
+    <div class="tool-groups">
+      {deviceGroups.map((group) => (
+        <article class="tool-group">
+          <header>
+            <span>{group.eyebrow}</span>
+            <h3>{group.title}</h3>
+          </header>
+          <ul>
+            {group.items.map((item) => (
+              <li>
+                <div>
+                  <span class="tool-item-icon">
+                    <ToolIcon name={toolIcon(group.eyebrow, item.name)} />
+                    {item.iconDomain && (
+                      <img
+                        class="tool-brand-icon"
+                        src={faviconUrl(`https://${item.iconDomain}`)}
+                        alt=""
+                        width="32"
+                        height="32"
+                        loading="lazy"
+                      />
+                    )}
+                  </span>
+                  <span class="tool-item-copy">
+                    <strong>{item.name}</strong>
+                    <small>{item.description}</small>
+                  </span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="tools-section">
+    <header class="tools-section-heading">
+      <span>02</span>
       <div>
         <p>SOFTWARE</p>
         <h2>软件工具</h2>
@@ -84,51 +135,6 @@ function faviconUrl(href: string): string {
                     </span>
                   </div>
                 )}
-              </li>
-            ))}
-          </ul>
-        </article>
-      ))}
-    </div>
-  </section>
-
-  <section class="tools-section">
-    <header class="tools-section-heading">
-      <span>02</span>
-      <div>
-        <p>HARDWARE</p>
-        <h2>硬件设备</h2>
-      </div>
-    </header>
-    <div class="tool-groups">
-      {deviceGroups.map((group) => (
-        <article class="tool-group">
-          <header>
-            <span>{group.eyebrow}</span>
-            <h3>{group.title}</h3>
-          </header>
-          <ul>
-            {group.items.map((item) => (
-              <li>
-                <div>
-                  <span class="tool-item-icon">
-                    <ToolIcon name={toolIcon(group.eyebrow, item.name)} />
-                    {item.iconDomain && (
-                      <img
-                        class="tool-brand-icon"
-                        src={faviconUrl(`https://${item.iconDomain}`)}
-                        alt=""
-                        width="32"
-                        height="32"
-                        loading="lazy"
-                      />
-                    )}
-                  </span>
-                  <span class="tool-item-copy">
-                    <strong>{item.name}</strong>
-                    <small>{item.description}</small>
-                  </span>
-                </div>
               </li>
             ))}
           </ul>
