@@ -1,5 +1,263 @@
 [
   {
+    "externalId": "624384808",
+    "name": "有氧运动",
+    "activityDate": "2026-08-04",
+    "durationSeconds": 2484,
+    "caloriesKcal": 198,
+    "startTimeLocal": "2026-08-04 20:06:23",
+    "startTimeGmt": "2026-08-04 12:06:23",
+    "activityType": "indoor_cardio",
+    "movingDurationSeconds": 0.0,
+    "elapsedDurationSeconds": 2485.945068359375,
+    "distanceMeters": 0.0,
+    "averageSpeedMps": 0.0,
+    "averageHeartRateBpm": 137.0,
+    "maxHeartRateBpm": 169.0,
+    "bmrCaloriesKcal": 45.0,
+    "aerobicTrainingEffect": 2.9000000953674316,
+    "anaerobicTrainingEffect": 1.5,
+    "trainingLoad": 104.9241943359375,
+    "trainingEffectLabel": "AEROBIC_BASE",
+    "trainingDetails": {
+      "heartRateZones": [
+        {
+          "zoneNumber": 1,
+          "secsInZone": 233.945,
+          "zoneLowBoundary": 97
+        },
+        {
+          "zoneNumber": 2,
+          "secsInZone": 400.0,
+          "zoneLowBoundary": 116
+        },
+        {
+          "zoneNumber": 3,
+          "secsInZone": 586.038,
+          "zoneLowBoundary": 135
+        },
+        {
+          "zoneNumber": 4,
+          "secsInZone": 1051.098,
+          "zoneLowBoundary": 154
+        },
+        {
+          "zoneNumber": 5,
+          "secsInZone": 0.0,
+          "zoneLowBoundary": 174
+        }
+      ],
+      "splits": {
+        "activityId": 624384808,
+        "lapDTOs": [
+          {
+            "startTimeGMT": "2026-08-04T12:06:23.0",
+            "distance": 0.0,
+            "duration": 710.718,
+            "movingDuration": 0.0,
+            "elapsedDuration": 711.221,
+            "averageSpeed": 0.0,
+            "calories": 48.0,
+            "bmrCalories": 13.0,
+            "averageHR": 116.0,
+            "maxHR": 162.0,
+            "lapIndex": 1,
+            "lengthDTOs": [],
+            "connectIQMeasurement": [],
+            "intensityType": "ACTIVE",
+            "messageIndex": 0
+          },
+          {
+            "startTimeGMT": "2026-08-04T12:18:15.0",
+            "distance": 0.0,
+            "duration": 295.137,
+            "movingDuration": 0.0,
+            "elapsedDuration": 296.391,
+            "averageSpeed": 0.0,
+            "calories": 30.0,
+            "bmrCalories": 5.0,
+            "averageHR": 152.0,
+            "maxHR": 165.0,
+            "lapIndex": 2,
+            "lengthDTOs": [],
+            "connectIQMeasurement": [],
+            "intensityType": "ACTIVE",
+            "messageIndex": 1
+          },
+          {
+            "startTimeGMT": "2026-08-04T12:23:11.0",
+            "distance": 0.0,
+            "duration": 357.5,
+            "movingDuration": 0.0,
+            "elapsedDuration": 357.5,
+            "averageSpeed": 0.0,
+            "calories": 36.0,
+            "bmrCalories": 6.0,
+            "averageHR": 155.0,
+            "maxHR": 167.0,
+            "lapIndex": 3,
+            "lengthDTOs": [],
+            "connectIQMeasurement": [],
+            "intensityType": "ACTIVE",
+            "messageIndex": 2
+          },
+          {
+            "startTimeGMT": "2026-08-04T12:29:09.0",
+            "distance": 0.0,
+            "duration": 358.418,
+            "movingDuration": 0.0,
+            "elapsedDuration": 358.418,
+            "averageSpeed": 0.0,
+            "calories": 35.0,
+            "bmrCalories": 6.0,
+            "averageHR": 153.0,
+            "maxHR": 169.0,
+            "lapIndex": 4,
+            "lengthDTOs": [],
+            "connectIQMeasurement": [],
+            "intensityType": "ACTIVE",
+            "messageIndex": 3
+          },
+          {
+            "startTimeGMT": "2026-08-04T12:35:07.0",
+            "distance": 0.0,
+            "duration": 363.52,
+            "movingDuration": 0.0,
+            "elapsedDuration": 363.52,
+            "averageSpeed": 0.0,
+            "calories": 33.0,
+            "bmrCalories": 7.0,
+            "averageHR": 150.0,
+            "maxHR": 164.0,
+            "lapIndex": 5,
+            "lengthDTOs": [],
+            "connectIQMeasurement": [],
+            "intensityType": "ACTIVE",
+            "messageIndex": 4
+          },
+          {
+            "startTimeGMT": "2026-08-04T12:41:10.0",
+            "distance": 0.0,
+            "duration": 398.895,
+            "movingDuration": 0.0,
+            "elapsedDuration": 398.895,
+            "averageSpeed": 0.0,
+            "calories": 17.0,
+            "bmrCalories": 7.0,
+            "averageHR": 124.0,
+            "maxHR": 158.0,
+            "lapIndex": 6,
+            "lengthDTOs": [],
+            "connectIQMeasurement": [],
+            "intensityType": "ACTIVE",
+            "messageIndex": 5
+          }
+        ],
+        "eventDTOs": [
+          {
+            "startTimeGMT": "2026-08-04T12:06:22.0",
+            "startTimeGMTDoubleValue": 1785845182000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-08-04T12:06:23.0",
+            "startTimeGMTDoubleValue": 1785845183000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-08-04T12:18:13.0",
+            "startTimeGMTDoubleValue": 1785845893000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-08-04T12:18:14.0",
+            "startTimeGMTDoubleValue": 1785845894000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-08-04T12:18:19.0",
+            "startTimeGMTDoubleValue": 1785845899000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-08-04T12:18:20.0",
+            "startTimeGMTDoubleValue": 1785845900000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-08-04T12:18:22.0",
+            "startTimeGMTDoubleValue": 1785845902000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-08-04T12:18:23.0",
+            "startTimeGMTDoubleValue": 1785845903000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-08-04T12:47:49.0",
+            "startTimeGMTDoubleValue": 1785847669000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          }
+        ]
+      },
+      "typedSplits": {
+        "activityId": 624384808,
+        "activityUUID": {
+          "uuid": "7240d63c-dd5c-4ad8-901e-d4e2f27901af"
+        },
+        "splits": []
+      },
+      "splitSummaries": {
+        "activityId": 624384808,
+        "activityUUID": {
+          "uuid": "7240d63c-dd5c-4ad8-901e-d4e2f27901af"
+        },
+        "splitSummaries": []
+      },
+      "exerciseSets": {
+        "activityId": 624384808,
+        "exerciseSets": null
+      }
+    }
+  },
+  {
     "externalId": "624010340",
     "name": "舞蹈健身",
     "activityDate": "2026-08-03",
