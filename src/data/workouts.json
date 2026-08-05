@@ -1,5 +1,362 @@
 [
   {
+    "externalId": "624572705",
+    "name": "力量训练",
+    "activityDate": "2026-08-05",
+    "durationSeconds": 3150,
+    "caloriesKcal": 280,
+    "startTimeLocal": "2026-08-05 07:45:18",
+    "startTimeGmt": "2026-08-04 23:45:18",
+    "activityType": "strength_training",
+    "movingDurationSeconds": 2026.9630126953125,
+    "elapsedDurationSeconds": 3150.4541015625,
+    "distanceMeters": 0.0,
+    "averageSpeedMps": 0.0,
+    "averageHeartRateBpm": 151.0,
+    "maxHeartRateBpm": 181.0,
+    "bmrCaloriesKcal": 57.0,
+    "aerobicTrainingEffect": 3.299999952316284,
+    "anaerobicTrainingEffect": 2.0999999046325684,
+    "trainingLoad": 157.8499298095703,
+    "trainingEffectLabel": "ANAEROBIC_CAPACITY",
+    "totalSets": 7,
+    "activeSets": 7,
+    "totalReps": 38,
+    "trainingDetails": {
+      "heartRateZones": [
+        {
+          "zoneNumber": 1,
+          "secsInZone": 107.05,
+          "zoneLowBoundary": 97
+        },
+        {
+          "zoneNumber": 2,
+          "secsInZone": 550.899,
+          "zoneLowBoundary": 116
+        },
+        {
+          "zoneNumber": 3,
+          "secsInZone": 715.681,
+          "zoneLowBoundary": 135
+        },
+        {
+          "zoneNumber": 4,
+          "secsInZone": 1563.079,
+          "zoneLowBoundary": 154
+        },
+        {
+          "zoneNumber": 5,
+          "secsInZone": 193.625,
+          "zoneLowBoundary": 174
+        }
+      ],
+      "splits": {
+        "activityId": 624572705,
+        "lapDTOs": [
+          {
+            "startTimeGMT": "2026-08-04T23:45:18.0",
+            "distance": 0.0,
+            "duration": 3150.454,
+            "movingDuration": 2026.963,
+            "elapsedDuration": 3150.454,
+            "averageSpeed": 0.0,
+            "averageMovingSpeed": 0.0,
+            "calories": 280.0,
+            "bmrCalories": 57.0,
+            "averageHR": 151.0,
+            "maxHR": 181.0,
+            "trainingEffect": 3.299999952316284,
+            "waterEstimated": 820.0,
+            "lapIndex": 1,
+            "lengthDTOs": [],
+            "connectIQMeasurement": []
+          }
+        ],
+        "eventDTOs": [
+          {
+            "startTimeGMT": "2026-08-04T23:45:17.0",
+            "startTimeGMTDoubleValue": 1785887117000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-08-04T23:45:18.0",
+            "startTimeGMTDoubleValue": 1785887118000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          }
+        ]
+      },
+      "typedSplits": {
+        "activityId": 624572705,
+        "activityUUID": {
+          "uuid": "53b8acf7-a480-4268-944b-ccae318224dd"
+        },
+        "splits": []
+      },
+      "splitSummaries": {
+        "activityId": 624572705,
+        "activityUUID": {
+          "uuid": "53b8acf7-a480-4268-944b-ccae318224dd"
+        },
+        "splitSummaries": []
+      },
+      "exerciseSets": {
+        "activityId": 624572705,
+        "exerciseSets": [
+          {
+            "exercises": [
+              {
+                "category": "LUNGE",
+                "name": null,
+                "probability": 40.234375
+              },
+              {
+                "category": "SQUAT",
+                "name": null,
+                "probability": 30.859375
+              },
+              {
+                "category": "HIP_RAISE",
+                "name": "BARBELL_HIP_THRUST_ON_FLOOR",
+                "probability": 26.953125
+              }
+            ],
+            "duration": 363.241,
+            "repetitionCount": 6,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-04T23:45:18.0",
+            "wktStepIndex": null,
+            "messageIndex": 0
+          },
+          {
+            "exercises": [],
+            "duration": 157.359,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-08-04T23:51:21.0",
+            "wktStepIndex": null,
+            "messageIndex": 1
+          },
+          {
+            "exercises": [
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 99.609375
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              }
+            ],
+            "duration": 236.919,
+            "repetitionCount": 4,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-04T23:53:58.0",
+            "wktStepIndex": null,
+            "messageIndex": 2
+          },
+          {
+            "exercises": [],
+            "duration": 175.075,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-08-04T23:57:55.0",
+            "wktStepIndex": null,
+            "messageIndex": 3
+          },
+          {
+            "exercises": [
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 99.609375
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              }
+            ],
+            "duration": 151.933,
+            "repetitionCount": 4,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-05T00:00:50.0",
+            "wktStepIndex": null,
+            "messageIndex": 4
+          },
+          {
+            "exercises": [],
+            "duration": 97.073,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-08-05T00:03:22.0",
+            "wktStepIndex": null,
+            "messageIndex": 5
+          },
+          {
+            "exercises": [
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 99.609375
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              }
+            ],
+            "duration": 158.473,
+            "repetitionCount": 5,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-05T00:04:59.0",
+            "wktStepIndex": null,
+            "messageIndex": 6
+          },
+          {
+            "exercises": [],
+            "duration": 120.904,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-08-05T00:07:38.0",
+            "wktStepIndex": null,
+            "messageIndex": 7
+          },
+          {
+            "exercises": [
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 99.609375
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              }
+            ],
+            "duration": 900.36,
+            "repetitionCount": 15,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-05T00:09:38.0",
+            "wktStepIndex": null,
+            "messageIndex": 8
+          },
+          {
+            "exercises": [],
+            "duration": 143.409,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-08-05T00:24:39.0",
+            "wktStepIndex": null,
+            "messageIndex": 9
+          },
+          {
+            "exercises": [
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 99.609375
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              }
+            ],
+            "duration": 213.828,
+            "repetitionCount": 4,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-05T00:27:02.0",
+            "wktStepIndex": null,
+            "messageIndex": 10
+          },
+          {
+            "exercises": [],
+            "duration": 429.671,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-08-05T00:30:36.0",
+            "wktStepIndex": null,
+            "messageIndex": 11
+          },
+          {
+            "exercises": [
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 99.609375
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              }
+            ],
+            "duration": 2.209,
+            "repetitionCount": 0,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-05T00:37:46.0",
+            "wktStepIndex": null,
+            "messageIndex": 12
+          }
+        ]
+      }
+    }
+  },
+  {
     "externalId": "624384808",
     "name": "有氧运动",
     "activityDate": "2026-08-04",
