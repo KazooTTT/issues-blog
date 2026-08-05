@@ -79,6 +79,37 @@ describe("static blog build", () => {
     expect(archive).not.toContain('class="archive-tag"');
   });
 
+  it("groups periodic review tags under one summary menu item", () => {
+    const home = readFileSync(resolve(root, "dist/index.html"), "utf8");
+    const summary = readFileSync(
+      resolve(root, "dist/collections/summary/index.html"),
+      "utf8",
+    );
+
+    expect(home).toContain('href="/blog/collections/summary/">总结</a>');
+    expect(home).not.toContain('href="/blog/tags/%E5%91%A8%E6%8A%A5/">周报</a>');
+    expect(summary).toContain("欢迎来到我的博客");
+    expect(summary).toContain("第 100 次记录");
+    expect(summary).toContain("第 99 次记录");
+    expect(summary).toContain("第 98 次记录");
+    expect(summary).toContain("COLLECTION · 4 POSTS");
+  });
+
+  it("renders a standalone projects page with its own card layout", () => {
+    const home = readFileSync(resolve(root, "dist/index.html"), "utf8");
+    const projects = readFileSync(
+      resolve(root, "dist/projects/index.html"),
+      "utf8",
+    );
+
+    expect(home).toContain('href="/blog/projects/">项目</a>');
+    expect(projects).toContain("PROJECTS · 2 ENTRIES");
+    expect(projects).toContain("issues-blog：以 GitHub Issues 为源的博客");
+    expect(projects).toContain("声控烤箱：把日常记录变成长期资产");
+    expect(projects).toContain('class="project-grid"');
+    expect(projects).not.toContain('class="post-list"');
+  });
+
   it("keeps the selected theme synchronized across page loads and tabs", () => {
     const home = readFileSync(resolve(root, "dist/index.html"), "utf8");
     const article = readFileSync(resolve(root, "dist/posts/101/index.html"), "utf8");

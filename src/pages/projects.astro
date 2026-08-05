@@ -1,0 +1,69 @@
+---
+import { siteConfig } from "@/config";
+import { getSiteContent } from "@/data/site-content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { deriveExcerpt } from "@/rendering/content";
+import { formatDate, sitePath } from "@/utils/presentation";
+
+const { posts } = await getSiteContent();
+const projects = posts
+  .filter((post) => post.tags.includes(siteConfig.projectTag))
+  .sort(
+    (left, right) =>
+      right.updatedAt.localeCompare(left.updatedAt) ||
+      right.publishedAt.localeCompare(left.publishedAt),
+  );
+---
+
+<BaseLayout
+  title="项目"
+  description="瞎折腾的东西。"
+>
+  <section class="page-intro projects-intro">
+    <span class="eyebrow">PROJECTS · {projects.length} ENTRIES</span>
+    <h1>项目</h1>
+    <p>瞎折腾的东西。</p>
+  </section>
+
+  {
+    projects.length === 0 ? (
+      <p class="empty-state">还没有项目记录。</p>
+    ) : (
+      <ol class="project-grid">
+        {projects.map((post, index) => (
+          <li class="project-card">
+            <a class="project-card-link" href={sitePath(post.permalink)}>
+              <header class="project-card-head">
+                <span class="project-index">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <span class="project-issue">Issue #{post.number}</span>
+              </header>
+
+              <h2 class="project-card-title">{post.title}</h2>
+              <p class="project-card-excerpt">
+                {deriveExcerpt(post.body, 96)}
+              </p>
+
+              <footer class="project-card-foot">
+                <time datetime={post.publishedAt}>
+                  {formatDate(post.publishedAt)}
+                </time>
+                {post.updatedAt !== post.publishedAt && (
+                  <span class="project-updated">
+                    更新于 {formatDate(post.updatedAt)}
+                  </span>
+                )}
+                <span class="project-arrow" aria-hidden="true">↗</span>
+              </footer>
+            </a>
+          </li>
+        ))}
+      </ol>
+    )
+  }
+
+  <p class="extras-note">
+    项目以「{siteConfig.projectTag}」标签归类，点开任意卡片可阅读完整记录。
+  </p>
+</BaseLayout>

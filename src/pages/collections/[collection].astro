@@ -1,0 +1,31 @@
+---
+import PostList from "@/components/PostList.astro";
+import { siteConfig } from "@/config";
+import { getSiteContent } from "@/data/site-content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+export async function getStaticPaths() {
+  const { posts } = await getSiteContent();
+
+  return siteConfig.tagCollections.map((collection) => ({
+    params: { collection: collection.slug },
+    props: {
+      collection,
+      posts: posts.filter((post) =>
+        collection.tags.some((tag) => post.tags.includes(tag)),
+      ),
+    },
+  }));
+}
+
+const { collection, posts } = Astro.props;
+---
+
+<BaseLayout title={collection.label}>
+  <section class="page-intro">
+    <span class="eyebrow">COLLECTION · {posts.length} POSTS</span>
+    <h1>{collection.label}</h1>
+    <p>{collection.description}</p>
+  </section>
+  <PostList posts={posts} />
+</BaseLayout>

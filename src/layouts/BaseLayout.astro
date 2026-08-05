@@ -29,6 +29,7 @@ const routeStartsWith = (path: string) => pathname.startsWith(routePath(path));
 const articleActive =
   routeStartsWith("/posts/") ||
   routeStartsWith("/tags/") ||
+  routeStartsWith("/collections/") ||
   routeStartsWith("/archive/");
 ---
 
@@ -133,12 +134,23 @@ const articleActive =
                   href={sitePath(`/tags/${encodeURIComponent(tag)}/`)}
                 >{tag}</a>
               ))}
-              <a
-                class:list={{ "nav-link-active": routeIs("/tags/") }}
-                href={sitePath("/tags/")}
-              >标签</a>
+              {siteConfig.tagCollections.map((collection) => (
+                <a
+                  class:list={{ "nav-link-active": routeIs(`/collections/${collection.slug}/`) }}
+                  href={sitePath(`/collections/${collection.slug}/`)}
+                >{collection.label}</a>
+              ))}
             </div>
           </div>
+
+          <a
+            class:list={{ "nav-link-active": routeStartsWith("/tags/") }}
+            href={sitePath("/tags/")}
+          >标签</a>
+          <a
+            class:list={{ "nav-link-active": routeStartsWith("/projects/") }}
+            href={sitePath("/projects/")}
+          >项目</a>
           <a
             class:list={{ "nav-link-active": routeStartsWith("/tools/") }}
             href={sitePath("/tools/")}

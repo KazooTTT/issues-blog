@@ -26,6 +26,10 @@ export const fixtureIssues: SourceIssue[] = [
         "blog:publish",
         ...(index < 2 ? ["blog:featured"] : []),
         topics[index % topics.length]!,
+        ...(index === 0 ? ["周报"] : []),
+        ...(index === 1 ? ["月报"] : []),
+        ...(index === 2 ? ["季报"] : []),
+        ...(index === 3 ? ["总结"] : []),
       ],
       labelEvents: [{ label: "blog:publish", createdAt: publishedAt }],
       reactions:
@@ -47,6 +51,50 @@ export const fixtureIssues: SourceIssue[] = [
           : [],
     };
   }),
+  {
+    number: 301,
+    title: "issues-blog：以 GitHub Issues 为源的博客",
+    body: `把 GitHub Issues 当作写作后台，用 Astro 做展示层，发布资格、永久链接和讨论都围绕 Issue 工作流定义。
+
+## 想解决的问题
+
+不想再维护一套独立的 CMS 或数据库，又能保留发布控制、评论讨论和可迁移的内容快照。
+
+## 当前状态
+
+文章源、构建产物和归档已经跑通，导航入口按随笔 / 笔记 / 总结分好类。`,
+    url: "https://github.com/kazoottt/issues-blog/issues/301",
+    author: "kazoottt",
+    state: "OPEN",
+    createdAt: "2026-05-20T08:00:00Z",
+    updatedAt: "2026-06-10T08:00:00Z",
+    labels: ["blog:publish", "项目", "技术"],
+    labelEvents: [{ label: "blog:publish", createdAt: "2026-05-20T08:00:00Z" }],
+    reactions: [{ content: "THUMBS_UP", count: 5 }],
+    comments: [],
+  },
+  {
+    number: 302,
+    title: "声控烤箱：把日常记录变成长期资产",
+    body: `一个想把零散记录沉淀为可回看、可检索内容的长期实验。
+
+## 做了什么
+
+从随手的跑步复盘、工具清单，到阶段性总结，都收拢到同一个写作空间里，避免分散在多处最后找不到。
+
+## 下一步
+
+继续完善项目入口，让不同性质的记录各有归处，而不是全部塞进时间线。`,
+    url: "https://github.com/kazoottt/issues-blog/issues/302",
+    author: "kazoottt",
+    state: "OPEN",
+    createdAt: "2026-04-02T08:00:00Z",
+    updatedAt: "2026-05-01T08:00:00Z",
+    labels: ["blog:publish", "项目", "生活"],
+    labelEvents: [{ label: "blog:publish", createdAt: "2026-04-02T08:00:00Z" }],
+    reactions: [],
+    comments: [],
+  },
   {
     number: 202,
     title: "运动复盘｜2026-07-31｜舞蹈健身",

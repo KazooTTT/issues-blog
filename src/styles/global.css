@@ -376,6 +376,77 @@ main { min-height: 65vh; }
 .link-card small { overflow-wrap: anywhere; color: var(--muted); }
 .link-arrow { position: absolute; top: 20px; right: 22px; color: var(--muted); }
 .extras-note { margin: 10px 0 90px; color: var(--muted); font-size: 13px; }
+
+.projects-intro { padding: 48px 0 36px; margin-bottom: 28px; }
+.projects-intro p { margin-top: 6px; }
+.project-grid {
+  margin: 0 0 50px;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+.project-card {
+  border: 1px solid var(--line);
+  background: var(--card);
+  box-shadow: var(--shadow);
+  transition: border-color 0.15s, transform 0.15s;
+}
+.project-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.project-card-link {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 26px 28px;
+}
+.project-card-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.project-index {
+  font: 600 22px/1 var(--serif);
+  color: var(--accent);
+}
+.project-issue {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.project-card-title {
+  margin: 0 0 10px;
+  font: 600 clamp(21px, 2.4vw, 27px)/1.3 var(--serif);
+}
+.project-card-excerpt {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.75;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.project-card-foot {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: auto;
+  padding-top: 22px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.project-updated { color: var(--muted); }
+.project-arrow {
+  margin-left: auto;
+  color: var(--accent);
+  font-size: 16px;
+}
 .workout-summary {
   display: grid; grid-template-columns: repeat(3, 1fr);
   margin: 25px 0 55px; border-block: 1px solid var(--line);
@@ -712,6 +783,7 @@ button.workout-kind, a.workout-kind { cursor: pointer; }
   .post-list li { padding: 19px 0; }
   .view-all { margin-top: 24px; }
   .page-intro { padding: 52px 0 36px; margin-bottom: 26px; }
+  .projects-intro { padding: 30px 0 22px; margin-bottom: 16px; }
   .page-intro h1 { margin-block: 18px; }
   .post-list li > a { grid-template-columns: 1fr; gap: 8px; }
   .post { padding-top: 46px; }
@@ -733,6 +805,8 @@ button.workout-kind, a.workout-kind { cursor: pointer; }
   .tool-groups { grid-template-columns: 1fr; }
   .link-grid { grid-template-columns: 1fr; }
   .link-card { min-height: 135px; }
+  .project-grid { grid-template-columns: 1fr; }
+  .project-card-link { padding: 22px 22px; }
   .extras-note { margin-bottom: 48px; }
   .workout-summary strong { font-size: 25px; }
   .workout-summary div + div { padding-left: 16px; }

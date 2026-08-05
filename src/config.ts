@@ -7,5 +7,14 @@ export const siteConfig = {
   homePostLimit: 10,
   featuredLimit: 5,
   feedLimit: 20,
-  primaryTags: ["随笔", "笔记", "周报"],
+  primaryTags: ["随笔", "笔记"],
+  projectTag: "项目",
+  tagCollections: [
+    {
+      slug: "summary",
+      label: "总结",
+      description: "按时间回顾阶段性的记录、复盘与总结。",
+      tags: ["周报", "月报", "季报", "年报", "年度总结", "总结"],
+    },
+  ],
 } as const;
