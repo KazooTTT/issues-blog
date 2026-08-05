@@ -1,9 +1,16 @@
 ---
 import { sortWorkoutsChronologically, workouts } from "@/data/workouts";
 import WorkoutDetails from "@/components/WorkoutDetails.astro";
+import { getSiteContent } from "@/data/site-content";
+import { indexWorkoutReviews } from "@/domain/workout-reviews";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
+const { workoutReviews } = await getSiteContent();
+const reviewsByWorkoutId = indexWorkoutReviews(
+  workoutReviews,
+  workouts.map((workout) => workout.externalId),
+);
 
 type WorkoutKind =
   | "strength"
@@ -186,7 +193,12 @@ const calendarMonths = [...new Set(workouts.map(({ activityDate }) => activityDa
           >
             {workoutKinds[kind].mark}
           </i>
-          <h2>{workout.name}</h2>
+          <h2>
+            {workout.name}
+            {reviewsByWorkoutId.has(workout.externalId) && (
+              <span class="workout-review-mark" title="已有复盘" aria-label="已有复盘"></span>
+            )}
+          </h2>
           <div class="workout-row-metrics">
             <span><small>时长</small>{formatDuration(workout.durationSeconds)}</span>
             <span><small>热量</small>{workout.caloriesKcal} kcal</span>
@@ -250,6 +262,9 @@ const calendarMonths = [...new Set(workouts.map(({ activityDate }) => activityDa
                           aria-describedby={detailId}
                         >
                           <span aria-hidden="true">{workoutKinds[kind].mark}</span>
+                          {reviewsByWorkoutId.has(workout.externalId) && (
+                            <span class="workout-review-mark" aria-label="已有复盘"></span>
+                          )}
                         </a>
                         <div
                           id={detailId}
@@ -301,7 +316,12 @@ const calendarMonths = [...new Set(workouts.map(({ activityDate }) => activityDa
                         {workoutKinds[kind].mark}
                       </i>
                       <span>
-                        <strong>{workout.name}</strong>
+                        <strong>
+                          {workout.name}
+                          {reviewsByWorkoutId.has(workout.externalId) && (
+                            <span class="workout-review-mark" title="已有复盘" aria-label="已有复盘"></span>
+                          )}
+                        </strong>
                         <small>
                           {formatDuration(workout.durationSeconds)} · {workout.caloriesKcal} kcal
                         </small>

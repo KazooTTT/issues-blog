@@ -230,6 +230,18 @@ describe("static blog build", () => {
     expect(workout).toContain("下一个运动");
     expect(workout).toContain('rel="prev"');
     expect(workout).toContain('rel="next"');
+    expect(workout).toContain("编辑复盘 ↗");
+    expect(workout).toContain(
+      'href="https://github.com/kazoottt/issues-blog/issues/202"',
+    );
+  });
+
+  it("marks reviewed workouts in the list and calendar", () => {
+    const workouts = readFileSync(resolve(root, "dist/workouts/index.html"), "utf8");
+
+    expect(workouts).toContain('class="workout-review-mark"');
+    expect(workouts).toContain("已有复盘");
+    expect(workouts).not.toContain(">复</span>");
   });
 
   it("keeps workout tooltips pointed at their trigger while avoiding viewport edges", () => {
