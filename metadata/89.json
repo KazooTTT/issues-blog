@@ -1,0 +1,21 @@
+{
+  "number": 89,
+  "title": "运动复盘｜2026-06-23｜私教",
+  "body": "<!-- workout-review:v1 -->\n<!-- workout-id: 609332728 -->\n\n## 训练内容\n\n### 热身\n\n| 动作 | 组数 | 次数 | 负荷 |\n|---|---:|---:|---|\n| 虫爬 + 开合跳 | 4 | 15 | 自重 |\n| 双手战绳 | 2 | 50 | 战绳 |\n| 双手战绳 | 2 | 45 | 战绳 |\n| Plank Up-Down（前臂支撑到高平板转换） | 4 | 15 | 自重 |\n| 哑铃开合跳 | 3 | 15 | 哑铃 |\n",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/89",
+  "state": "OPEN",
+  "createdAt": "2026-08-05T02:58:04Z",
+  "updatedAt": "2026-08-05T02:58:04Z",
+  "author": "KazooTTT",
+  "labels": [
+    "workout:review"
+  ],
+  "labelEvents": [
+    {
+      "label": "workout:review",
+      "createdAt": "2026-08-05T02:58:06Z"
+    }
+  ],
+  "reactions": [],
+  "comments": []
+}

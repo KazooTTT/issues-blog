@@ -1,0 +1,21 @@
+{
+  "number": 96,
+  "title": "运动复盘｜2026-07-05｜黑怕",
+  "body": "<!-- workout-review:v1 -->\n<!-- workout-id: 613611998 -->\n\n## 基本信息\n\n- 类型：跳舞（黑怕）\n- 老师：小智\n- 内容：黑怕基本功 + 体能训练\n\n## 训练内容\n\n| 动作 | 备注 |\n|---|---|\n| 黑怕基本功 | 主要练基本功 |\n| 双手撑 | 体能训练 |\n| 平板撑 | 体能训练 |\n| Up-Down Plank | 平板撑上下切换 |\n| 转向单手平板撑 | 转向后保持单手平板撑，另一只手举起来 |\n",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/96",
+  "state": "OPEN",
+  "createdAt": "2026-08-05T02:59:11Z",
+  "updatedAt": "2026-08-05T02:59:11Z",
+  "author": "KazooTTT",
+  "labels": [
+    "workout:review"
+  ],
+  "labelEvents": [
+    {
+      "label": "workout:review",
+      "createdAt": "2026-08-05T02:59:12Z"
+    }
+  ],
+  "reactions": [],
+  "comments": []
+}

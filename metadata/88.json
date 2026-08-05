@@ -1,0 +1,21 @@
+{
+  "number": 88,
+  "title": "运动复盘｜2026-06-22｜跳舞",
+  "body": "<!-- workout-review:v1 -->\n<!-- workout-id: 608939282 -->\n\n## 基本信息\n\n- 类型：跳舞\n- 课程：黑怕基础\n- 老师：小 A\n- 感受：跟不上\n\n## 感受与思考\n\n- 跟不上节奏\n",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/88",
+  "state": "OPEN",
+  "createdAt": "2026-08-05T02:57:52Z",
+  "updatedAt": "2026-08-05T02:57:52Z",
+  "author": "KazooTTT",
+  "labels": [
+    "workout:review"
+  ],
+  "labelEvents": [
+    {
+      "label": "workout:review",
+      "createdAt": "2026-08-05T02:57:54Z"
+    }
+  ],
+  "reactions": [],
+  "comments": []
+}

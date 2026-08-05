@@ -1,0 +1,21 @@
+{
+  "number": 91,
+  "title": "运动复盘｜2026-06-26｜私教",
+  "body": "<!-- workout-review:v1 -->\n<!-- workout-id: 610426233 -->\n\n## 训练内容\n\n| 动作 | 组数 × 次数 | 备注 |\n|---|---|---|\n| 手放在鞋上然后起身下蹲 | 1 × 20 | |\n| 火箭筒左右跑屈髋往下蹲 | 多组 | 火箭筒触底后往另外一个方向跑，不要外八 |\n| 手放瑜伽垫前后跳 | 1 × 8 | 腿不要往下掉，因力量不足换动作 |\n| 波比跳 | 4 × 8 | 替代前后跳 |\n| 躺下腿夹泡沫块空杆脚部抬起 | 4 × 15 | 双手握空杆，缓慢抬起脚（屁股离开地面），缓慢放下触底 |\n",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/91",
+  "state": "OPEN",
+  "createdAt": "2026-08-05T02:58:25Z",
+  "updatedAt": "2026-08-05T02:58:25Z",
+  "author": "KazooTTT",
+  "labels": [
+    "workout:review"
+  ],
+  "labelEvents": [
+    {
+      "label": "workout:review",
+      "createdAt": "2026-08-05T02:58:26Z"
+    }
+  ],
+  "reactions": [],
+  "comments": []
+}
