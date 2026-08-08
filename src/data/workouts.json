@@ -1,5 +1,168 @@
 [
   {
+    "externalId": "625885427",
+    "name": "舞蹈健身",
+    "activityDate": "2026-08-08",
+    "durationSeconds": 7874,
+    "caloriesKcal": 674,
+    "startTimeLocal": "2026-08-08 18:40:20",
+    "startTimeGmt": "2026-08-08 10:40:20",
+    "activityType": "dance",
+    "movingDurationSeconds": 0.0,
+    "elapsedDurationSeconds": 8209.1396484375,
+    "distanceMeters": 0.0,
+    "elevationGainMeters": 0.0,
+    "elevationLossMeters": 0.0,
+    "averageSpeedMps": 0.0,
+    "averageHeartRateBpm": 155.0,
+    "maxHeartRateBpm": 185.0,
+    "bmrCaloriesKcal": 141.0,
+    "aerobicTrainingEffect": 4.5,
+    "anaerobicTrainingEffect": 3.200000047683716,
+    "trainingLoad": 361.8616943359375,
+    "trainingEffectLabel": "LACTATE_THRESHOLD",
+    "averageRunningCadenceSpm": 18.21875,
+    "maxRunningCadenceSpm": 250.0,
+    "trainingDetails": {
+      "heartRateZones": [
+        {
+          "zoneNumber": 1,
+          "secsInZone": 132.987,
+          "zoneLowBoundary": 97
+        },
+        {
+          "zoneNumber": 2,
+          "secsInZone": 961.997,
+          "zoneLowBoundary": 116
+        },
+        {
+          "zoneNumber": 3,
+          "secsInZone": 2014.011,
+          "zoneLowBoundary": 135
+        },
+        {
+          "zoneNumber": 4,
+          "secsInZone": 4200.485,
+          "zoneLowBoundary": 154
+        },
+        {
+          "zoneNumber": 5,
+          "secsInZone": 563.617,
+          "zoneLowBoundary": 174
+        }
+      ],
+      "splits": {
+        "activityId": 625885427,
+        "lapDTOs": [
+          {
+            "startTimeGMT": "2026-08-08T10:40:20.0",
+            "distance": 0.0,
+            "duration": 7874.098,
+            "movingDuration": 0.0,
+            "elapsedDuration": 8209.14,
+            "elevationGain": 0.0,
+            "elevationLoss": 0.0,
+            "maxElevation": 489.4,
+            "minElevation": 485.6,
+            "averageSpeed": 0.0,
+            "calories": 674.0,
+            "bmrCalories": 141.0,
+            "averageHR": 155.0,
+            "maxHR": 185.0,
+            "averageRunCadence": 18.21875,
+            "maxRunCadence": 250.0,
+            "maxVerticalSpeed": 0.79998779296875,
+            "lapIndex": 1,
+            "lengthDTOs": [],
+            "connectIQMeasurement": [
+              {
+                "appID": "6583ba3c-6148-499a-9ab8-fdab1dec3359",
+                "developerFieldNumber": 2,
+                "value": "1.0"
+              }
+            ],
+            "intensityType": "ACTIVE",
+            "messageIndex": 0
+          }
+        ],
+        "eventDTOs": [
+          {
+            "startTimeGMT": "2026-08-08T10:40:19.0",
+            "startTimeGMTDoubleValue": 1786185619000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-08-08T10:40:20.0",
+            "startTimeGMTDoubleValue": 1786185620000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-08-08T12:12:01.0",
+            "startTimeGMTDoubleValue": 1786191121000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-08-08T12:12:03.0",
+            "startTimeGMTDoubleValue": 1786191123000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-08-08T12:28:17.0",
+            "startTimeGMTDoubleValue": 1786192097000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-08-08T12:33:49.0",
+            "startTimeGMTDoubleValue": 1786192429000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          }
+        ]
+      },
+      "typedSplits": {
+        "activityId": 625885427,
+        "activityUUID": {
+          "uuid": "b36c89f3-3ce9-4c43-8be5-9edb8f15a490"
+        },
+        "splits": []
+      },
+      "splitSummaries": {
+        "activityId": 625885427,
+        "activityUUID": {
+          "uuid": "b36c89f3-3ce9-4c43-8be5-9edb8f15a490"
+        },
+        "splitSummaries": []
+      },
+      "exerciseSets": {
+        "activityId": 625885427,
+        "exerciseSets": null
+      }
+    }
+  },
+  {
     "externalId": "625785862",
     "name": "舞蹈健身",
     "activityDate": "2026-08-08",
