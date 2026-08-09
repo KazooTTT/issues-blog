@@ -1,5 +1,605 @@
 [
   {
+    "externalId": "626084222",
+    "name": "力量训练",
+    "activityDate": "2026-08-09",
+    "durationSeconds": 4238,
+    "caloriesKcal": 307,
+    "startTimeLocal": "2026-08-09 11:00:34",
+    "startTimeGmt": "2026-08-09 03:00:34",
+    "activityType": "strength_training",
+    "movingDurationSeconds": 2488.639892578125,
+    "elapsedDurationSeconds": 4371.994140625,
+    "distanceMeters": 0.0,
+    "averageSpeedMps": 0.0,
+    "averageHeartRateBpm": 144.0,
+    "maxHeartRateBpm": 189.0,
+    "bmrCaloriesKcal": 76.0,
+    "aerobicTrainingEffect": 3.0999999046325684,
+    "anaerobicTrainingEffect": 3.700000047683716,
+    "trainingLoad": 262.7016906738281,
+    "trainingEffectLabel": "ANAEROBIC_CAPACITY",
+    "totalSets": 13,
+    "activeSets": 13,
+    "totalReps": 223,
+    "trainingDetails": {
+      "heartRateZones": [
+        {
+          "zoneNumber": 1,
+          "secsInZone": 311.106,
+          "zoneLowBoundary": 97
+        },
+        {
+          "zoneNumber": 2,
+          "secsInZone": 1014.793,
+          "zoneLowBoundary": 116
+        },
+        {
+          "zoneNumber": 3,
+          "secsInZone": 1376.275,
+          "zoneLowBoundary": 135
+        },
+        {
+          "zoneNumber": 4,
+          "secsInZone": 873.377,
+          "zoneLowBoundary": 154
+        },
+        {
+          "zoneNumber": 5,
+          "secsInZone": 519.265,
+          "zoneLowBoundary": 174
+        }
+      ],
+      "splits": {
+        "activityId": 626084222,
+        "lapDTOs": [
+          {
+            "startTimeGMT": "2026-08-09T03:00:34.0",
+            "distance": 0.0,
+            "duration": 4238.291,
+            "movingDuration": 2488.64,
+            "elapsedDuration": 4371.994,
+            "averageSpeed": 0.0,
+            "averageMovingSpeed": 0.0,
+            "calories": 307.0,
+            "bmrCalories": 76.0,
+            "averageHR": 144.0,
+            "maxHR": 189.0,
+            "trainingEffect": 3.0999999046325684,
+            "waterEstimated": 1050.0,
+            "lapIndex": 1,
+            "lengthDTOs": [],
+            "connectIQMeasurement": []
+          }
+        ],
+        "eventDTOs": [
+          {
+            "startTimeGMT": "2026-08-09T03:00:33.0",
+            "startTimeGMTDoubleValue": 1786244433000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-08-09T03:00:34.0",
+            "startTimeGMTDoubleValue": 1786244434000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-08-09T03:58:37.0",
+            "startTimeGMTDoubleValue": 1786247917000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-08-09T04:00:51.0",
+            "startTimeGMTDoubleValue": 1786248051000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-08-09T04:13:26.0",
+            "startTimeGMTDoubleValue": 1786248806000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          }
+        ]
+      },
+      "typedSplits": {
+        "activityId": 626084222,
+        "activityUUID": {
+          "uuid": "a60a9da1-f243-41e6-af7f-e8e3cf0d8ccc"
+        },
+        "splits": []
+      },
+      "splitSummaries": {
+        "activityId": 626084222,
+        "activityUUID": {
+          "uuid": "a60a9da1-f243-41e6-af7f-e8e3cf0d8ccc"
+        },
+        "splitSummaries": []
+      },
+      "exerciseSets": {
+        "activityId": 626084222,
+        "exerciseSets": [
+          {
+            "exercises": [
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 99.609375
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              }
+            ],
+            "duration": 457.524,
+            "repetitionCount": 3,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-09T03:00:34.0",
+            "wktStepIndex": null,
+            "messageIndex": 0
+          },
+          {
+            "exercises": [],
+            "duration": 247.866,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-08-09T03:08:12.0",
+            "wktStepIndex": null,
+            "messageIndex": 1
+          },
+          {
+            "exercises": [
+              {
+                "category": "PULL_UP",
+                "name": null,
+                "probability": 58.203125
+              },
+              {
+                "category": "PULL_UP",
+                "name": "LAT_PULLDOWN",
+                "probability": 32.03125
+              },
+              {
+                "category": "TRICEPS_EXTENSION",
+                "name": "BENCH_DIP",
+                "probability": 8.59375
+              }
+            ],
+            "duration": 189.505,
+            "repetitionCount": 6,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-09T03:12:20.0",
+            "wktStepIndex": null,
+            "messageIndex": 2
+          },
+          {
+            "exercises": [],
+            "duration": 123.233,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-08-09T03:15:29.0",
+            "wktStepIndex": null,
+            "messageIndex": 3
+          },
+          {
+            "exercises": [
+              {
+                "category": "TRICEPS_EXTENSION",
+                "name": null,
+                "probability": 39.453125
+              },
+              {
+                "category": "LATERAL_RAISE",
+                "name": null,
+                "probability": 30.46875
+              },
+              {
+                "category": "SIT_UP",
+                "name": null,
+                "probability": 28.515625
+              }
+            ],
+            "duration": 101.713,
+            "repetitionCount": 8,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-09T03:17:32.0",
+            "wktStepIndex": null,
+            "messageIndex": 4
+          },
+          {
+            "exercises": [],
+            "duration": 225.808,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-08-09T03:19:14.0",
+            "wktStepIndex": null,
+            "messageIndex": 5
+          },
+          {
+            "exercises": [
+              {
+                "category": "PULL_UP",
+                "name": null,
+                "probability": 37.109375
+              },
+              {
+                "category": "OLYMPIC_LIFT",
+                "name": "CLEAN",
+                "probability": 31.640625
+              },
+              {
+                "category": "PLYO",
+                "name": "BOX_JUMP",
+                "probability": 29.6875
+              }
+            ],
+            "duration": 121.788,
+            "repetitionCount": 6,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-09T03:23:00.0",
+            "wktStepIndex": null,
+            "messageIndex": 6
+          },
+          {
+            "exercises": [],
+            "duration": 155.502,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-08-09T03:25:02.0",
+            "wktStepIndex": null,
+            "messageIndex": 7
+          },
+          {
+            "exercises": [
+              {
+                "category": "OLYMPIC_LIFT",
+                "name": "CLEAN",
+                "probability": 73.4375
+              },
+              {
+                "category": "SHOULDER_PRESS",
+                "name": null,
+                "probability": 14.453125
+              },
+              {
+                "category": "PULL_UP",
+                "name": null,
+                "probability": 10.9375
+              }
+            ],
+            "duration": 76.389,
+            "repetitionCount": 13,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-09T03:27:37.0",
+            "wktStepIndex": null,
+            "messageIndex": 8
+          },
+          {
+            "exercises": [],
+            "duration": 154.392,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-08-09T03:28:54.0",
+            "wktStepIndex": null,
+            "messageIndex": 9
+          },
+          {
+            "exercises": [
+              {
+                "category": "OLYMPIC_LIFT",
+                "name": "CLEAN",
+                "probability": 64.84375
+              },
+              {
+                "category": "SHOULDER_PRESS",
+                "name": null,
+                "probability": 23.046875
+              },
+              {
+                "category": "OLYMPIC_LIFT",
+                "name": "SNATCH",
+                "probability": 10.9375
+              }
+            ],
+            "duration": 100.218,
+            "repetitionCount": 13,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-09T03:31:28.0",
+            "wktStepIndex": null,
+            "messageIndex": 10
+          },
+          {
+            "exercises": [],
+            "duration": 131.56,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-08-09T03:33:08.0",
+            "wktStepIndex": null,
+            "messageIndex": 11
+          },
+          {
+            "exercises": [
+              {
+                "category": "OLYMPIC_LIFT",
+                "name": "CLEAN",
+                "probability": 65.625
+              },
+              {
+                "category": "OLYMPIC_LIFT",
+                "name": "SNATCH",
+                "probability": 25.390625
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 7.8125
+              }
+            ],
+            "duration": 78.726,
+            "repetitionCount": 15,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-09T03:35:20.0",
+            "wktStepIndex": null,
+            "messageIndex": 12
+          },
+          {
+            "exercises": [],
+            "duration": 150.061,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-08-09T03:36:38.0",
+            "wktStepIndex": null,
+            "messageIndex": 13
+          },
+          {
+            "exercises": [
+              {
+                "category": "OLYMPIC_LIFT",
+                "name": "CLEAN",
+                "probability": 87.109375
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 10.546875
+              },
+              {
+                "category": "OLYMPIC_LIFT",
+                "name": "SNATCH",
+                "probability": 1.171875
+              }
+            ],
+            "duration": 81.402,
+            "repetitionCount": 18,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-09T03:39:09.0",
+            "wktStepIndex": null,
+            "messageIndex": 14
+          },
+          {
+            "exercises": [],
+            "duration": 141.592,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-08-09T03:40:30.0",
+            "wktStepIndex": null,
+            "messageIndex": 15
+          },
+          {
+            "exercises": [
+              {
+                "category": "CARDIO",
+                "name": "JUMPING_JACKS",
+                "probability": 58.203125
+              },
+              {
+                "category": "PLYO",
+                "name": "BOX_JUMP",
+                "probability": 33.203125
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 7.421875
+              }
+            ],
+            "duration": 47.843,
+            "repetitionCount": 38,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-09T03:42:52.0",
+            "wktStepIndex": null,
+            "messageIndex": 16
+          },
+          {
+            "exercises": [],
+            "duration": 222.731,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-08-09T03:43:39.0",
+            "wktStepIndex": null,
+            "messageIndex": 17
+          },
+          {
+            "exercises": [
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 99.609375
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              }
+            ],
+            "duration": 402.776,
+            "repetitionCount": 6,
+            "weight": 0.0,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-09T03:47:22.0",
+            "wktStepIndex": null,
+            "messageIndex": 18
+          },
+          {
+            "exercises": [],
+            "duration": 2.138,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-08-09T03:54:05.0",
+            "wktStepIndex": null,
+            "messageIndex": 19
+          },
+          {
+            "exercises": [
+              {
+                "category": "CARDIO",
+                "name": "JUMPING_JACKS",
+                "probability": 87.109375
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 11.328125
+              },
+              {
+                "category": "CURL",
+                "name": null,
+                "probability": 0.78125
+              }
+            ],
+            "duration": 34.011,
+            "repetitionCount": 38,
+            "weight": 0.0,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-09T03:54:07.0",
+            "wktStepIndex": null,
+            "messageIndex": 20
+          },
+          {
+            "exercises": [],
+            "duration": 120.743,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-08-09T03:54:41.0",
+            "wktStepIndex": null,
+            "messageIndex": 21
+          },
+          {
+            "exercises": [
+              {
+                "category": "CARDIO",
+                "name": "JUMPING_JACKS",
+                "probability": 76.171875
+              },
+              {
+                "category": "PLYO",
+                "name": "BOX_JUMP",
+                "probability": 12.890625
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 9.765625
+              }
+            ],
+            "duration": 36.847,
+            "repetitionCount": 37,
+            "weight": 0.0,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-09T03:56:42.0",
+            "wktStepIndex": null,
+            "messageIndex": 22
+          },
+          {
+            "exercises": [],
+            "duration": 74.025,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-08-09T03:57:19.0",
+            "wktStepIndex": null,
+            "messageIndex": 23
+          },
+          {
+            "exercises": [
+              {
+                "category": "TRICEPS_EXTENSION",
+                "name": null,
+                "probability": 60.9375
+              },
+              {
+                "category": "CURL",
+                "name": null,
+                "probability": 18.75
+              },
+              {
+                "category": "TRICEPS_EXTENSION",
+                "name": "DUMBBELL_KICKBACK",
+                "probability": 18.75
+              }
+            ],
+            "duration": 759.898,
+            "repetitionCount": 22,
+            "weight": 0.0,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-09T03:58:33.0",
+            "wktStepIndex": null,
+            "messageIndex": 24
+          }
+        ]
+      }
+    }
+  },
+  {
     "externalId": "625885427",
     "name": "舞蹈健身",
     "activityDate": "2026-08-08",
