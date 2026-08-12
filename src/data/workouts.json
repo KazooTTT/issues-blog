@@ -1,5 +1,588 @@
 [
   {
+    "externalId": "627028257",
+    "name": "力量训练",
+    "activityDate": "2026-08-12",
+    "durationSeconds": 3184,
+    "caloriesKcal": 252,
+    "startTimeLocal": "2026-08-12 07:47:54",
+    "startTimeGmt": "2026-08-11 23:47:54",
+    "activityType": "strength_training",
+    "movingDurationSeconds": 1384.5909423828125,
+    "elapsedDurationSeconds": 3184.02587890625,
+    "distanceMeters": 0.0,
+    "averageSpeedMps": 0.0,
+    "averageHeartRateBpm": 138.0,
+    "maxHeartRateBpm": 209.0,
+    "bmrCaloriesKcal": 57.0,
+    "aerobicTrainingEffect": 3.0,
+    "anaerobicTrainingEffect": 3.0,
+    "trainingLoad": 180.08026123046875,
+    "trainingEffectLabel": "ANAEROBIC_CAPACITY",
+    "totalSets": 13,
+    "activeSets": 13,
+    "totalReps": 227,
+    "trainingDetails": {
+      "heartRateZones": [
+        {
+          "zoneNumber": 1,
+          "secsInZone": 27.785,
+          "zoneLowBoundary": 97
+        },
+        {
+          "zoneNumber": 2,
+          "secsInZone": 538.093,
+          "zoneLowBoundary": 116
+        },
+        {
+          "zoneNumber": 3,
+          "secsInZone": 1335.023,
+          "zoneLowBoundary": 135
+        },
+        {
+          "zoneNumber": 4,
+          "secsInZone": 607.45,
+          "zoneLowBoundary": 154
+        },
+        {
+          "zoneNumber": 5,
+          "secsInZone": 264.438,
+          "zoneLowBoundary": 174
+        }
+      ],
+      "splits": {
+        "activityId": 627028257,
+        "lapDTOs": [
+          {
+            "startTimeGMT": "2026-08-11T23:47:54.0",
+            "distance": 0.0,
+            "duration": 3184.026,
+            "movingDuration": 1384.591,
+            "elapsedDuration": 3184.026,
+            "averageSpeed": 0.0,
+            "averageMovingSpeed": 0.0,
+            "calories": 252.0,
+            "bmrCalories": 57.0,
+            "averageHR": 138.0,
+            "maxHR": 209.0,
+            "trainingEffect": 3.0,
+            "waterEstimated": 759.0,
+            "lapIndex": 1,
+            "lengthDTOs": [],
+            "connectIQMeasurement": []
+          }
+        ],
+        "eventDTOs": [
+          {
+            "startTimeGMT": "2026-08-11T23:47:53.0",
+            "startTimeGMTDoubleValue": 1786492073000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-08-11T23:47:54.0",
+            "startTimeGMTDoubleValue": 1786492074000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          }
+        ]
+      },
+      "typedSplits": {
+        "activityId": 627028257,
+        "activityUUID": {
+          "uuid": "89ef5824-5ca6-4363-973d-1b869c93a797"
+        },
+        "splits": []
+      },
+      "splitSummaries": {
+        "activityId": 627028257,
+        "activityUUID": {
+          "uuid": "89ef5824-5ca6-4363-973d-1b869c93a797"
+        },
+        "splitSummaries": []
+      },
+      "exerciseSets": {
+        "activityId": 627028257,
+        "exerciseSets": [
+          {
+            "exercises": [
+              {
+                "category": "SQUAT",
+                "name": null,
+                "probability": 44.921875
+              },
+              {
+                "category": "LUNGE",
+                "name": null,
+                "probability": 32.8125
+              },
+              {
+                "category": "SIT_UP",
+                "name": null,
+                "probability": 20.703125
+              }
+            ],
+            "duration": 370.287,
+            "repetitionCount": 13,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-11T23:47:54.0",
+            "wktStepIndex": null,
+            "messageIndex": 0
+          },
+          {
+            "exercises": [],
+            "duration": 82.131,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-08-11T23:54:04.0",
+            "wktStepIndex": null,
+            "messageIndex": 1
+          },
+          {
+            "exercises": [
+              {
+                "category": "CARDIO",
+                "name": "JUMP_ROPE",
+                "probability": 99.609375
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              }
+            ],
+            "duration": 160.818,
+            "repetitionCount": 3,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-11T23:55:27.0",
+            "wktStepIndex": null,
+            "messageIndex": 2
+          },
+          {
+            "exercises": [],
+            "duration": 117.335,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-08-11T23:58:07.0",
+            "wktStepIndex": null,
+            "messageIndex": 3
+          },
+          {
+            "exercises": [
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 99.609375
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              }
+            ],
+            "duration": 230.726,
+            "repetitionCount": 5,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-12T00:00:05.0",
+            "wktStepIndex": null,
+            "messageIndex": 4
+          },
+          {
+            "exercises": [],
+            "duration": 167.39,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-08-12T00:03:55.0",
+            "wktStepIndex": null,
+            "messageIndex": 5
+          },
+          {
+            "exercises": [
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 99.609375
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              }
+            ],
+            "duration": 133.718,
+            "repetitionCount": 4,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-12T00:06:43.0",
+            "wktStepIndex": null,
+            "messageIndex": 6
+          },
+          {
+            "exercises": [],
+            "duration": 475.97,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-08-12T00:08:57.0",
+            "wktStepIndex": null,
+            "messageIndex": 7
+          },
+          {
+            "exercises": [
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 99.609375
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              }
+            ],
+            "duration": 89.429,
+            "repetitionCount": 3,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-12T00:16:53.0",
+            "wktStepIndex": null,
+            "messageIndex": 8
+          },
+          {
+            "exercises": [],
+            "duration": 106.213,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-08-12T00:18:22.0",
+            "wktStepIndex": null,
+            "messageIndex": 9
+          },
+          {
+            "exercises": [
+              {
+                "category": "TRICEPS_EXTENSION",
+                "name": null,
+                "probability": 41.015625
+              },
+              {
+                "category": "PULL_UP",
+                "name": null,
+                "probability": 29.296875
+              },
+              {
+                "category": "PLYO",
+                "name": "BOX_JUMP",
+                "probability": 28.515625
+              }
+            ],
+            "duration": 143.872,
+            "repetitionCount": 31,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-12T00:20:08.0",
+            "wktStepIndex": null,
+            "messageIndex": 10
+          },
+          {
+            "exercises": [],
+            "duration": 6.989,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-08-12T00:22:32.0",
+            "wktStepIndex": null,
+            "messageIndex": 11
+          },
+          {
+            "exercises": [
+              {
+                "category": "PULL_UP",
+                "name": null,
+                "probability": 63.28125
+              },
+              {
+                "category": "CARDIO",
+                "name": "JUMPING_JACKS",
+                "probability": 21.875
+              },
+              {
+                "category": "PLYO",
+                "name": "BOX_JUMP",
+                "probability": 13.28125
+              }
+            ],
+            "duration": 48.341,
+            "repetitionCount": 34,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-12T00:22:39.0",
+            "wktStepIndex": null,
+            "messageIndex": 12
+          },
+          {
+            "exercises": [],
+            "duration": 100.795,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-08-12T00:23:27.0",
+            "wktStepIndex": null,
+            "messageIndex": 13
+          },
+          {
+            "exercises": [
+              {
+                "category": "CARDIO",
+                "name": "JUMP_ROPE",
+                "probability": 99.609375
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              }
+            ],
+            "duration": 35.31,
+            "repetitionCount": 30,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-12T00:25:08.0",
+            "wktStepIndex": null,
+            "messageIndex": 14
+          },
+          {
+            "exercises": [],
+            "duration": 104.477,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-08-12T00:25:44.0",
+            "wktStepIndex": null,
+            "messageIndex": 15
+          },
+          {
+            "exercises": [
+              {
+                "category": "CARDIO",
+                "name": "JUMP_ROPE",
+                "probability": 99.609375
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              }
+            ],
+            "duration": 30.409,
+            "repetitionCount": 27,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-12T00:27:28.0",
+            "wktStepIndex": null,
+            "messageIndex": 16
+          },
+          {
+            "exercises": [],
+            "duration": 134.212,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-08-12T00:27:58.0",
+            "wktStepIndex": null,
+            "messageIndex": 17
+          },
+          {
+            "exercises": [
+              {
+                "category": "CARDIO",
+                "name": "JUMPING_JACKS",
+                "probability": 56.640625
+              },
+              {
+                "category": "PLYO",
+                "name": "BOX_JUMP",
+                "probability": 35.15625
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 7.03125
+              }
+            ],
+            "duration": 33.011,
+            "repetitionCount": 20,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-12T00:30:13.0",
+            "wktStepIndex": null,
+            "messageIndex": 18
+          },
+          {
+            "exercises": [],
+            "duration": 94.967,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-08-12T00:30:46.0",
+            "wktStepIndex": null,
+            "messageIndex": 19
+          },
+          {
+            "exercises": [
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 90.234375
+              },
+              {
+                "category": "CARDIO",
+                "name": "JUMPING_JACKS",
+                "probability": 6.640625
+              },
+              {
+                "category": "PULL_UP",
+                "name": null,
+                "probability": 1.5625
+              }
+            ],
+            "duration": 30.361,
+            "repetitionCount": 23,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-12T00:32:21.0",
+            "wktStepIndex": null,
+            "messageIndex": 20
+          },
+          {
+            "exercises": [],
+            "duration": 128.675,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-08-12T00:32:51.0",
+            "wktStepIndex": null,
+            "messageIndex": 21
+          },
+          {
+            "exercises": [
+              {
+                "category": "CARDIO",
+                "name": "JUMPING_JACKS",
+                "probability": 76.5625
+              },
+              {
+                "category": "PLYO",
+                "name": "BOX_JUMP",
+                "probability": 12.5
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 9.765625
+              }
+            ],
+            "duration": 33.269,
+            "repetitionCount": 22,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-12T00:35:00.0",
+            "wktStepIndex": null,
+            "messageIndex": 22
+          },
+          {
+            "exercises": [],
+            "duration": 162.069,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-08-12T00:35:33.0",
+            "wktStepIndex": null,
+            "messageIndex": 23
+          },
+          {
+            "exercises": [
+              {
+                "category": "CARDIO",
+                "name": "JUMPING_JACKS",
+                "probability": 87.109375
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 11.328125
+              },
+              {
+                "category": "PLYO",
+                "name": "BOX_JUMP",
+                "probability": 0.78125
+              }
+            ],
+            "duration": 45.04,
+            "repetitionCount": 12,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-12T00:38:15.0",
+            "wktStepIndex": null,
+            "messageIndex": 24
+          },
+          {
+            "exercises": [],
+            "duration": 118.212,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-08-12T00:39:00.0",
+            "wktStepIndex": null,
+            "messageIndex": 25
+          }
+        ]
+      }
+    }
+  },
+  {
     "externalId": "626854166",
     "name": "舞蹈健身",
     "activityDate": "2026-08-11",
