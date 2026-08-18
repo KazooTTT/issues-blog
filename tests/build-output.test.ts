@@ -74,9 +74,15 @@ describe("static blog build", () => {
 
   it("keeps archive rows focused on dates and titles", () => {
     const archive = readFileSync(resolve(root, "dist/archive/index.html"), "utf8");
+    const article = readFileSync(resolve(root, "dist/posts/101/index.html"), "utf8");
 
     expect(archive).not.toContain('class="archive-tags"');
     expect(archive).not.toContain('class="archive-tag"');
+    expect(archive).toContain(
+      'href="https://github.com/KazooTTT/issues-blog/issues/new?template=article.md"',
+    );
+    expect(archive).toContain("新增博文 ↗");
+    expect(article).not.toContain("新增博文 ↗");
   });
 
   it("groups periodic review tags under one summary menu item", () => {

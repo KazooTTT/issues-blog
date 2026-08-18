@@ -4,6 +4,8 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import { archiveDateParts, sitePath } from "@/utils/presentation";
 
 const { posts } = await getSiteContent();
+const newPostUrl = new URL("https://github.com/KazooTTT/issues-blog/issues/new");
+newPostUrl.searchParams.set("template", "article.md");
 const datedPosts = posts.map((post) => ({
   post,
   date: archiveDateParts(post.publishedAt),
@@ -33,6 +35,14 @@ const archive = Object.keys(postsByYear)
     <span class="eyebrow">ARCHIVE · {posts.length} POSTS</span>
     <h1>文章归档</h1>
     <p>按首次发布时间，回看不同时期留下的记录。</p>
+    <a
+      class="button"
+      href={newPostUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      新增博文 ↗
+    </a>
   </section>
   <div class="archive">
     {archive.map(({ year, months }) => (
