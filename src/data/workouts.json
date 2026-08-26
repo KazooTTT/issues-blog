@@ -1,5 +1,146 @@
 [
   {
+    "externalId": "632038022",
+    "name": "力量训练",
+    "activityDate": "2026-08-26",
+    "durationSeconds": 3769,
+    "caloriesKcal": 290,
+    "startTimeLocal": "2026-08-26 07:45:56",
+    "startTimeGmt": "2026-08-25 23:45:56",
+    "activityType": "strength_training",
+    "movingDurationSeconds": 3768.655029296875,
+    "elapsedDurationSeconds": 3768.655029296875,
+    "distanceMeters": 0.0,
+    "averageSpeedMps": 0.0,
+    "averageHeartRateBpm": 141.0,
+    "maxHeartRateBpm": 180.0,
+    "bmrCaloriesKcal": 67.0,
+    "aerobicTrainingEffect": 3.0999999046325684,
+    "anaerobicTrainingEffect": 2.0999999046325684,
+    "trainingLoad": 135.71913146972656,
+    "trainingEffectLabel": "ANAEROBIC_CAPACITY",
+    "totalSets": 1,
+    "activeSets": 1,
+    "totalReps": 6,
+    "trainingDetails": {
+      "heartRateZones": [
+        {
+          "zoneNumber": 1,
+          "secsInZone": 240.426,
+          "zoneLowBoundary": 97
+        },
+        {
+          "zoneNumber": 2,
+          "secsInZone": 1026.207,
+          "zoneLowBoundary": 116
+        },
+        {
+          "zoneNumber": 3,
+          "secsInZone": 1469.96,
+          "zoneLowBoundary": 135
+        },
+        {
+          "zoneNumber": 4,
+          "secsInZone": 801.062,
+          "zoneLowBoundary": 154
+        },
+        {
+          "zoneNumber": 5,
+          "secsInZone": 162.0,
+          "zoneLowBoundary": 174
+        }
+      ],
+      "splits": {
+        "activityId": 632038022,
+        "lapDTOs": [
+          {
+            "startTimeGMT": "2026-08-25T23:45:56.0",
+            "distance": 0.0,
+            "duration": 3768.655,
+            "movingDuration": 3768.655,
+            "elapsedDuration": 3768.655,
+            "averageSpeed": 0.0,
+            "averageMovingSpeed": 0.0,
+            "calories": 290.0,
+            "bmrCalories": 67.0,
+            "averageHR": 141.0,
+            "maxHR": 180.0,
+            "trainingEffect": 3.0999999046325684,
+            "waterEstimated": 916.0,
+            "lapIndex": 1,
+            "lengthDTOs": [],
+            "connectIQMeasurement": []
+          }
+        ],
+        "eventDTOs": [
+          {
+            "startTimeGMT": "2026-08-25T23:45:55.0",
+            "startTimeGMTDoubleValue": 1787701555000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-08-25T23:45:56.0",
+            "startTimeGMTDoubleValue": 1787701556000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          }
+        ]
+      },
+      "typedSplits": {
+        "activityId": 632038022,
+        "activityUUID": {
+          "uuid": "74f9f92f-0d33-435b-9445-03bddcd3a9a4"
+        },
+        "splits": []
+      },
+      "splitSummaries": {
+        "activityId": 632038022,
+        "activityUUID": {
+          "uuid": "74f9f92f-0d33-435b-9445-03bddcd3a9a4"
+        },
+        "splitSummaries": []
+      },
+      "exerciseSets": {
+        "activityId": 632038022,
+        "exerciseSets": [
+          {
+            "exercises": [
+              {
+                "category": "HIP_RAISE",
+                "name": "BARBELL_HIP_THRUST_ON_FLOOR",
+                "probability": 37.5
+              },
+              {
+                "category": "PUSH_UP",
+                "name": null,
+                "probability": 32.03125
+              },
+              {
+                "category": "PULL_UP",
+                "name": null,
+                "probability": 28.90625
+              }
+            ],
+            "duration": 3768.655,
+            "repetitionCount": 6,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-25T23:45:56.0",
+            "wktStepIndex": null,
+            "messageIndex": 0
+          }
+        ]
+      }
+    }
+  },
+  {
     "externalId": "629798214",
     "name": "力量训练",
     "activityDate": "2026-08-19",
