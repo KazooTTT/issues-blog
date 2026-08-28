@@ -1,5 +1,173 @@
 [
   {
+    "externalId": "632931928",
+    "name": "力量训练",
+    "activityDate": "2026-08-28",
+    "durationSeconds": 3340,
+    "caloriesKcal": 149,
+    "startTimeLocal": "2026-08-28 20:45:51",
+    "startTimeGmt": "2026-08-28 12:45:51",
+    "activityType": "strength_training",
+    "movingDurationSeconds": 3340.10595703125,
+    "elapsedDurationSeconds": 3342.8798828125,
+    "distanceMeters": 0.0,
+    "averageSpeedMps": 0.0,
+    "averageHeartRateBpm": 108.0,
+    "maxHeartRateBpm": 147.0,
+    "bmrCaloriesKcal": 60.0,
+    "aerobicTrainingEffect": 0.6000000238418579,
+    "anaerobicTrainingEffect": 0.0,
+    "trainingLoad": 9.924240112304688,
+    "trainingEffectLabel": "AEROBIC_BASE",
+    "totalSets": 1,
+    "activeSets": 1,
+    "totalReps": 5,
+    "trainingDetails": {
+      "heartRateZones": [
+        {
+          "zoneNumber": 1,
+          "secsInZone": 1716.568,
+          "zoneLowBoundary": 97
+        },
+        {
+          "zoneNumber": 2,
+          "secsInZone": 955.101,
+          "zoneLowBoundary": 116
+        },
+        {
+          "zoneNumber": 3,
+          "secsInZone": 58.997,
+          "zoneLowBoundary": 135
+        },
+        {
+          "zoneNumber": 4,
+          "secsInZone": 0.0,
+          "zoneLowBoundary": 154
+        },
+        {
+          "zoneNumber": 5,
+          "secsInZone": 0.0,
+          "zoneLowBoundary": 174
+        }
+      ],
+      "splits": {
+        "activityId": 632931928,
+        "lapDTOs": [
+          {
+            "startTimeGMT": "2026-08-28T12:45:51.0",
+            "distance": 0.0,
+            "duration": 3340.106,
+            "movingDuration": 3340.106,
+            "elapsedDuration": 3342.88,
+            "averageSpeed": 0.0,
+            "averageMovingSpeed": 0.0,
+            "calories": 149.0,
+            "bmrCalories": 60.0,
+            "averageHR": 108.0,
+            "maxHR": 147.0,
+            "trainingEffect": 0.6000000238418579,
+            "waterEstimated": 651.0,
+            "lapIndex": 1,
+            "lengthDTOs": [],
+            "connectIQMeasurement": []
+          }
+        ],
+        "eventDTOs": [
+          {
+            "startTimeGMT": "2026-08-28T12:45:50.0",
+            "startTimeGMTDoubleValue": 1787921150000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-08-28T12:45:51.0",
+            "startTimeGMTDoubleValue": 1787921151000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-08-28T13:41:30.0",
+            "startTimeGMTDoubleValue": 1787924490000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-08-28T13:41:32.0",
+            "startTimeGMTDoubleValue": 1787924492000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-08-28T13:41:34.0",
+            "startTimeGMTDoubleValue": 1787924494000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          }
+        ]
+      },
+      "typedSplits": {
+        "activityId": 632931928,
+        "activityUUID": {
+          "uuid": "5e7913d3-2f0b-49cd-92ed-6c43bf22b49a"
+        },
+        "splits": []
+      },
+      "splitSummaries": {
+        "activityId": 632931928,
+        "activityUUID": {
+          "uuid": "5e7913d3-2f0b-49cd-92ed-6c43bf22b49a"
+        },
+        "splitSummaries": []
+      },
+      "exerciseSets": {
+        "activityId": 632931928,
+        "exerciseSets": [
+          {
+            "exercises": [
+              {
+                "category": "LUNGE",
+                "name": null,
+                "probability": 33.984375
+              },
+              {
+                "category": "SQUAT",
+                "name": null,
+                "probability": 33.59375
+              },
+              {
+                "category": "HIP_RAISE",
+                "name": "BARBELL_HIP_THRUST_ON_FLOOR",
+                "probability": 31.25
+              }
+            ],
+            "duration": 3340.106,
+            "repetitionCount": 5,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-28T12:45:51.0",
+            "wktStepIndex": null,
+            "messageIndex": 0
+          }
+        ]
+      }
+    }
+  },
+  {
     "externalId": "632038022",
     "name": "力量训练",
     "activityDate": "2026-08-26",
