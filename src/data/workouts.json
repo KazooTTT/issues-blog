@@ -1,5 +1,146 @@
 [
   {
+    "externalId": "633492737",
+    "name": "力量训练",
+    "activityDate": "2026-08-30",
+    "durationSeconds": 3380,
+    "caloriesKcal": 243,
+    "startTimeLocal": "2026-08-30 10:03:21",
+    "startTimeGmt": "2026-08-30 02:03:21",
+    "activityType": "strength_training",
+    "movingDurationSeconds": 3380.083984375,
+    "elapsedDurationSeconds": 3380.083984375,
+    "distanceMeters": 0.0,
+    "averageSpeedMps": 0.0,
+    "averageHeartRateBpm": 134.0,
+    "maxHeartRateBpm": 162.0,
+    "bmrCaloriesKcal": 61.0,
+    "aerobicTrainingEffect": 2.700000047683716,
+    "anaerobicTrainingEffect": 1.600000023841858,
+    "trainingLoad": 90.87663269042969,
+    "trainingEffectLabel": "ANAEROBIC_CAPACITY",
+    "totalSets": 1,
+    "activeSets": 1,
+    "totalReps": 3,
+    "trainingDetails": {
+      "heartRateZones": [
+        {
+          "zoneNumber": 1,
+          "secsInZone": 552.203,
+          "zoneLowBoundary": 97
+        },
+        {
+          "zoneNumber": 2,
+          "secsInZone": 477.071,
+          "zoneLowBoundary": 116
+        },
+        {
+          "zoneNumber": 3,
+          "secsInZone": 1736.268,
+          "zoneLowBoundary": 135
+        },
+        {
+          "zoneNumber": 4,
+          "secsInZone": 396.918,
+          "zoneLowBoundary": 154
+        },
+        {
+          "zoneNumber": 5,
+          "secsInZone": 0.0,
+          "zoneLowBoundary": 174
+        }
+      ],
+      "splits": {
+        "activityId": 633492737,
+        "lapDTOs": [
+          {
+            "startTimeGMT": "2026-08-30T02:03:21.0",
+            "distance": 0.0,
+            "duration": 3380.084,
+            "movingDuration": 3380.084,
+            "elapsedDuration": 3380.084,
+            "averageSpeed": 0.0,
+            "averageMovingSpeed": 0.0,
+            "calories": 243.0,
+            "bmrCalories": 61.0,
+            "averageHR": 134.0,
+            "maxHR": 162.0,
+            "trainingEffect": 2.700000047683716,
+            "waterEstimated": 782.0,
+            "lapIndex": 1,
+            "lengthDTOs": [],
+            "connectIQMeasurement": []
+          }
+        ],
+        "eventDTOs": [
+          {
+            "startTimeGMT": "2026-08-30T02:03:20.0",
+            "startTimeGMTDoubleValue": 1788055400000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-08-30T02:03:21.0",
+            "startTimeGMTDoubleValue": 1788055401000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          }
+        ]
+      },
+      "typedSplits": {
+        "activityId": 633492737,
+        "activityUUID": {
+          "uuid": "e0995493-48b9-45d4-9ef0-eba0a0a59682"
+        },
+        "splits": []
+      },
+      "splitSummaries": {
+        "activityId": 633492737,
+        "activityUUID": {
+          "uuid": "e0995493-48b9-45d4-9ef0-eba0a0a59682"
+        },
+        "splitSummaries": []
+      },
+      "exerciseSets": {
+        "activityId": 633492737,
+        "exerciseSets": [
+          {
+            "exercises": [
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 99.609375
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              }
+            ],
+            "duration": 3380.084,
+            "repetitionCount": 3,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-08-30T02:03:21.0",
+            "wktStepIndex": null,
+            "messageIndex": 0
+          }
+        ]
+      }
+    }
+  },
+  {
     "externalId": "632931928",
     "name": "力量训练",
     "activityDate": "2026-08-28",
