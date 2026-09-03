@@ -1,5 +1,155 @@
 [
   {
+    "externalId": "634990469",
+    "name": "力量训练",
+    "activityDate": "2026-09-03",
+    "durationSeconds": 3328,
+    "caloriesKcal": 231,
+    "startTimeLocal": "2026-09-03 08:34:17",
+    "startTimeGmt": "2026-09-03 00:34:17",
+    "activityType": "strength_training",
+    "movingDurationSeconds": 3327.862060546875,
+    "elapsedDurationSeconds": 3327.862060546875,
+    "distanceMeters": 0.0,
+    "averageSpeedMps": 0.0,
+    "averageHeartRateBpm": 130.0,
+    "maxHeartRateBpm": 175.0,
+    "bmrCaloriesKcal": 60.0,
+    "aerobicTrainingEffect": 2.700000047683716,
+    "anaerobicTrainingEffect": 1.100000023841858,
+    "trainingLoad": 85.78366088867188,
+    "trainingEffectLabel": "AEROBIC_BASE",
+    "totalSets": 1,
+    "activeSets": 1,
+    "totalReps": 3,
+    "trainingDetails": {
+      "heartRateZones": [
+        {
+          "zoneNumber": 1,
+          "secsInZone": 735.659,
+          "zoneLowBoundary": 97
+        },
+        {
+          "zoneNumber": 2,
+          "secsInZone": 778.968,
+          "zoneLowBoundary": 116
+        },
+        {
+          "zoneNumber": 3,
+          "secsInZone": 842.262,
+          "zoneLowBoundary": 135
+        },
+        {
+          "zoneNumber": 4,
+          "secsInZone": 699.725,
+          "zoneLowBoundary": 154
+        },
+        {
+          "zoneNumber": 5,
+          "secsInZone": 9.605,
+          "zoneLowBoundary": 174
+        }
+      ],
+      "splits": {
+        "activityId": 634990469,
+        "lapDTOs": [
+          {
+            "startTimeGMT": "2026-09-03T00:34:17.0",
+            "distance": 0.0,
+            "duration": 3327.862,
+            "movingDuration": 3327.862,
+            "elapsedDuration": 3327.862,
+            "averageSpeed": 0.0,
+            "averageMovingSpeed": 0.0,
+            "calories": 231.0,
+            "bmrCalories": 60.0,
+            "averageHR": 130.0,
+            "maxHR": 175.0,
+            "trainingEffect": 2.700000047683716,
+            "waterEstimated": 769.0,
+            "lapIndex": 1,
+            "lengthDTOs": [],
+            "connectIQMeasurement": []
+          }
+        ],
+        "eventDTOs": [
+          {
+            "startTimeGMT": "2026-09-03T00:34:16.0",
+            "startTimeGMTDoubleValue": 1788395656000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-09-03T00:34:17.0",
+            "startTimeGMTDoubleValue": 1788395657000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-09-03T01:29:45.0",
+            "startTimeGMTDoubleValue": 1788398985000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          }
+        ]
+      },
+      "typedSplits": {
+        "activityId": 634990469,
+        "activityUUID": {
+          "uuid": "7d55f71e-0683-4267-827b-d247a1465e27"
+        },
+        "splits": []
+      },
+      "splitSummaries": {
+        "activityId": 634990469,
+        "activityUUID": {
+          "uuid": "7d55f71e-0683-4267-827b-d247a1465e27"
+        },
+        "splitSummaries": []
+      },
+      "exerciseSets": {
+        "activityId": 634990469,
+        "exerciseSets": [
+          {
+            "exercises": [
+              {
+                "category": "DEADLIFT",
+                "name": "STRAIGHT_LEG_DEADLIFT",
+                "probability": 38.28125
+              },
+              {
+                "category": "SQUAT",
+                "name": null,
+                "probability": 30.859375
+              },
+              {
+                "category": "HIP_RAISE",
+                "name": "BARBELL_HIP_THRUST_ON_FLOOR",
+                "probability": 29.296875
+              }
+            ],
+            "duration": 3327.862,
+            "repetitionCount": 3,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-09-03T00:34:17.0",
+            "wktStepIndex": null,
+            "messageIndex": 0
+          }
+        ]
+      }
+    }
+  },
+  {
     "externalId": "634791241",
     "name": "跑步机",
     "activityDate": "2026-09-02",
