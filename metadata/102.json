@@ -1,0 +1,36 @@
+{
+  "number": 102,
+  "title": "Tana 全局快捷键自定义失效：schema 键名与实际读取键名不一致",
+  "body": "## 背景\n\nTana 桌面端（Electron 应用）有一个全局语音捕获功能，默认快捷键 `Cmd+Shift+E`，通过 Electron 的 `globalShortcut` 注册——**全局生效，Tana 在后台也会被触发**。这个组合键容易和滴答清单的主窗口唤起（`Cmd+Control+E`）误触，所以想把它禁用掉。\n\n思路是：把快捷键改成一个物理上不存在的键（如 `F24`），等效于禁用，又比塞非法字符串干净（注册能成功，不产生错误日志）。\n\n## 踩过的坑\n\n直接改配置文件 `~/Library/Application Support/Tana Outliner/keyBindings.json`：\n\n```json\n{\n\t\"toggleVoiceCapture\": \"CommandOrControl+Shift+F24\"\n}\n```\n\n改完重启，`Cmd+Shift+E` **依然生效**。看起来像是「设置了 custom 不会禁用 default，两者并存」——但这是错觉。\n\n## 真正的原因：键名不一致\n\n读 Tana 的 `main.js`（版本 1.523.0）取证，发现两处键名对不上：\n\n| 位置                          | 键名                                              |\n| --------------------------- | ----------------------------------------------- |\n| store schema 声明（`KRe`）      | `toggleVoiceCapture`（遗留名，全代码只出现一次，**没有任何地方读它**） |\n| 命令列表（`dre`）里的 command       | `voiceCapture`                                  |\n| 实际读取：`store.get(e.command)` | **`voiceCapture`**                              |\n\n快捷键管理器的注册逻辑本身是**替换**，不是并存：\n\n```js\nbindAll() {\n  this.globalShortcut.unregisterAll();            // 先全部注销\n  for (let r of this.getKeyBindings()) {\n    let n = r.customShortcut && typeof r.customShortcut == \"string\"\n            ? r.customShortcut : r.defaultShortcut;  // 有 custom 就用 custom\n    this.globalShortcut.register(n, ...);          // 只注册一个\n  }\n}\n```\n\n但 `getKeyBindings()` 读的是 `store.get(\"voiceCapture\")`，而我们写的是 `toggleVoiceCapture` → 读到 `undefined` → falsy → **静默回退到默认值 `Cmd+Shift+E`**。自定义配置被无声地忽略了。\n\n本质上是 Tana 自己的一个 bug：schema 里的遗留键名和实际读取的 command 名不一致。\n\n## 正确的写法\n\n```json\n{\n\t\"voiceCapture\": \"CommandOrControl+Shift+F24\",\n\t\"quickCapture\": \"CommandOrControl+Shift+Space\"\n}\n```\n\nTana 的 GUI 入口（**Options → Customize Keybindings**）内部也是用 command 名写入的，所以这和 GUI 设置完全等效。\n\n## 另外两个操作要点\n\n1. **改配置前必须先退出 Tana**。Tana 用 electron-store 管理配置，App 退出时会把内存中的值写回文件；在它运行时改 JSON 会被静默覆盖。流程：备份 → 优雅退出 → 改配置 → 重启 → 读回验证。\n2. **不要试图用空字符串「禁用」**。取值逻辑是 `customShortcut || defaultShortcut`，空串是 falsy，会静默回退默认值，你以为禁了其实没禁。要用合法但按不到的键（F24 在任何 Mac 键盘上都不存在，Electron accelerator 支持 F1–F24）。\n\n## 替代方案：不一定要禁用全局捕获\n\nTana 还有个**非全局**的语音入口：`Cmd+Shift+L`（Quick chat with dictation），只在 Tana 前台生效。如果需要的只是「在 Tana 里语音输入」，禁用全局捕获后改用它就够了。代价是失去 Tana 语音捕获最值钱的能力——在别的 App 里（比如浏览器看资料时）不用切窗口直接说话记进 Tana。\n\n## 一键禁用脚本\n\n以下脚本可直接分享使用：自动退出 Tana → 备份 → 写入正确的键名（保留其他配置、清理无效的遗留键名）。已在 macOS 上验证。\n\n```bash\n#!/bin/bash\n# 禁用 Tana 全局语音捕获快捷键（Cmd+Shift+E → 永不触发的 F24）\n# 原理：Tana 读取 keyBindings.json 里的 \"voiceCapture\" 键作为自定义快捷键，\n#       自定义存在时完全替换默认值。F24 在 Mac 键盘上不存在，等效禁用。\n# 注意：schema 里的 \"toggleVoiceCapture\" 是无人读取的遗留键名，写了无效。\nset -euo pipefail\n\nKB=\"$HOME/Library/Application Support/Tana Outliner/keyBindings.json\"\n\n# 1. 退出 Tana（electron-store 会在退出时把内存值写回文件，运行中修改会被覆盖）\nif pgrep -f \"Tana Outliner\" > /dev/null; then\n  echo \"正在退出 Tana...\"\n  osascript -e 'quit app \"Tana Outliner\"' || true\n  for _ in $(seq 1 10); do\n    pgrep -f \"Tana Outliner\" > /dev/null || break\n    sleep 1\n  done\n  if pgrep -f \"Tana Outliner\" > /dev/null; then\n    echo \"错误：Tana 未能退出，请手动退出后重试\" >&2\n    exit 1\n  fi\nfi\n\n# 2. 备份现有配置\nif [ -f \"$KB\" ]; then\n  cp \"$KB\" \"$KB.bak.$(date +%Y%m%d-%H%M%S)\"\n  echo \"已备份原配置\"\nfi\n\n# 3. 合并写入（保留其他键，清理无效的遗留键名）\npython3 - \"$KB\" << 'EOF'\nimport json, os, sys\npath = sys.argv[1]\ndata = {}\nif os.path.exists(path):\n    with open(path) as f:\n        data = json.load(f)\nremoved = data.pop(\"toggleVoiceCapture\", None)\ndata[\"voiceCapture\"] = \"CommandOrControl+Shift+F24\"\nos.makedirs(os.path.dirname(path), exist_ok=True)\nwith open(path, \"w\") as f:\n    json.dump(data, f, indent=\"\\t\", ensure_ascii=False)\n    f.write(\"\\n\")\nif removed:\n    print(f\"已清理无效键 toggleVoiceCapture（原值: {removed}）\")\nprint(\"已设置 voiceCapture = CommandOrControl+Shift+F24\")\nEOF\n\necho \"完成。启动 Tana 后，Cmd+Shift+E 将不再触发全局语音捕获。\"\necho \"回滚：Tana 菜单 → Options → Customize Keybindings → Voice capture 行点 × 清除自定义。\"\n```\n\n如果只想粘贴一行（需先手动退出 Tana）：\n\n```bash\npython3 -c \"import json,os; p=os.path.expanduser('~/Library/Application Support/Tana Outliner/keyBindings.json'); d=json.load(open(p)) if os.path.exists(p) else {}; d.pop('toggleVoiceCapture',None); d['voiceCapture']='CommandOrControl+Shift+F24'; os.makedirs(os.path.dirname(p),exist_ok=True); json.dump(d,open(p,'w'),indent='\\t',ensure_ascii=False); print('已禁用，重启 Tana 生效')\"\n```\n\n## 经验总结\n\n**逆向修改 Electron 应用的配置文件前，先确认代码实际 `get()` 的键名，而不是看 schema 声明。** schema 可能留有历史遗留键名，写错了不会报错，只会静默失效——排查时容易误判成「配置机制和预期不同」（这次就误判成了 custom/default 并存）。\n",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/102",
+  "state": "OPEN",
+  "createdAt": "2026-09-04T07:14:08Z",
+  "updatedAt": "2026-09-04T07:14:08Z",
+  "author": "KazooTTT",
+  "labels": [
+    "blog:publish",
+    "笔记",
+    "效率",
+    "mac"
+  ],
+  "labelEvents": [
+    {
+      "label": "blog:publish",
+      "createdAt": "2026-09-04T07:14:10Z"
+    },
+    {
+      "label": "笔记",
+      "createdAt": "2026-09-04T07:14:10Z"
+    },
+    {
+      "label": "效率",
+      "createdAt": "2026-09-04T07:14:10Z"
+    },
+    {
+      "label": "mac",
+      "createdAt": "2026-09-04T07:14:11Z"
+    }
+  ],
+  "reactions": [],
+  "comments": []
+}
