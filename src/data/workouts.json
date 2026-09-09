@@ -1,5 +1,146 @@
 [
   {
+    "externalId": "637364213",
+    "name": "力量训练",
+    "activityDate": "2026-09-09",
+    "durationSeconds": 6825,
+    "caloriesKcal": 332,
+    "startTimeLocal": "2026-09-09 07:47:52",
+    "startTimeGmt": "2026-09-08 23:47:52",
+    "activityType": "strength_training",
+    "movingDurationSeconds": 6824.9580078125,
+    "elapsedDurationSeconds": 6824.9580078125,
+    "distanceMeters": 0.0,
+    "averageSpeedMps": 0.0,
+    "averageHeartRateBpm": 115.0,
+    "maxHeartRateBpm": 174.0,
+    "bmrCaloriesKcal": 122.0,
+    "aerobicTrainingEffect": 2.799999952316284,
+    "anaerobicTrainingEffect": 1.100000023841858,
+    "trainingLoad": 88.75497436523438,
+    "trainingEffectLabel": "AEROBIC_BASE",
+    "totalSets": 1,
+    "activeSets": 1,
+    "totalReps": 4,
+    "trainingDetails": {
+      "heartRateZones": [
+        {
+          "zoneNumber": 1,
+          "secsInZone": 745.701,
+          "zoneLowBoundary": 97
+        },
+        {
+          "zoneNumber": 2,
+          "secsInZone": 1422.989,
+          "zoneLowBoundary": 116
+        },
+        {
+          "zoneNumber": 3,
+          "secsInZone": 1282.155,
+          "zoneLowBoundary": 135
+        },
+        {
+          "zoneNumber": 4,
+          "secsInZone": 810.671,
+          "zoneLowBoundary": 154
+        },
+        {
+          "zoneNumber": 5,
+          "secsInZone": 2.903,
+          "zoneLowBoundary": 174
+        }
+      ],
+      "splits": {
+        "activityId": 637364213,
+        "lapDTOs": [
+          {
+            "startTimeGMT": "2026-09-08T23:47:52.0",
+            "distance": 0.0,
+            "duration": 6824.958,
+            "movingDuration": 6824.958,
+            "elapsedDuration": 6824.958,
+            "averageSpeed": 0.0,
+            "averageMovingSpeed": 0.0,
+            "calories": 332.0,
+            "bmrCalories": 122.0,
+            "averageHR": 115.0,
+            "maxHR": 174.0,
+            "trainingEffect": 2.799999952316284,
+            "waterEstimated": 1431.0,
+            "lapIndex": 1,
+            "lengthDTOs": [],
+            "connectIQMeasurement": []
+          }
+        ],
+        "eventDTOs": [
+          {
+            "startTimeGMT": "2026-09-08T23:47:51.0",
+            "startTimeGMTDoubleValue": 1788911271000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-09-08T23:47:52.0",
+            "startTimeGMTDoubleValue": 1788911272000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          }
+        ]
+      },
+      "typedSplits": {
+        "activityId": 637364213,
+        "activityUUID": {
+          "uuid": "a125e33f-c685-4956-90c3-4b083c04212f"
+        },
+        "splits": []
+      },
+      "splitSummaries": {
+        "activityId": 637364213,
+        "activityUUID": {
+          "uuid": "a125e33f-c685-4956-90c3-4b083c04212f"
+        },
+        "splitSummaries": []
+      },
+      "exerciseSets": {
+        "activityId": 637364213,
+        "exerciseSets": [
+          {
+            "exercises": [
+              {
+                "category": "HIP_RAISE",
+                "name": "BARBELL_HIP_THRUST_ON_FLOOR",
+                "probability": 40.234375
+              },
+              {
+                "category": "SQUAT",
+                "name": null,
+                "probability": 31.25
+              },
+              {
+                "category": "LUNGE",
+                "name": null,
+                "probability": 27.34375
+              }
+            ],
+            "duration": 6824.958,
+            "repetitionCount": 4,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-09-08T23:47:52.0",
+            "wktStepIndex": null,
+            "messageIndex": 0
+          }
+        ]
+      }
+    }
+  },
+  {
     "externalId": "637195377",
     "name": "舞蹈健身",
     "activityDate": "2026-09-08",
