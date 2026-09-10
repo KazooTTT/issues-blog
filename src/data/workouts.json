@@ -1,5 +1,155 @@
 [
   {
+    "externalId": "637768081",
+    "name": "力量训练",
+    "activityDate": "2026-09-10",
+    "durationSeconds": 3372,
+    "caloriesKcal": 201,
+    "startTimeLocal": "2026-09-10 08:28:26",
+    "startTimeGmt": "2026-09-10 00:28:26",
+    "activityType": "strength_training",
+    "movingDurationSeconds": 3371.9990234375,
+    "elapsedDurationSeconds": 3371.9990234375,
+    "distanceMeters": 0.0,
+    "averageSpeedMps": 0.0,
+    "averageHeartRateBpm": 123.0,
+    "maxHeartRateBpm": 154.0,
+    "bmrCaloriesKcal": 60.0,
+    "aerobicTrainingEffect": 2.0,
+    "anaerobicTrainingEffect": 0.10000000149011612,
+    "trainingLoad": 30.88311767578125,
+    "trainingEffectLabel": "AEROBIC_BASE",
+    "totalSets": 1,
+    "activeSets": 1,
+    "totalReps": 4,
+    "trainingDetails": {
+      "heartRateZones": [
+        {
+          "zoneNumber": 1,
+          "secsInZone": 605.727,
+          "zoneLowBoundary": 97
+        },
+        {
+          "zoneNumber": 2,
+          "secsInZone": 1922.248,
+          "zoneLowBoundary": 116
+        },
+        {
+          "zoneNumber": 3,
+          "secsInZone": 643.985,
+          "zoneLowBoundary": 135
+        },
+        {
+          "zoneNumber": 4,
+          "secsInZone": 2.0,
+          "zoneLowBoundary": 154
+        },
+        {
+          "zoneNumber": 5,
+          "secsInZone": 0.0,
+          "zoneLowBoundary": 174
+        }
+      ],
+      "splits": {
+        "activityId": 637768081,
+        "lapDTOs": [
+          {
+            "startTimeGMT": "2026-09-10T00:28:26.0",
+            "distance": 0.0,
+            "duration": 3371.999,
+            "movingDuration": 3371.999,
+            "elapsedDuration": 3371.999,
+            "averageSpeed": 0.0,
+            "averageMovingSpeed": 0.0,
+            "calories": 201.0,
+            "bmrCalories": 60.0,
+            "averageHR": 123.0,
+            "maxHR": 154.0,
+            "trainingEffect": 2.0,
+            "waterEstimated": 707.0,
+            "lapIndex": 1,
+            "lengthDTOs": [],
+            "connectIQMeasurement": []
+          }
+        ],
+        "eventDTOs": [
+          {
+            "startTimeGMT": "2026-09-10T00:28:25.0",
+            "startTimeGMTDoubleValue": 1789000105000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-09-10T00:28:26.0",
+            "startTimeGMTDoubleValue": 1789000106000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-09-10T01:24:38.0",
+            "startTimeGMTDoubleValue": 1789003478000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          }
+        ]
+      },
+      "typedSplits": {
+        "activityId": 637768081,
+        "activityUUID": {
+          "uuid": "e1f41395-594b-41c5-b8fb-1117b43567c8"
+        },
+        "splits": []
+      },
+      "splitSummaries": {
+        "activityId": 637768081,
+        "activityUUID": {
+          "uuid": "e1f41395-594b-41c5-b8fb-1117b43567c8"
+        },
+        "splitSummaries": []
+      },
+      "exerciseSets": {
+        "activityId": 637768081,
+        "exerciseSets": [
+          {
+            "exercises": [
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 99.609375
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              }
+            ],
+            "duration": 3371.999,
+            "repetitionCount": 4,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-09-10T00:28:26.0",
+            "wktStepIndex": null,
+            "messageIndex": 0
+          }
+        ]
+      }
+    }
+  },
+  {
     "externalId": "637364213",
     "name": "力量训练",
     "activityDate": "2026-09-09",
