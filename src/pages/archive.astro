@@ -6,6 +6,10 @@ import { archiveDateParts, sitePath } from "@/utils/presentation";
 const { posts } = await getSiteContent();
 const newPostUrl = new URL("https://github.com/KazooTTT/issues-blog/issues/new");
 newPostUrl.searchParams.set("template", "article.md");
+// 预填 blog:publish 标签：点击按钮创建的 Issue 会直接发布。
+// 注意 GitHub 只允许有仓库权限的用户通过 URL 预填 labels（游客会静默忽略），
+// 因此该参数只对作者本人生效，不影响普通访客。
+newPostUrl.searchParams.set("labels", "blog:publish");
 const datedPosts = posts.map((post) => ({
   post,
   date: archiveDateParts(post.publishedAt),
