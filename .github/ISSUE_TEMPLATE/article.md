@@ -2,7 +2,7 @@
 name: 新文章
 about: 创建一篇博客草稿
 title: ""
-labels: ""
+labels: "blog:publish"
 assignees: ""
 ---
 
