@@ -20,6 +20,23 @@ describe("static blog build", () => {
     });
   }, 30_000);
 
+  it("shares About discussion on home and About with older messages collapsed", () => {
+    for (const route of ["index.html", "about/index.html"]) {
+      const page = readFileSync(resolve(root, "dist", route), "utf8");
+      expect(page).toContain('aria-label="留言"');
+      expect(page).toContain("11 条留言");
+      expect(page).toContain('href="https://github.com/kazoottt/issues-blog/issues/1">去 GitHub 留言');
+      const older = page.match(/<details class="older-comments">([\s\S]*?)<\/details>/)?.[1];
+      expect(older).toContain("第 1 条访客留言");
+      expect(older).not.toContain("第 2 条访客留言");
+      expect(page).toContain("第 11 条访客留言");
+      expect(page.match(/class="comment"/g)).toHaveLength(11);
+    }
+    const emptyPost = readFileSync(resolve(root, "dist/posts/100/index.html"), "utf8");
+    expect(emptyPost).toContain("还没有留言，欢迎来打个招呼。");
+    expect(emptyPost).toContain("去 GitHub 留言");
+  });
+
   it("generates stable article routes and sends the full-list action to archive", async () => {
     await expect(access(resolve(root, "dist/posts/101/index.html"))).resolves.toBe(
       undefined,

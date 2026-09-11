@@ -137,6 +137,15 @@ export const fixtureIssues: SourceIssue[] = [
     labels: ["blog:about"],
     labelEvents: [],
     reactions: [],
-    comments: [],
+    comments: Array.from({ length: 11 }, (_, index) => ({
+      id: `about-comment-${index + 1}`,
+      body: `第 ${index + 1} 条访客留言，欢迎交流。`,
+      url: `https://github.com/kazoottt/issues-blog/issues/1#issuecomment-${index + 1}`,
+      author: "visitor",
+      avatarUrl: "",
+      createdAt: "2026-05-02T00:00:00Z",
+      updatedAt: "2026-05-02T00:00:00Z",
+      reactions: [],
+    })),
   },
 ];

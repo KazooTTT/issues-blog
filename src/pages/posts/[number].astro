@@ -1,13 +1,11 @@
 ---
-import Comment from "@/components/Comment.astro";
+import Discussion from "@/components/Discussion.astro";
 import ReactionBar from "@/components/ReactionBar.astro";
-import { siteConfig } from "@/config";
 import { getSiteContent } from "@/data/site-content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import {
   deriveExcerpt,
   renderMarkdownDocument,
-  splitDiscussion,
 } from "@/rendering/content";
 import { formatDate, sitePath } from "@/utils/presentation";
 
@@ -21,7 +19,6 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { html, references } = await renderMarkdownDocument(post.body, Astro.site);
-const discussion = splitDiscussion(post.comments);
 ---
 
 <BaseLayout
@@ -65,23 +62,5 @@ const discussion = splitDiscussion(post.comments);
     </footer>
   </article>
 
-  <section class="discussion">
-    <div class="section-heading">
-      <h2>讨论</h2>
-      <span>{post.comments.length} comments</span>
-    </div>
-    {post.comments.length === 0 ? (
-      <p class="empty-state">还没有评论。<a href={post.url}>去 GitHub 留言 ↗</a></p>
-    ) : (
-      <>
-        {discussion.older.length > 0 && (
-          <details class="older-comments">
-            <summary>查看更早的 {discussion.older.length} 条评论</summary>
-            {discussion.older.map((comment) => <Comment comment={comment} owner={siteConfig.owner} />)}
-          </details>
-        )}
-        {discussion.latest.map((comment) => <Comment comment={comment} owner={siteConfig.owner} />)}
-      </>
-    )}
-  </section>
+  <Discussion issue={post} title="讨论" />
 </BaseLayout>

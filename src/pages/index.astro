@@ -1,4 +1,5 @@
 ---
+import Discussion from "@/components/Discussion.astro";
 import FeaturedPosts from "@/components/FeaturedPosts.astro";
 import PostList from "@/components/PostList.astro";
 import SocialLinks from "@/components/SocialLinks.astro";
@@ -8,7 +9,7 @@ import { getSiteContent } from "@/data/site-content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { featuredPosts, regularPosts, sitePath } from "@/utils/presentation";
 
-const { posts, warnings } = await getSiteContent();
+const { posts, warnings, about } = await getSiteContent();
 const featured = featuredPosts(posts);
 const regular = regularPosts(posts);
 const latestPosts = regular.slice(0, siteConfig.homePostLimit);
@@ -54,4 +55,5 @@ warnings.forEach((warning) => console.warn(`[content] ${warning}`));
     <SocialLinks />
   </section>
 
+  {about && <Discussion issue={about} />}
 </BaseLayout>

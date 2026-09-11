@@ -1,0 +1,35 @@
+---
+import Comment from "@/components/Comment.astro";
+import { siteConfig } from "@/config";
+import type { SourceIssue } from "@/domain/types";
+import { splitDiscussion } from "@/rendering/content";
+
+interface Props {
+  issue: SourceIssue;
+  title?: string;
+}
+
+const { issue, title = "留言" } = Astro.props;
+const discussion = splitDiscussion(issue.comments);
+---
+
+<section class="discussion" aria-label={title}>
+  <div class="section-heading">
+    <h2>{title}</h2>
+    <span>{issue.comments.length} 条留言</span>
+  </div>
+  <p><a class="view-all" href={issue.url}>去 GitHub 留言 ↗</a></p>
+  {issue.comments.length === 0 ? (
+    <p class="empty-state">还没有留言，欢迎来打个招呼。</p>
+  ) : (
+    <>
+      {discussion.older.length > 0 && (
+        <details class="older-comments">
+          <summary>查看更早的 {discussion.older.length} 条留言</summary>
+          {discussion.older.map((comment) => <Comment comment={comment} owner={siteConfig.owner} />)}
+        </details>
+      )}
+      {discussion.latest.map((comment) => <Comment comment={comment} owner={siteConfig.owner} />)}
+    </>
+  )}
+</section>

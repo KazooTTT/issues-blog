@@ -1,4 +1,5 @@
 ---
+import Discussion from "@/components/Discussion.astro";
 import { getSiteContent } from "@/data/site-content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { renderMarkdown } from "@/rendering/content";
@@ -15,4 +16,5 @@ const html = about ? await renderMarkdown(about.body) : "";
   {about ? <div class="prose about-body" set:html={html} /> : (
     <p class="empty-state">还没有设置带有 blog:about 标签的 Issue。</p>
   )}
+  {about && <Discussion issue={about} />}
 </BaseLayout>

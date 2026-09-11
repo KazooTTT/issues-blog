@@ -9,7 +9,7 @@
 - 仓库所有者创建的 Issue 才能成为文章。
 - 添加 `blog:publish` 发布；移除后撤回。
 - 添加 `blog:featured` 进入首页精选区，最多展示 5 篇。
-- 一个带 `blog:about` 的 Issue 提供 About 页面。
+- 一个带 `blog:about` 的 Issue 提供 About 页面；其评论作为首页和 About 共用的留言区，通过 GitHub 留言，自动重建后显示。
 - 其他非 `blog:*` Labels 都作为内容标签。
 - Issue 的 Open/Closed 状态不影响发布。
 - 历史迁移文章可在正文末尾使用
