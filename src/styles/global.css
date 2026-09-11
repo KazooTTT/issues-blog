@@ -738,6 +738,19 @@ button.workout-kind, a.workout-kind { cursor: pointer; }
 .not-found > span { color: var(--accent); font: 700 110px/1 var(--serif); }
 .not-found h1 { font: 600 42px/1.3 var(--serif); }
 .button { display: inline-block; margin-top: 20px; padding: 12px 18px; background: var(--ink); color: var(--paper); }
+.new-post-menu { position: relative; display: inline-block; margin-top: 20px; }
+.new-post-menu-button { margin-top: 0; border: 0; font: inherit; cursor: pointer; }
+.new-post-dropdown {
+  position: absolute; z-index: 20; top: calc(100% - 1px); left: 0;
+  display: none; width: 290px; padding: 8px;
+  border: 1px solid var(--line); background: var(--paper); box-shadow: var(--shadow);
+}
+.new-post-menu:hover .new-post-dropdown,
+.new-post-menu:focus-within .new-post-dropdown { display: grid; }
+.new-post-dropdown a { display: block; padding: 10px 12px; font-size: 13px; }
+.new-post-dropdown a span { display: block; margin-top: 3px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.new-post-dropdown a:hover, .new-post-dropdown a:focus-visible { background: var(--paper-deep); color: var(--accent-dark); }
+.new-post-dropdown a:hover span, .new-post-dropdown a:focus-visible span { color: var(--accent-dark); }
 .site-footer { display: flex; align-items: center; justify-content: space-between; gap: 30px; padding: 42px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
 .site-footer p { margin: 3px 0; }
 .site-source-link { text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 3px; }

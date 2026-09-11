@@ -79,10 +79,15 @@ describe("static blog build", () => {
     expect(archive).not.toContain('class="archive-tags"');
     expect(archive).not.toContain('class="archive-tag"');
     expect(archive).toContain(
-      'href="https://github.com/KazooTTT/issues-blog/issues/new?template=article.md&amp;labels=blog%3Apublish"',
+      'href="https://github.com/KazooTTT/issues-blog/issues/new?template=article.md"',
     );
-    expect(archive).toContain("新增博文 ↗");
-    expect(article).not.toContain("新增博文 ↗");
+    expect(archive).toContain(
+      'href="https://github.com/KazooTTT/issues-blog/issues/new?template=article-draft.md"',
+    );
+    expect(archive).toContain("新增博文");
+    expect(archive).toContain("新增草稿");
+    expect(article).not.toContain("新增博文");
+    expect(article).not.toContain("新增草稿");
   });
 
   it("groups periodic review tags under one summary menu item", () => {
