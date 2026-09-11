@@ -1,5 +1,182 @@
 [
   {
+    "externalId": "638151111",
+    "name": "力量训练",
+    "activityDate": "2026-09-11",
+    "durationSeconds": 3259,
+    "caloriesKcal": 229,
+    "startTimeLocal": "2026-09-11 07:48:58",
+    "startTimeGmt": "2026-09-10 23:48:58",
+    "activityType": "strength_training",
+    "movingDurationSeconds": 3258.81396484375,
+    "elapsedDurationSeconds": 3262.510986328125,
+    "distanceMeters": 0.0,
+    "averageSpeedMps": 0.0,
+    "averageHeartRateBpm": 134.0,
+    "maxHeartRateBpm": 171.0,
+    "bmrCaloriesKcal": 58.0,
+    "aerobicTrainingEffect": 2.4000000953674316,
+    "anaerobicTrainingEffect": 2.0,
+    "trainingLoad": 80.64070129394531,
+    "trainingEffectLabel": "ANAEROBIC_CAPACITY",
+    "totalSets": 1,
+    "activeSets": 1,
+    "totalReps": 5,
+    "trainingDetails": {
+      "heartRateZones": [
+        {
+          "zoneNumber": 1,
+          "secsInZone": 130.415,
+          "zoneLowBoundary": 97
+        },
+        {
+          "zoneNumber": 2,
+          "secsInZone": 1669.642,
+          "zoneLowBoundary": 116
+        },
+        {
+          "zoneNumber": 3,
+          "secsInZone": 946.756,
+          "zoneLowBoundary": 135
+        },
+        {
+          "zoneNumber": 4,
+          "secsInZone": 455.0,
+          "zoneLowBoundary": 154
+        },
+        {
+          "zoneNumber": 5,
+          "secsInZone": 0.0,
+          "zoneLowBoundary": 174
+        }
+      ],
+      "splits": {
+        "activityId": 638151111,
+        "lapDTOs": [
+          {
+            "startTimeGMT": "2026-09-10T23:48:58.0",
+            "distance": 0.0,
+            "duration": 3258.814,
+            "movingDuration": 3258.814,
+            "elapsedDuration": 3262.511,
+            "averageSpeed": 0.0,
+            "averageMovingSpeed": 0.0,
+            "calories": 229.0,
+            "bmrCalories": 58.0,
+            "averageHR": 134.0,
+            "maxHR": 171.0,
+            "trainingEffect": 2.4000000953674316,
+            "waterEstimated": 761.0,
+            "lapIndex": 1,
+            "lengthDTOs": [],
+            "connectIQMeasurement": []
+          }
+        ],
+        "eventDTOs": [
+          {
+            "startTimeGMT": "2026-09-10T23:48:57.0",
+            "startTimeGMTDoubleValue": 1789084137000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-09-10T23:48:58.0",
+            "startTimeGMTDoubleValue": 1789084138000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-09-11T00:43:13.0",
+            "startTimeGMTDoubleValue": 1789087393000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-09-11T00:43:16.0",
+            "startTimeGMTDoubleValue": 1789087396000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-09-11T00:43:17.0",
+            "startTimeGMTDoubleValue": 1789087397000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-09-11T00:43:18.0",
+            "startTimeGMTDoubleValue": 1789087398000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          }
+        ]
+      },
+      "typedSplits": {
+        "activityId": 638151111,
+        "activityUUID": {
+          "uuid": "f5599f77-4c6c-40a6-abd6-8202de05a7b5"
+        },
+        "splits": []
+      },
+      "splitSummaries": {
+        "activityId": 638151111,
+        "activityUUID": {
+          "uuid": "f5599f77-4c6c-40a6-abd6-8202de05a7b5"
+        },
+        "splitSummaries": []
+      },
+      "exerciseSets": {
+        "activityId": 638151111,
+        "exerciseSets": [
+          {
+            "exercises": [
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 99.609375
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              }
+            ],
+            "duration": 3258.814,
+            "repetitionCount": 5,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-09-10T23:48:58.0",
+            "wktStepIndex": null,
+            "messageIndex": 0
+          }
+        ]
+      }
+    }
+  },
+  {
     "externalId": "637768081",
     "name": "力量训练",
     "activityDate": "2026-09-10",
