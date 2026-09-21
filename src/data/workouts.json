@@ -1,5 +1,245 @@
 [
   {
+    "externalId": "642386514",
+    "name": "力量训练",
+    "activityDate": "2026-09-21",
+    "durationSeconds": 3379,
+    "caloriesKcal": 277,
+    "startTimeLocal": "2026-09-21 21:01:21",
+    "startTimeGmt": "2026-09-21 13:01:21",
+    "activityType": "strength_training",
+    "movingDurationSeconds": 3373.845947265625,
+    "elapsedDurationSeconds": 3379.155029296875,
+    "distanceMeters": 0.0,
+    "averageSpeedMps": 0.0,
+    "averageHeartRateBpm": 147.0,
+    "maxHeartRateBpm": 185.0,
+    "bmrCaloriesKcal": 61.0,
+    "aerobicTrainingEffect": 3.4000000953674316,
+    "anaerobicTrainingEffect": 2.200000047683716,
+    "trainingLoad": 165.0486602783203,
+    "trainingEffectLabel": "ANAEROBIC_CAPACITY",
+    "totalSets": 2,
+    "activeSets": 2,
+    "totalReps": 10,
+    "trainingDetails": {
+      "heartRateZones": [
+        {
+          "zoneNumber": 1,
+          "secsInZone": 168.123,
+          "zoneLowBoundary": 97
+        },
+        {
+          "zoneNumber": 2,
+          "secsInZone": 560.244,
+          "zoneLowBoundary": 116
+        },
+        {
+          "zoneNumber": 3,
+          "secsInZone": 1493.039,
+          "zoneLowBoundary": 135
+        },
+        {
+          "zoneNumber": 4,
+          "secsInZone": 673.471,
+          "zoneLowBoundary": 154
+        },
+        {
+          "zoneNumber": 5,
+          "secsInZone": 459.755,
+          "zoneLowBoundary": 174
+        }
+      ],
+      "splits": {
+        "activityId": 642386514,
+        "lapDTOs": [
+          {
+            "startTimeGMT": "2026-09-21T13:01:21.0",
+            "distance": 0.0,
+            "duration": 3379.155,
+            "movingDuration": 3373.846,
+            "elapsedDuration": 3379.155,
+            "averageSpeed": 0.0,
+            "averageMovingSpeed": 0.0,
+            "calories": 277.0,
+            "bmrCalories": 61.0,
+            "averageHR": 147.0,
+            "maxHR": 185.0,
+            "trainingEffect": 3.4000000953674316,
+            "waterEstimated": 914.0,
+            "lapIndex": 1,
+            "lengthDTOs": [],
+            "connectIQMeasurement": []
+          }
+        ],
+        "eventDTOs": [
+          {
+            "startTimeGMT": "2026-09-21T13:01:20.0",
+            "startTimeGMTDoubleValue": 1789995680000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-09-21T13:01:21.0",
+            "startTimeGMTDoubleValue": 1789995681000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          }
+        ]
+      },
+      "typedSplits": {
+        "activityId": 642386514,
+        "activityUUID": {
+          "uuid": "8035beeb-44dd-4a70-ad90-72f7790c45c0"
+        },
+        "splits": []
+      },
+      "splitSummaries": {
+        "activityId": 642386514,
+        "activityUUID": {
+          "uuid": "8035beeb-44dd-4a70-ad90-72f7790c45c0"
+        },
+        "splitSummaries": []
+      },
+      "exerciseSets": {
+        "activityId": 642386514,
+        "exerciseSets": [
+          {
+            "exercises": [
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 99.609375
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              }
+            ],
+            "duration": 1495.41,
+            "repetitionCount": 3,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-09-21T13:01:21.0",
+            "wktStepIndex": null,
+            "messageIndex": 0,
+            "minimalViableThreshold": null,
+            "avgConcentricMeanVelocity": null,
+            "maxConcentricMeanVelocity": null,
+            "avgEccentricMeanVelocity": null,
+            "maxEccentricMeanVelocity": null,
+            "avgConcentricPeakVelocity": null,
+            "maxConcentricPeakVelocity": null,
+            "avgEccentricPeakVelocity": null,
+            "maxEccentricPeakVelocity": null,
+            "avgMeanPropulsiveVelocity": null,
+            "maxMeanPropulsiveVelocity": null,
+            "avgConcentricMeanPower": null,
+            "maxConcentricMeanPower": null,
+            "avgConcentricPeakPower": null,
+            "maxConcentricPeakPower": null,
+            "avgConcentricDuration": null,
+            "maxConcentricDuration": null,
+            "avgEccentricDuration": null,
+            "maxEccentricDuration": null,
+            "avgConcentricRom": null,
+            "maxConcentricRom": null
+          },
+          {
+            "exercises": [],
+            "duration": 5.309,
+            "repetitionCount": null,
+            "weight": null,
+            "setType": "REST",
+            "startTime": "2026-09-21T13:26:17.0",
+            "wktStepIndex": null,
+            "messageIndex": 1,
+            "minimalViableThreshold": null,
+            "avgConcentricMeanVelocity": null,
+            "maxConcentricMeanVelocity": null,
+            "avgEccentricMeanVelocity": null,
+            "maxEccentricMeanVelocity": null,
+            "avgConcentricPeakVelocity": null,
+            "maxConcentricPeakVelocity": null,
+            "avgEccentricPeakVelocity": null,
+            "maxEccentricPeakVelocity": null,
+            "avgMeanPropulsiveVelocity": null,
+            "maxMeanPropulsiveVelocity": null,
+            "avgConcentricMeanPower": null,
+            "maxConcentricMeanPower": null,
+            "avgConcentricPeakPower": null,
+            "maxConcentricPeakPower": null,
+            "avgConcentricDuration": null,
+            "maxConcentricDuration": null,
+            "avgEccentricDuration": null,
+            "maxEccentricDuration": null,
+            "avgConcentricRom": null,
+            "maxConcentricRom": null
+          },
+          {
+            "exercises": [
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 99.609375
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              },
+              {
+                "category": "UNKNOWN",
+                "name": null,
+                "probability": 0.0
+              }
+            ],
+            "duration": 1878.436,
+            "repetitionCount": 7,
+            "weight": null,
+            "setType": "ACTIVE",
+            "startTime": "2026-09-21T13:26:22.0",
+            "wktStepIndex": null,
+            "messageIndex": 2,
+            "minimalViableThreshold": null,
+            "avgConcentricMeanVelocity": null,
+            "maxConcentricMeanVelocity": null,
+            "avgEccentricMeanVelocity": null,
+            "maxEccentricMeanVelocity": null,
+            "avgConcentricPeakVelocity": null,
+            "maxConcentricPeakVelocity": null,
+            "avgEccentricPeakVelocity": null,
+            "maxEccentricPeakVelocity": null,
+            "avgMeanPropulsiveVelocity": null,
+            "maxMeanPropulsiveVelocity": null,
+            "avgConcentricMeanPower": null,
+            "maxConcentricMeanPower": null,
+            "avgConcentricPeakPower": null,
+            "maxConcentricPeakPower": null,
+            "avgConcentricDuration": null,
+            "maxConcentricDuration": null,
+            "avgEccentricDuration": null,
+            "maxEccentricDuration": null,
+            "avgConcentricRom": null,
+            "maxConcentricRom": null
+          }
+        ]
+      }
+    }
+  },
+  {
     "externalId": "641766190",
     "name": "力量训练",
     "activityDate": "2026-09-20",
