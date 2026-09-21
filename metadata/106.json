@@ -1,0 +1,14 @@
+{
+  "number": 106,
+  "title": "qkpr back 功能使用场景",
+  "body": "`qkpr back` 命令用于从 merge 分支快速切换回源分支,提升 Git 工作流效率。\n\n## 场景 1:单一匹配(最常见)\n\n当只有一个匹配的源分支时,一键切换:\n\n```bash\n# 你在 merge 分支上解决了冲突\n$ git branch\n* merge/feat-M-12345-auth-to-main\n  main\n  feat/M-12345-auth\n\n# 一行命令切回去\n$ qkpr back\n\n🔙  Back to Source Branch\n  Merge branch: merge/feat-M-12345-auth-to-main\n  Detected source: feat/M-12345-auth\n  Detected target: main\n\n🔄  Switching to source branch: feat/M-12345-auth\n✅  Switched back to: feat/M-12345-auth\n   (from merge branch: merge/feat-M-12345-auth-to-main)\n```\n\n## 场景 2:多个分支匹配\n\n当存在多个可能的源分支时,提供选择菜单:\n\n```bash\n# 同时存在 feat/my-feature 和 feat-my-feature\n$ qkpr back\n\n🔙  Back to Source Branch\n  Merge branch: merge/feat-my-feature-to-main\n\n⚠️  Found 2 possible branch combinations:\n\n? Which source branch do you want to switch to?\n❯ feat/my-feature → main\n  feat-my-feature → main\n  ────────────────\n  Cancel\n```\n\n## 场景 3:主菜单入口\n\n在主菜单中作为第 5 个选项:\n\n```bash\n$ qkpr\n\n╔══════════════════════════════════════════════════════════════╗\n║                     🚀  Quick PR Tool                        ║\n║           Your All-in-One Git Workflow Assistant             ║\n║                      Author: KazooTTT                        ║\n╚══════════════════════════════════════════════════════════════╝\n            Version: 1.0.17\n\n? What would you like to do?\n  1. 🔧  Create Pull Request\n  2. 🤖  Generate Commit Message\n  3. 🌿  Generate Branch Name\n  4. 🗑️  Delete Merge Branches\n❯ 5. 🔙  Back to Source Branch    ← 新增的选项\n  6. 📌  Manage Pinned Branches\n  7. ⚙️   Settings\n  ❌  Exit\n```\n\n## 场景 4:解析失败时(手动选择)\n\n当 merge 分支名称不符合预期格式时,提供手动选择:\n\n```bash\n$ qkpr back\n\n🔙  Back to Source Branch\n  Merge branch: merge/invalid-name\n\n❌  Could not parse merge branch name: merge/invalid-name\nExpected format: merge/<source>-to-<target>\n\n? Select source branch (type to search):\n❯ feat/login-page\n  fix/bug-456\n  chore/update-deps\n  ...\n```\n\n## 场景 5:本地没有源分支\n\n当源分支不在本地时,提供从远程检出或其他选项:\n\n```bash\n$ qkpr back\n\n🔙  Back to Source Branch\n  Merge branch: merge/feat-new-api-to-develop\n  Detected source: feat/new-api\n  Detected target: develop\n\n⚠️  Source branch 'feat/new-api' is not available locally.\n\n? What would you like to do?\n❯ Checkout from remote (origin/feat/new-api)\n  Select a different branch\n  Cancel\n```\n\n## 实现要点\n\n- 自动解析 merge 分支名称,提取源分支和目标分支\n- 支持多种分支命名格式的识别\n- 提供交互式选择菜单处理歧义情况\n- 优雅处理边界情况(解析失败、分支不存在等)\n\n---\n\n*此文档为草稿,待发布到 Issues Blog*\n",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/106",
+  "state": "OPEN",
+  "createdAt": "2026-09-21T09:35:04Z",
+  "updatedAt": "2026-09-21T09:35:04Z",
+  "author": "KazooTTT",
+  "labels": [],
+  "labelEvents": [],
+  "reactions": [],
+  "comments": []
+}

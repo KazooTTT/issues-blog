@@ -37,18 +37,6 @@
     {
       "label": "卡片",
       "createdAt": "2026-07-24T10:20:07Z"
-    },
-    {
-      "label": "阅读",
-      "createdAt": "2026-07-24T10:20:07Z"
-    },
-    {
-      "label": "tree-shaking",
-      "createdAt": "2026-07-24T10:20:07Z"
-    },
-    {
-      "label": "wasm",
-      "createdAt": "2026-07-24T10:20:07Z"
     }
   ],
   "reactions": [],
