@@ -1,0 +1,26 @@
+{
+  "number": 107,
+  "title": "Quick PR Tool v1.0.17 - 新增 Back to Source Branch 功能",
+  "body": "## 新功能:Back to Source Branch\n\n从 merge 分支快速切换回源分支,解决冲突后一键返回。\n\n🔗 **GitHub 仓库**: https://github.com/KazooTTT/quick-pr\n\n### 安装与更新\n\n```bash\nnpm install -g @kazoottt/quick-pr\n# 或更新到最新版本\nnpm update -g @kazoottt/quick-pr\n```\n\n### 使用方式\n\n**命令行直接使用:**\n```bash\nqkpr back\n```\n\n**主菜单选项:**\n```bash\nqkpr\n# 选择 \"5. 🔙 Back to Source Branch\"\n```\n\n### 场景演示\n\n#### 场景 1:单一匹配(最常见)\n\n```bash\n$ git branch\n* merge/feat-M-12345-auth-to-main\n  main\n  feat/M-12345-auth\n\n$ qkpr back\n🔙  Back to Source Branch\n  Merge branch: merge/feat-M-12345-auth-to-main\n  Detected source: feat/M-12345-auth\n  Detected target: main\n\n🔄  Switching to source branch: feat/M-12345-auth\n✅  Switched back to: feat/M-12345-auth\n```\n\n#### 场景 2:多个分支匹配\n\n自动检测并提供选择菜单:\n\n```bash\n$ qkpr back\n⚠️  Found 2 possible branch combinations:\n\n? Which source branch do you want to switch to?\n❯ feat/my-feature → main\n  feat-my-feature → main\n```\n\n#### 场景 3:解析失败时\n\n提供手动选择界面:\n\n```bash\n$ qkpr back\n❌  Could not parse merge branch name: merge/invalid-name\n\n? Select source branch (type to search):\n❯ feat/login-page\n  fix/bug-456\n  chore/update-deps\n```\n\n#### 场景 4:本地没有源分支\n\n支持从远程检出:\n\n```bash\n$ qkpr back\n⚠️  Source branch 'feat/new-api' is not available locally.\n\n? What would you like to do?\n❯ Checkout from remote (origin/feat/new-api)\n  Select a different branch\n  Cancel\n```\n\n### 版本信息\n\n- **当前版本**: 1.0.17\n- **更新日期**: 2026-09-21\n\n### 项目地址\n\n🌟 **欢迎 Star**: https://github.com/KazooTTT/quick-pr\n\n🐛 **问题反馈**: https://github.com/KazooTTT/quick-pr/issues\n\n---\n\n*Quick PR Tool - Your All-in-One Git Workflow Assistant*\n",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/107",
+  "state": "OPEN",
+  "createdAt": "2026-09-21T09:39:03Z",
+  "updatedAt": "2026-09-21T09:39:03Z",
+  "author": "KazooTTT",
+  "labels": [
+    "总结",
+    "工具"
+  ],
+  "labelEvents": [
+    {
+      "label": "总结",
+      "createdAt": "2026-09-21T09:39:04Z"
+    },
+    {
+      "label": "工具",
+      "createdAt": "2026-09-21T09:39:04Z"
+    }
+  ],
+  "reactions": [],
+  "comments": []
+}
