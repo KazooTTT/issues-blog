@@ -8,6 +8,7 @@
   "updatedAt": "2026-09-21T09:39:03Z",
   "author": "KazooTTT",
   "labels": [
+    "blog:publish",
     "总结",
     "工具"
   ],
@@ -19,6 +20,10 @@
     {
       "label": "工具",
       "createdAt": "2026-09-21T09:39:04Z"
+    },
+    {
+      "label": "blog:publish",
+      "createdAt": "2026-09-22T02:15:07Z"
     }
   ],
   "reactions": [],
