@@ -1,0 +1,72 @@
+version: 2
+updates:
+  # npm dependencies
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Shanghai"
+    # 将更新分组，减少 PR 数量和冲突
+    groups:
+      # 主要框架和核心依赖 - 单独一组，便于测试
+      astro-framework:
+        patterns:
+          - "astro"
+          - "@astrojs/*"
+
+      # 内容处理相关依赖
+      content-processing:
+        patterns:
+          - "shiki"
+          - "@shikijs/*"
+          - "rehype-*"
+          - "remark-*"
+          - "unified"
+          - "github-slugger"
+
+      # 其他生产依赖
+      production-other:
+        patterns:
+          - "mermaid"
+          - "zod"
+
+      # 开发依赖 - 通常可以安全合并
+      dev-dependencies:
+        dependency-type: "development"
+        patterns:
+          - "*"
+
+    # 限制同时打开的 PR 数量
+    open-pull-requests-limit: 10
+
+    # 对于 patch 和 minor 更新，可以配置自动合并（需要仓库设置中启用）
+    versioning-strategy: increase
+
+    # 添加 labels 便于分类
+    labels:
+      - "dependencies"
+
+    # 提交消息前缀
+    commit-message:
+      prefix: "build(deps)"
+      prefix-development: "build(deps-dev)"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Shanghai"
+    groups:
+      all-actions:
+        patterns:
+          - "*"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "ci(deps)"
