@@ -16,9 +16,9 @@
     "node": ">=22"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.9",
+    "@astrojs/check": "^0.9.10",
     "@astrojs/rss": "^4.0.19",
-    "@astrojs/sitemap": "^3.7.3",
+    "@astrojs/sitemap": "^3.7.4",
     "@shikijs/rehype": "^4.3.1",
     "astro": "^7.3.3",
     "github-slugger": "^2.0.0",
