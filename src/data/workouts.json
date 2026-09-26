@@ -1,5 +1,262 @@
 [
   {
+    "externalId": "644185014",
+    "name": "保山市 徒步",
+    "activityDate": "2026-09-26",
+    "durationSeconds": 1640,
+    "caloriesKcal": 112,
+    "startTimeLocal": "2026-09-26 18:43:25",
+    "startTimeGmt": "2026-09-26 10:43:25",
+    "activityType": "hiking",
+    "movingDurationSeconds": 833.0,
+    "elapsedDurationSeconds": 1639.612060546875,
+    "distanceMeters": 1001.8200073242188,
+    "elevationGainMeters": 76.0,
+    "elevationLossMeters": 31.0,
+    "averageSpeedMps": 0.6110000014305115,
+    "maxSpeedMps": 1.753999948501587,
+    "averageHeartRateBpm": 130.0,
+    "maxHeartRateBpm": 165.0,
+    "bmrCaloriesKcal": 29.0,
+    "aerobicTrainingEffect": 2.0999999046325684,
+    "anaerobicTrainingEffect": 0.4000000059604645,
+    "trainingLoad": 44.391632080078125,
+    "trainingEffectLabel": "RECOVERY",
+    "averageRunningCadenceSpm": 46.234375,
+    "maxRunningCadenceSpm": 187.0,
+    "trainingDetails": {
+      "heartRateZones": [
+        {
+          "zoneNumber": 1,
+          "secsInZone": 517.216,
+          "zoneLowBoundary": 97
+        },
+        {
+          "zoneNumber": 2,
+          "secsInZone": 451.989,
+          "zoneLowBoundary": 116
+        },
+        {
+          "zoneNumber": 3,
+          "secsInZone": 449.427,
+          "zoneLowBoundary": 135
+        },
+        {
+          "zoneNumber": 4,
+          "secsInZone": 220.98,
+          "zoneLowBoundary": 154
+        },
+        {
+          "zoneNumber": 5,
+          "secsInZone": 0.0,
+          "zoneLowBoundary": 174
+        }
+      ],
+      "splits": {
+        "activityId": 644185014,
+        "lapDTOs": [
+          {
+            "startTimeGMT": "2026-09-26T10:43:25.0",
+            "distance": 1001.82,
+            "duration": 1639.612,
+            "movingDuration": 833.0,
+            "elapsedDuration": 1639.612,
+            "elevationGain": 76.0,
+            "elevationLoss": 31.0,
+            "maxElevation": 1470.2,
+            "minElevation": 1399.2,
+            "averageSpeed": 0.6110000014305115,
+            "averageMovingSpeed": 1.20266507481899,
+            "maxSpeed": 1.753999948501587,
+            "calories": 112.0,
+            "bmrCalories": 29.0,
+            "averageHR": 130.0,
+            "maxHR": 165.0,
+            "averageRunCadence": 46.234375,
+            "maxRunCadence": 187.0,
+            "maxVerticalSpeed": 1.800048828125,
+            "lapIndex": 1,
+            "lengthDTOs": [],
+            "connectIQMeasurement": [],
+            "intensityType": "ACTIVE",
+            "messageIndex": 0
+          }
+        ],
+        "eventDTOs": [
+          {
+            "startTimeGMT": "2026-09-26T10:43:24.0",
+            "startTimeGMTDoubleValue": 1790419404000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-09-26T10:43:25.0",
+            "startTimeGMTDoubleValue": 1790419405000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-09-26T11:10:45.0",
+            "startTimeGMTDoubleValue": 1790421045000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          }
+        ]
+      },
+      "typedSplits": {
+        "activityId": 644185014,
+        "activityUUID": {
+          "uuid": "4784ae7e-4352-4289-aab0-751031fa3892"
+        },
+        "splits": []
+      },
+      "splitSummaries": {
+        "activityId": 644185014,
+        "activityUUID": {
+          "uuid": "4784ae7e-4352-4289-aab0-751031fa3892"
+        },
+        "splitSummaries": []
+      },
+      "exerciseSets": {
+        "activityId": 644185014,
+        "exerciseSets": null
+      }
+    }
+  },
+  {
+    "externalId": "644146607",
+    "name": "保山市 徒步",
+    "activityDate": "2026-09-26",
+    "durationSeconds": 3102,
+    "caloriesKcal": 106,
+    "startTimeLocal": "2026-09-26 16:45:37",
+    "startTimeGmt": "2026-09-26 08:45:37",
+    "activityType": "hiking",
+    "movingDurationSeconds": 725.0,
+    "elapsedDurationSeconds": 3101.639892578125,
+    "distanceMeters": 2439.72998046875,
+    "elevationGainMeters": 6.0,
+    "elevationLossMeters": 16.0,
+    "averageSpeedMps": 0.7870000004768372,
+    "maxSpeedMps": 16.32900047302246,
+    "averageHeartRateBpm": 96.0,
+    "maxHeartRateBpm": 129.0,
+    "bmrCaloriesKcal": 56.0,
+    "aerobicTrainingEffect": 0.20000000298023224,
+    "anaerobicTrainingEffect": 0.0,
+    "trainingLoad": 3.32257080078125,
+    "trainingEffectLabel": "UNKNOWN",
+    "averageRunningCadenceSpm": 11.0625,
+    "maxRunningCadenceSpm": 160.0,
+    "trainingDetails": {
+      "heartRateZones": [
+        {
+          "zoneNumber": 1,
+          "secsInZone": 1436.931,
+          "zoneLowBoundary": 97
+        },
+        {
+          "zoneNumber": 2,
+          "secsInZone": 30.0,
+          "zoneLowBoundary": 116
+        },
+        {
+          "zoneNumber": 3,
+          "secsInZone": 0.0,
+          "zoneLowBoundary": 135
+        },
+        {
+          "zoneNumber": 4,
+          "secsInZone": 0.0,
+          "zoneLowBoundary": 154
+        },
+        {
+          "zoneNumber": 5,
+          "secsInZone": 0.0,
+          "zoneLowBoundary": 174
+        }
+      ],
+      "splits": {
+        "activityId": 644146607,
+        "lapDTOs": [
+          {
+            "startTimeGMT": "2026-09-26T08:45:37.0",
+            "distance": 2439.73,
+            "duration": 3101.64,
+            "movingDuration": 725.0,
+            "elapsedDuration": 3101.64,
+            "elevationGain": 6.0,
+            "elevationLoss": 16.0,
+            "maxElevation": 1698.6,
+            "minElevation": 1685.6,
+            "averageSpeed": 0.7870000004768372,
+            "averageMovingSpeed": 3.3651448006465516,
+            "maxSpeed": 16.32900047302246,
+            "calories": 106.0,
+            "bmrCalories": 56.0,
+            "averageHR": 96.0,
+            "maxHR": 129.0,
+            "averageRunCadence": 11.0625,
+            "maxRunCadence": 160.0,
+            "maxVerticalSpeed": 0.40002441406250006,
+            "lapIndex": 1,
+            "lengthDTOs": [],
+            "connectIQMeasurement": [],
+            "intensityType": "ACTIVE",
+            "messageIndex": 0
+          }
+        ],
+        "eventDTOs": [
+          {
+            "startTimeGMT": "2026-09-26T08:45:36.0",
+            "startTimeGMTDoubleValue": 1790412336000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-09-26T08:45:37.0",
+            "startTimeGMTDoubleValue": 1790412337000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          }
+        ]
+      },
+      "typedSplits": {
+        "activityId": 644146607,
+        "activityUUID": {
+          "uuid": "e4c98bb4-4ea3-46c2-b307-5286ad0e45d4"
+        },
+        "splits": []
+      },
+      "splitSummaries": {
+        "activityId": 644146607,
+        "activityUUID": {
+          "uuid": "e4c98bb4-4ea3-46c2-b307-5286ad0e45d4"
+        },
+        "splitSummaries": []
+      },
+      "exerciseSets": {
+        "activityId": 644146607,
+        "exerciseSets": null
+      }
+    }
+  },
+  {
     "externalId": "642916794",
     "name": "力量训练",
     "activityDate": "2026-09-23",
