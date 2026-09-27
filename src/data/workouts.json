@@ -1,5 +1,173 @@
 [
   {
+    "externalId": "644447223",
+    "name": "保山市 徒步",
+    "activityDate": "2026-09-27",
+    "durationSeconds": 11748,
+    "caloriesKcal": 562,
+    "startTimeLocal": "2026-09-27 09:45:44",
+    "startTimeGmt": "2026-09-27 01:45:44",
+    "activityType": "hiking",
+    "movingDurationSeconds": 3175.0,
+    "elapsedDurationSeconds": 11750.169921875,
+    "distanceMeters": 5751.89990234375,
+    "elevationGainMeters": 311.0,
+    "elevationLossMeters": 296.0,
+    "averageSpeedMps": 0.4900000095367432,
+    "maxSpeedMps": 1.9309999942779543,
+    "averageHeartRateBpm": 120.0,
+    "maxHeartRateBpm": 176.0,
+    "bmrCaloriesKcal": 210.0,
+    "aerobicTrainingEffect": 3.0,
+    "anaerobicTrainingEffect": 1.899999976158142,
+    "trainingLoad": 111.733642578125,
+    "trainingEffectLabel": "AEROBIC_BASE",
+    "averageRunningCadenceSpm": 23.875,
+    "maxRunningCadenceSpm": 238.0,
+    "trainingDetails": {
+      "heartRateZones": [
+        {
+          "zoneNumber": 1,
+          "secsInZone": 3950.996,
+          "zoneLowBoundary": 97
+        },
+        {
+          "zoneNumber": 2,
+          "secsInZone": 2957.475,
+          "zoneLowBoundary": 116
+        },
+        {
+          "zoneNumber": 3,
+          "secsInZone": 1991.002,
+          "zoneLowBoundary": 135
+        },
+        {
+          "zoneNumber": 4,
+          "secsInZone": 1161.005,
+          "zoneLowBoundary": 154
+        },
+        {
+          "zoneNumber": 5,
+          "secsInZone": 19.002,
+          "zoneLowBoundary": 174
+        }
+      ],
+      "splits": {
+        "activityId": 644447223,
+        "lapDTOs": [
+          {
+            "startTimeGMT": "2026-09-27T01:45:44.0",
+            "distance": 4602.88,
+            "duration": 9853.065,
+            "movingDuration": 2350.0,
+            "elapsedDuration": 9855.066,
+            "elevationGain": 307.0,
+            "elevationLoss": 157.0,
+            "maxElevation": 2082.6,
+            "minElevation": 1794.0,
+            "averageSpeed": 0.46700000762939453,
+            "averageMovingSpeed": 1.9586722905585108,
+            "maxSpeed": 1.9309999942779543,
+            "calories": 501.0,
+            "bmrCalories": 176.0,
+            "averageHR": 123.0,
+            "maxHR": 176.0,
+            "averageRunCadence": 20.46875,
+            "maxRunCadence": 238.0,
+            "maxVerticalSpeed": 0.60009765625,
+            "lapIndex": 1,
+            "lengthDTOs": [],
+            "connectIQMeasurement": [],
+            "intensityType": "ACTIVE",
+            "messageIndex": 0
+          },
+          {
+            "startTimeGMT": "2026-09-27T04:29:59.0",
+            "distance": 1149.02,
+            "duration": 1895.104,
+            "movingDuration": 825.0,
+            "elapsedDuration": 1895.104,
+            "elevationGain": 4.0,
+            "elevationLoss": 139.0,
+            "maxElevation": 1959.4,
+            "minElevation": 1817.4,
+            "averageSpeed": 0.6060000061988831,
+            "averageMovingSpeed": 1.3927515388257576,
+            "maxSpeed": 1.493000030517578,
+            "calories": 61.0,
+            "bmrCalories": 34.0,
+            "averageHR": 103.0,
+            "maxHR": 144.0,
+            "averageRunCadence": 41.59375,
+            "maxRunCadence": 158.0,
+            "maxVerticalSpeed": 0.2000732421875,
+            "lapIndex": 2,
+            "lengthDTOs": [],
+            "connectIQMeasurement": [],
+            "intensityType": "ACTIVE",
+            "messageIndex": 1
+          }
+        ],
+        "eventDTOs": [
+          {
+            "startTimeGMT": "2026-09-27T01:45:43.0",
+            "startTimeGMTDoubleValue": 1790473543000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-09-27T01:45:44.0",
+            "startTimeGMTDoubleValue": 1790473544000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-09-27T04:29:55.0",
+            "startTimeGMTDoubleValue": 1790483395000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-09-27T04:29:57.0",
+            "startTimeGMTDoubleValue": 1790483397000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          }
+        ]
+      },
+      "typedSplits": {
+        "activityId": 644447223,
+        "activityUUID": {
+          "uuid": "e12e65af-3cd6-4655-87df-9758a7ed13bb"
+        },
+        "splits": []
+      },
+      "splitSummaries": {
+        "activityId": 644447223,
+        "activityUUID": {
+          "uuid": "e12e65af-3cd6-4655-87df-9758a7ed13bb"
+        },
+        "splitSummaries": []
+      },
+      "exerciseSets": {
+        "activityId": 644447223,
+        "exerciseSets": null
+      }
+    }
+  },
+  {
     "externalId": "644185014",
     "name": "保山市 徒步",
     "activityDate": "2026-09-26",
