@@ -1,5 +1,198 @@
 [
   {
+    "externalId": "648870135",
+    "name": "舞蹈健身",
+    "activityDate": "2026-10-09",
+    "durationSeconds": 3754,
+    "caloriesKcal": 340,
+    "startTimeLocal": "2026-10-09 20:10:54",
+    "startTimeGmt": "2026-10-09 12:10:54",
+    "activityType": "dance",
+    "movingDurationSeconds": 0.0,
+    "elapsedDurationSeconds": 3759.75390625,
+    "distanceMeters": 0.0,
+    "elevationGainMeters": 0.0,
+    "elevationLossMeters": 0.0,
+    "averageSpeedMps": 0.0,
+    "averageHeartRateBpm": 150.0,
+    "maxHeartRateBpm": 186.0,
+    "bmrCaloriesKcal": 67.0,
+    "aerobicTrainingEffect": 4.0,
+    "anaerobicTrainingEffect": 3.0999999046325684,
+    "trainingLoad": 238.9957733154297,
+    "trainingEffectLabel": "TEMPO",
+    "averageRunningCadenceSpm": 23.46875,
+    "maxRunningCadenceSpm": 243.0,
+    "trainingDetails": {
+      "heartRateZones": [
+        {
+          "zoneNumber": 1,
+          "secsInZone": 369.677,
+          "zoneLowBoundary": 97
+        },
+        {
+          "zoneNumber": 2,
+          "secsInZone": 391.487,
+          "zoneLowBoundary": 116
+        },
+        {
+          "zoneNumber": 3,
+          "secsInZone": 1206.773,
+          "zoneLowBoundary": 135
+        },
+        {
+          "zoneNumber": 4,
+          "secsInZone": 1210.707,
+          "zoneLowBoundary": 154
+        },
+        {
+          "zoneNumber": 5,
+          "secsInZone": 555.001,
+          "zoneLowBoundary": 174
+        }
+      ],
+      "splits": {
+        "activityId": 648870135,
+        "lapDTOs": [
+          {
+            "startTimeGMT": "2026-10-09T12:10:54.0",
+            "distance": 0.0,
+            "duration": 3606.396,
+            "movingDuration": 0.0,
+            "elapsedDuration": 3612.247,
+            "elevationGain": 0.0,
+            "elevationLoss": 0.0,
+            "maxElevation": 418.4,
+            "minElevation": 418.4,
+            "averageSpeed": 0.0,
+            "calories": 330.0,
+            "bmrCalories": 65.0,
+            "averageHR": 150.0,
+            "maxHR": 186.0,
+            "averageRunCadence": 23.421875,
+            "maxRunCadence": 243.0,
+            "maxVerticalSpeed": 0.0,
+            "lapIndex": 1,
+            "lengthDTOs": [],
+            "connectIQMeasurement": [
+              {
+                "appID": "6583ba3c-6148-499a-9ab8-fdab1dec3359",
+                "developerFieldNumber": 2,
+                "value": "1.0"
+              }
+            ],
+            "intensityType": "ACTIVE",
+            "messageIndex": 0
+          },
+          {
+            "startTimeGMT": "2026-10-09T13:11:06.0",
+            "distance": 0.0,
+            "duration": 147.507,
+            "movingDuration": 0.0,
+            "elapsedDuration": 147.507,
+            "elevationGain": 0.0,
+            "elevationLoss": 0.0,
+            "maxElevation": 418.4,
+            "minElevation": 418.4,
+            "averageSpeed": 0.0,
+            "calories": 10.0,
+            "bmrCalories": 3.0,
+            "averageHR": 149.0,
+            "maxHR": 169.0,
+            "averageRunCadence": 24.609375,
+            "maxRunCadence": 116.0,
+            "maxVerticalSpeed": 0.0,
+            "lapIndex": 2,
+            "lengthDTOs": [],
+            "connectIQMeasurement": [
+              {
+                "appID": "6583ba3c-6148-499a-9ab8-fdab1dec3359",
+                "developerFieldNumber": 2,
+                "value": "2.0"
+              }
+            ],
+            "intensityType": "ACTIVE",
+            "messageIndex": 1
+          }
+        ],
+        "eventDTOs": [
+          {
+            "startTimeGMT": "2026-10-09T12:10:53.0",
+            "startTimeGMTDoubleValue": 1791547853000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-10-09T12:10:54.0",
+            "startTimeGMTDoubleValue": 1791547854000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-10-09T12:11:34.0",
+            "startTimeGMTDoubleValue": 1791547894000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-10-09T12:11:37.0",
+            "startTimeGMTDoubleValue": 1791547897000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-10-09T13:11:02.0",
+            "startTimeGMTDoubleValue": 1791551462000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-10-09T13:11:05.0",
+            "startTimeGMTDoubleValue": 1791551465000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          }
+        ]
+      },
+      "typedSplits": {
+        "activityId": 648870135,
+        "activityUUID": {
+          "uuid": "0843f4d0-34fc-4643-ad03-d8b3a8ab8bb9"
+        },
+        "splits": []
+      },
+      "splitSummaries": {
+        "activityId": 648870135,
+        "activityUUID": {
+          "uuid": "0843f4d0-34fc-4643-ad03-d8b3a8ab8bb9"
+        },
+        "splitSummaries": []
+      },
+      "exerciseSets": {
+        "activityId": 648870135,
+        "exerciseSets": null
+      }
+    }
+  },
+  {
     "externalId": "646596583",
     "name": "迪庆藏族自治州 徒步",
     "activityDate": "2026-10-03",
