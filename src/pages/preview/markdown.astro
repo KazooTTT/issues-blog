@@ -1,0 +1,84 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { renderMarkdown } from '@/rendering/content';
+// This review page is available only in the local development server.
+if (import.meta.env.PROD) return Astro.redirect('/404/');
+const markdown = `好的排版，让文字有呼吸的空间。这里展示这次调整后的 **Markdown 阅读体验**：正文、标题、列表和代码都使用同一套节奏，中文与 English 可以自然地放在一起。
+
+## 01 · 从阅读开始
+
+一篇文章的美感，往往藏在细节里。适当的行宽，让视线轻松回到下一行；清楚的标题层级，让读者知道自己读到了哪里。长段落也应该舒适，不需要刻意放大每一个元素。
+
+这是第二个段落。我们保留博客原有的暖纸色与朱红点缀，正文使用清晰的系统字体，标题则使用宋体。你可以切换右上角的明暗主题，看看夜间阅读的效果。
+
+> 写作不一定要得出结论，能够准确记录当时的判断就已经足够。
+>
+> 留一点空白，让读者也参与思考。
+
+### 细节，也值得被认真对待
+
+普通文字、**重点信息**、*轻轻强调*，以及 ~~已经放下的想法~~，各有自己的位置。行内代码 \`renderMarkdown()\` 不必抢眼，却应该容易辨认。
+
+- 正文有稳定的行距和段落间距。
+- 列表保留清晰的缩进与层级。
+  - 嵌套项与主项保持紧密关联。
+  - 较长的内容换行后，依然保持对齐，便于连续阅读与快速浏览。
+- 链接使用细下划线，例如 [Gwern 的排版设计](https://gwern.net/design)。
+
+### 一段可以复制的代码
+
+\`\`\`typescript
+interface Article {
+  title: string;
+  body: string;
+}
+
+function readingTime(article: Article): number {
+  const characters = article.body.length;
+  return Math.max(1, Math.ceil(characters / 400));
+}
+\`\`\`
+
+## 02 · 结构化的信息
+
+表格使用浅色表头和轻分隔线。在手机上，较宽的表格可以单独横向滚动。
+
+| 元素 | 处理方式 | 阅读感受 |
+| :--- | :--- | :--- |
+| 正文 | 限制行宽，统一段落节奏 | 轻松连续阅读 |
+| 标题 | 宋体与渐进字号 | 便于定位结构 |
+| 引用 | 朱红边线与柔和底色 | 与正文自然区分 |
+| 代码 | 深色面板、语法高亮 | 技术内容清楚可读 |
+
+1. 先把想法完整写下来。
+2. 再调整顺序，让每段只讲一个重点。
+3. 最后检查链接、代码与引用。
+
+- [x] 调整段落与标题
+- [x] 优化表格与代码
+- [ ] 听听你的阅读感受
+
+<details><summary>展开看看：补充信息</summary>
+
+折叠内容适合放置附录或进一步解释，展开后仍然遵循正文的排版规则。
+
+</details>
+
+---
+
+#### 写在最后
+
+美观并不需要很多装饰。文字本身值得被认真呈现。这一版先从行宽、层级和留白开始。
+`;
+const html = await renderMarkdown(markdown);
+---
+<BaseLayout title="Markdown 排版预览">
+  <article class="post">
+    <header class="post-header">
+      <div class="post-kicker"><span>Typography / 本地预览</span></div>
+      <h1>让文字，慢慢展开。</h1>
+      <div class="post-meta"><span>Markdown 排版样张</span><span>中文 · 代码 · 表格 · 引用</span></div>
+    </header>
+    <div class="prose post-body" set:html={html} />
+  </article>
+</BaseLayout>

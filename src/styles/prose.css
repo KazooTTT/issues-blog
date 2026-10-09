@@ -1,0 +1,72 @@
+/* Reading styles: a quiet, bounded column with consistent vertical rhythm. */
+.post { max-width: 780px; margin-inline: auto; }
+.post + .discussion { max-width: 780px; margin-inline: auto; }
+.post-header h1 { font-size: clamp(34px, 4.5vw, 52px); line-height: 1.4; letter-spacing: -.025em; text-wrap: balance; }
+.prose {
+  font-family: var(--sans); font-size: 17px; line-height: 1.9;
+  color: color-mix(in srgb, var(--ink) 92%, var(--muted));
+  overflow-wrap: break-word;
+}
+.prose > :first-child { margin-top: 0; }
+.prose > :last-child { margin-bottom: 0; }
+.prose p { margin-block: 1.25em; }
+.prose :is(h1, h2, h3, h4, h5, h6) {
+  color: var(--ink); font-family: var(--serif); font-weight: 700;
+  line-height: 1.5; scroll-margin-top: 32px; text-wrap: balance;
+}
+.prose h1 { margin: 2.2em 0 .85em; font-size: 2em; }
+.prose h2 { margin: 2.5em 0 .9em; padding-bottom: .4em; border-bottom: 1px solid var(--line); font-size: 1.65em; }
+.prose h3 { margin: 2em 0 .7em; font-size: 1.3em; }
+.prose :is(h4, h5, h6) { margin: 1.8em 0 .6em; font-size: 1.05em; }
+.prose :is(h1, h2, h3, h4, h5, h6) + :is(p, ul, ol) { margin-top: .6em; }
+.prose strong { color: var(--ink); font-weight: 650; }
+.prose a { text-decoration-color: color-mix(in srgb, var(--accent-dark) 40%, transparent); text-underline-offset: .22em; }
+.prose a:hover { text-decoration-color: currentColor; }
+.prose a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.prose :is(ul, ol) { margin-block: 1.3em; padding-left: 1.6em; }
+.prose li { padding-left: .25em; margin-block: .4em; }
+.prose li::marker { color: var(--accent-dark); font-weight: 600; }
+.prose li > :is(ul, ol) { margin-block: .45em; }
+.prose li > p { margin-block: .6em; }
+.prose .contains-task-list { list-style: none; padding-left: .2em; }
+.prose input[type="checkbox"] { accent-color: var(--accent-dark); margin-right: .5em; }
+.prose blockquote {
+  margin: 1.8em 0; padding: .7em 1.4em; border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0; background: color-mix(in srgb, var(--accent) 5%, var(--paper));
+  font-family: var(--serif); font-size: 1.06em; color: var(--muted);
+}
+.prose blockquote > :first-child { margin-top: .2em; }
+.prose blockquote > :last-child { margin-bottom: .2em; }
+.prose :is(code, pre, kbd) { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
+.prose code:not(pre code) {
+  padding: .16em .4em; border: 1px solid color-mix(in srgb, var(--line) 65%, transparent);
+  background: color-mix(in srgb, var(--paper-deep) 65%, var(--paper)); color: var(--accent-dark);
+  border-radius: 5px; font-size: .84em; overflow-wrap: anywhere;
+}
+.prose pre { margin: 1.8em 0; padding: 48px 24px 24px; border: 1px solid #ffffff15; border-radius: 10px; font-size: 13px; line-height: 1.8; }
+.prose pre code { display: block; width: max-content; min-width: 100%; }
+.prose pre[data-language]::before { top: 14px; left: 24px; }
+.prose kbd { padding: .15em .4em; border: 1px solid var(--line); border-bottom-width: 3px; border-radius: 4px; font-size: .8em; background: var(--card); }
+.prose .table-scroll { overflow-x: auto; margin: 1.8em 0; border: 1px solid var(--line); border-radius: 8px; }
+.prose table { width: 100%; margin: 0; border: 0; font-size: 14px; line-height: 1.7; }
+.prose :is(th, td) { padding: 12px 16px; border: 0; border-bottom: 1px solid var(--line); min-width: 120px; }
+.prose th { color: var(--ink); background: var(--paper-deep); font-weight: 600; }
+.prose tr:nth-child(even) td { background: var(--card); }
+.prose tbody tr:last-child td { border-bottom: 0; }
+.prose hr { height: 0; margin: 3em auto; width: 64px; border: 0; border-top: 2px solid var(--line); }
+.prose details { margin: 1.8em 0; padding: 16px 20px; border-radius: 8px; }
+.prose details[open] > summary { margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+.prose summary { font-size: .9em; }
+.prose .mermaid-diagram { border-radius: 10px; }
+.post-body { padding-block: 44px 60px; }
+.post-references { font-size: 14px; }
+.post-references h2 { margin-top: 0; font-size: 20px; }
+.comment-body { font-size: 15px; }
+@media (max-width: 760px) {
+  .prose { font-size: 16px; line-height: 1.85; }
+  .prose h2 { font-size: 1.5em; }
+  .prose pre { padding-inline: 16px; font-size: 12px; }
+  .prose pre[data-language]::before { left: 16px; }
+  .prose blockquote { padding-inline: 1em; }
+  .post-body { padding-block: 30px 40px; }
+}

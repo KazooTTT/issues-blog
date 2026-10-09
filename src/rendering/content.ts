@@ -114,6 +114,26 @@ function labelCodeLanguages() {
   };
 }
 
+function wrapTables() {
+  return (tree: HastNode) => {
+    function visit(node: HastNode): void {
+      node.children = node.children?.map((child) => {
+        if (child.tagName === "table") {
+          return {
+            type: "element",
+            tagName: "div",
+            properties: { className: ["table-scroll"] },
+            children: [child],
+          };
+        }
+        visit(child);
+        return child;
+      });
+    }
+    visit(tree);
+  };
+}
+
 export async function renderMarkdown(markdown: string): Promise<string> {
   return (await renderMarkdownDocument(markdown)).html;
 }
@@ -192,6 +212,7 @@ export async function renderMarkdownDocument(
       ],
     })
     .use(labelCodeLanguages)
+    .use(wrapTables)
     .use(rehypeStringify)
     .process(markdown);
 
