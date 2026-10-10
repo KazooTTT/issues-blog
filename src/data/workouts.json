@@ -1,5 +1,150 @@
 [
   {
+    "externalId": "649246428",
+    "name": "舞蹈健身",
+    "activityDate": "2026-10-10",
+    "durationSeconds": 4020,
+    "caloriesKcal": 331,
+    "startTimeLocal": "2026-10-10 20:05:14",
+    "startTimeGmt": "2026-10-10 12:05:14",
+    "activityType": "dance",
+    "movingDurationSeconds": 0.0,
+    "elapsedDurationSeconds": 4021.35595703125,
+    "distanceMeters": 0.0,
+    "elevationGainMeters": 0.0,
+    "elevationLossMeters": 0.0,
+    "averageSpeedMps": 0.0,
+    "averageHeartRateBpm": 145.0,
+    "maxHeartRateBpm": 190.0,
+    "bmrCaloriesKcal": 72.0,
+    "aerobicTrainingEffect": 3.5,
+    "anaerobicTrainingEffect": 2.700000047683716,
+    "trainingLoad": 183.7395782470703,
+    "trainingEffectLabel": "SPEED",
+    "averageRunningCadenceSpm": 14.265625,
+    "maxRunningCadenceSpm": 237.0,
+    "trainingDetails": {
+      "heartRateZones": [
+        {
+          "zoneNumber": 1,
+          "secsInZone": 301.001,
+          "zoneLowBoundary": 97
+        },
+        {
+          "zoneNumber": 2,
+          "secsInZone": 710.365,
+          "zoneLowBoundary": 116
+        },
+        {
+          "zoneNumber": 3,
+          "secsInZone": 1705.505,
+          "zoneLowBoundary": 135
+        },
+        {
+          "zoneNumber": 4,
+          "secsInZone": 908.985,
+          "zoneLowBoundary": 154
+        },
+        {
+          "zoneNumber": 5,
+          "secsInZone": 355.999,
+          "zoneLowBoundary": 174
+        }
+      ],
+      "splits": {
+        "activityId": 649246428,
+        "lapDTOs": [
+          {
+            "startTimeGMT": "2026-10-10T12:05:14.0",
+            "distance": 0.0,
+            "duration": 4019.844,
+            "movingDuration": 0.0,
+            "elapsedDuration": 4021.356,
+            "elevationGain": 0.0,
+            "elevationLoss": 0.0,
+            "maxElevation": 415.4,
+            "minElevation": 415.4,
+            "averageSpeed": 0.0,
+            "calories": 331.0,
+            "bmrCalories": 72.0,
+            "averageHR": 145.0,
+            "maxHR": 190.0,
+            "averageRunCadence": 14.265625,
+            "maxRunCadence": 237.0,
+            "maxVerticalSpeed": 0.0,
+            "lapIndex": 1,
+            "lengthDTOs": [],
+            "connectIQMeasurement": [
+              {
+                "appID": "6583ba3c-6148-499a-9ab8-fdab1dec3359",
+                "developerFieldNumber": 2,
+                "value": "1.0"
+              }
+            ],
+            "intensityType": "ACTIVE",
+            "messageIndex": 0
+          }
+        ],
+        "eventDTOs": [
+          {
+            "startTimeGMT": "2026-10-10T12:05:13.0",
+            "startTimeGMTDoubleValue": 1791633913000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-10-10T12:05:14.0",
+            "startTimeGMTDoubleValue": 1791633914000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-10-10T13:09:20.0",
+            "startTimeGMTDoubleValue": 1791637760000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          },
+          {
+            "startTimeGMT": "2026-10-10T13:09:21.0",
+            "startTimeGMTDoubleValue": 1791637761000.0,
+            "sectionTypeDTO": {
+              "id": 4,
+              "key": "timerTrigger",
+              "sectionTypeKey": "TIMER_TRIGGER"
+            }
+          }
+        ]
+      },
+      "typedSplits": {
+        "activityId": 649246428,
+        "activityUUID": {
+          "uuid": "93ddb155-1b65-4675-bb32-c247898967e3"
+        },
+        "splits": []
+      },
+      "splitSummaries": {
+        "activityId": 649246428,
+        "activityUUID": {
+          "uuid": "93ddb155-1b65-4675-bb32-c247898967e3"
+        },
+        "splitSummaries": []
+      },
+      "exerciseSets": {
+        "activityId": 649246428,
+        "exerciseSets": null
+      }
+    }
+  },
+  {
     "externalId": "648870135",
     "name": "舞蹈健身",
     "activityDate": "2026-10-09",
