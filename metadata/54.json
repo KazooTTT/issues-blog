@@ -16,7 +16,7 @@
     "runner",
     "ts-node",
     "vscode",
-    "AI 写作为主"
+    "人工写作为主"
   ],
   "labelEvents": [
     {
@@ -54,6 +54,10 @@
     {
       "label": "AI 写作为主",
       "createdAt": "2026-10-12T03:23:50Z"
+    },
+    {
+      "label": "人工写作为主",
+      "createdAt": "2026-10-12T03:39:16Z"
     }
   ],
   "reactions": [],
