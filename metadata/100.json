@@ -11,7 +11,8 @@
     "blog:publish",
     "开源",
     "笔记",
-    "obsidian"
+    "obsidian",
+    "AI 写作为主"
   ],
   "labelEvents": [
     {
@@ -29,6 +30,10 @@
     {
       "label": "obsidian",
       "createdAt": "2026-08-31T06:00:22Z"
+    },
+    {
+      "label": "AI 写作为主",
+      "createdAt": "2026-10-12T03:27:12Z"
     }
   ],
   "reactions": [],

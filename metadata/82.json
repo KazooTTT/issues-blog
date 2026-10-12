@@ -13,7 +13,8 @@
     "OPC",
     "现实生活",
     "个人思考",
-    "blog:featured"
+    "blog:featured",
+    "人工写作为主"
   ],
   "labelEvents": [
     {
@@ -39,6 +40,10 @@
     {
       "label": "blog:featured",
       "createdAt": "2026-07-29T07:46:34Z"
+    },
+    {
+      "label": "人工写作为主",
+      "createdAt": "2026-10-12T03:27:13Z"
     }
   ],
   "reactions": [],

@@ -13,7 +13,8 @@
     "react",
     "react-router",
     "vite",
-    "vite-plugin-pages"
+    "vite-plugin-pages",
+    "人工写作为主"
   ],
   "labelEvents": [
     {

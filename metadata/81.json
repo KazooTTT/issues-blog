@@ -10,7 +10,8 @@
   "labels": [
     "blog:publish",
     "提示词",
-    "备份"
+    "备份",
+    "AI 写作为主"
   ],
   "labelEvents": [
     {
@@ -24,6 +25,10 @@
     {
       "label": "备份",
       "createdAt": "2026-07-24T10:23:49Z"
+    },
+    {
+      "label": "AI 写作为主",
+      "createdAt": "2026-10-12T03:27:13Z"
     }
   ],
   "reactions": [],
