@@ -1,6 +1,8 @@
 name: Build and deploy blog
 
 on:
+  schedule:
+    - cron: "0 2 * * *"
   workflow_dispatch:
   push:
     branches: [main]
@@ -41,6 +43,9 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
       - run: pnpm build
+        env:
+          GA4_SERVICE_ACCOUNT_JSON: ${{ secrets.GA4_SERVICE_ACCOUNT_JSON }}
+          GA4_PROPERTY_ID: ${{ vars.GA4_PROPERTY_ID }}
       - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v5
         with:

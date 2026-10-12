@@ -1,5 +1,8 @@
 ---
 import type { Post } from "@/domain/types";
+import PageStatistics from "@/components/PageStatistics.astro";
+import WritingSourceBadge from "@/components/WritingSourceBadge.astro";
+import { topicTags } from "@/utils/writing-source";
 import { formatDate } from "@/utils/presentation";
 import { sitePath } from "@/utils/presentation";
 
@@ -14,12 +17,13 @@ const { posts } = Astro.props;
   {posts.map((post) => (
     <li>
       <a href={sitePath(post.permalink)}>
-        <span class="post-list-title">{post.title}</span>
+        <span class="post-list-title">{post.title}<WritingSourceBadge tags={post.tags} /></span>
         <time datetime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
       </a>
       <div class="tag-row">
-        {post.tags.map((tag) => <a class="tag" href={sitePath(`/tags/${encodeURIComponent(tag)}/`)}>{tag}</a>)}
+        {topicTags(post.tags).map((tag) => <a class="tag" href={sitePath(`/tags/${encodeURIComponent(tag)}/`)}>{tag}</a>)}
       </div>
+      <PageStatistics path={post.permalink} compact />
     </li>
   ))}
 </ol>

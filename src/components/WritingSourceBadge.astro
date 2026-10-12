@@ -1,0 +1,39 @@
+---
+import { writingSource } from "@/utils/writing-source";
+
+interface Props {
+  tags: string[];
+}
+
+const source = writingSource(Astro.props.tags);
+---
+
+{source && (
+  <span class:list={["writing-source", { "writing-source-ai": source === "AI 写作为主" }]}
+    title={`写作来源：${source}`} aria-label={`写作来源：${source}`}>
+    {source === "AI 写作为主" ? "AI 主写" : "人工主写"}
+  </span>
+)}
+
+<style>
+  .writing-source {
+    display: inline-block;
+    margin-inline-start: .6em;
+    padding: .2em .55em;
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    background: var(--card);
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+  .writing-source-ai {
+    border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
+    background: color-mix(in srgb, var(--accent) 10%, var(--card));
+    color: var(--accent-dark);
+  }
+</style>

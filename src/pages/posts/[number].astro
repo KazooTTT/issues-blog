@@ -1,6 +1,9 @@
 ---
 import Discussion from "@/components/Discussion.astro";
 import ReactionBar from "@/components/ReactionBar.astro";
+import PageStatistics from "@/components/PageStatistics.astro";
+import WritingSourceBadge from "@/components/WritingSourceBadge.astro";
+import { topicTags } from "@/utils/writing-source";
 import { getSiteContent } from "@/data/site-content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import {
@@ -32,12 +35,12 @@ const { html, references } = await renderMarkdownDocument(post.body, Astro.site)
       <div class="post-kicker">
         <span>Issue #{post.number}</span>
         <nav class="post-tags" aria-label="文章标签">
-          {post.tags.map((tag: string) => (
+          {topicTags(post.tags).map((tag: string) => (
             <a class="tag" href={sitePath(`/tags/${encodeURIComponent(tag)}/`)}>#{tag}</a>
           ))}
         </nav>
       </div>
-      <h1>{post.title}</h1>
+      <h1>{post.title}<WritingSourceBadge tags={post.tags} /></h1>
       <div class="post-meta">
         <span>发布于 <time datetime={post.publishedAt}>{formatDate(post.publishedAt)}</time></span>
         {post.updatedAt !== post.publishedAt && (
@@ -45,6 +48,7 @@ const { html, references } = await renderMarkdownDocument(post.body, Astro.site)
         )}
         <a href={post.url}>查看源 Issue ↗</a>
       </div>
+      <PageStatistics path={post.permalink} />
     </header>
     <div class="prose post-body" set:html={html} />
     {references.length > 0 && (

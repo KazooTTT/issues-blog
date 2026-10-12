@@ -27,24 +27,27 @@ warnings.forEach((warning) => console.warn(`[content] ${warning}`));
     <AvatarOrbit />
   </section>
 
-  {featured.length > 0 && (
-    <section class="home-section">
-      <div class="section-heading">
-        <h2>从这里开始</h2>
-        <span>Start here</span>
-      </div>
-      <FeaturedPosts posts={featured} />
-    </section>
-  )}
+  <div class:list={["home-editorial", { "home-editorial-single": featured.length === 0 }]}>
+    {featured.length > 0 && (
+      <section class="home-section home-featured">
+        <div class="section-heading">
+          <h2>从这里开始</h2>
+          <span>Start here</span>
+        </div>
+        <FeaturedPosts posts={featured} />
+      </section>
+    )}
 
-  <section class="home-section">
-    <div class="section-heading">
-      <h2>最近更新</h2>
-      <span>Latest posts</span>
-    </div>
-    <PostList posts={latestPosts} />
-    <a class="view-all" href={sitePath("/archive/")}>查看全部文章 →</a>
-  </section>
+    <section class="home-section home-latest">
+      <div class="section-heading">
+        <h2>最近更新</h2>
+        <span>Latest posts</span>
+      </div>
+      <PostList posts={latestPosts} />
+      <a class="view-all" href={sitePath("/archive/")}>查看全部文章 →</a>
+    </section>
+
+  </div>
 
   <section class="home-section social-section">
     <div class="section-heading">

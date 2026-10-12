@@ -41,7 +41,7 @@ const articleActive =
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="theme-color" content="#f3eee4" />
+    <meta name="theme-color" content="#f8f9fd" />
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
     <link rel="icon" href={sitePath("/favicon.svg")} type="image/svg+xml" />
@@ -82,7 +82,7 @@ const articleActive =
           }
           document
             .querySelector('meta[name="theme-color"]')
-            ?.setAttribute("content", theme === "dark" ? "#191917" : "#f3eee4");
+            ?.setAttribute("content", theme === "dark" ? "#15181e" : "#f8f9fd");
         };
         const save = (theme) => {
           try {

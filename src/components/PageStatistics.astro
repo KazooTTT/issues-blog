@@ -1,0 +1,27 @@
+---
+import { getPageAnalytics, statisticsForPath } from "@/data/page-analytics";
+import { sitePath } from "@/utils/presentation";
+
+interface Props { path: string; compact?: boolean }
+const { path, compact = false } = Astro.props;
+const analytics = await getPageAnalytics();
+const statistics = analytics && statisticsForPath(analytics, sitePath(path));
+const number = new Intl.NumberFormat("zh-CN");
+---
+
+{analytics && statistics && (
+  <div class:list={["page-statistics", { "is-compact": compact }]} aria-label="文章访问统计">
+    <span class="statistics-period">近 30 天</span>
+    <span><strong>{number.format(statistics.views)}</strong> 次浏览</span>
+    <span><strong>{number.format(statistics.users)}</strong> 位访客</span>
+    {!compact && <span class="statistics-date">统计截至 {analytics.throughDate} · GA4</span>}
+  </div>
+)}
+
+<style>
+  .page-statistics { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 18px; margin-top: 18px; color: var(--muted); font-size: 13px; line-height: 1.8; }
+  strong { color: var(--ink); font-variant-numeric: tabular-nums; font-weight: 600; }
+  .statistics-period { font-size: 12px; }
+  .statistics-date { font-size: 12px; }
+  .is-compact { margin-top: 8px; gap: 4px 12px; font-size: 12px; }
+</style>

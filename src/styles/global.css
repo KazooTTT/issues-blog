@@ -1,29 +1,29 @@
+/* Editorial palette shared by every page. */
 :root {
   color-scheme: light;
-  --paper: #f3eee4;
-  --paper-deep: #e9e1d3;
-  --ink: #20201d;
-  --muted: #706b62;
-  --line: #d6ccbb;
-  --accent: #d95d39;
-  --accent-dark: #aa3e24;
-  --card: rgba(255, 252, 244, 0.72);
-  --shadow: 0 24px 80px rgba(59, 45, 30, 0.09);
-  --serif: "Songti SC", "STSong", "Noto Serif CJK SC", serif;
+  --paper: #f8f9fd;
+  --paper-deep: #edf0f8;
+  --ink: #292b38;
+  --muted: #727587;
+  --line: #e3e5ef;
+  --accent: #7863ce;
+  --accent-dark: #6250b4;
+  --card: #ffffff;
+  --shadow: 0 12px 34px rgb(32 36 44 / .08);
   --sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+  --serif: var(--sans);
 }
-
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --paper: #191917;
-  --paper-deep: #22221e;
-  --ink: #eee8dc;
-  --muted: #aaa397;
-  --line: #3b3933;
-  --accent: #ef7652;
-  --accent-dark: #ff9878;
-  --card: rgba(39, 38, 34, 0.76);
-  --shadow: 0 24px 80px rgba(0, 0, 0, 0.22);
+  --paper: #15181e;
+  --paper-deep: #20252e;
+  --ink: #eef1f6;
+  --muted: #a8b1c0;
+  --line: #343c49;
+  --accent: #b9a8ff;
+  --accent-dark: #b9a8ff;
+  --card: #1b2028;
+  --shadow: 0 12px 34px rgb(0 0 0 / .2);
 }
 
 @view-transition {

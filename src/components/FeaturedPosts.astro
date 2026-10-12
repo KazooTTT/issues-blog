@@ -1,5 +1,8 @@
 ---
 import type { Post } from "@/domain/types";
+import PageStatistics from "@/components/PageStatistics.astro";
+import WritingSourceBadge from "@/components/WritingSourceBadge.astro";
+import { topicTags } from "@/utils/writing-source";
 import { deriveExcerpt } from "@/rendering/content";
 import { formatDate, sitePath } from "@/utils/presentation";
 
@@ -16,13 +19,14 @@ const { posts } = Astro.props;
       <span class="featured-index">{String(index + 1).padStart(2, "0")}</span>
       <div class="featured-content">
         <span class="eyebrow">精选</span>
-        <h2><a href={sitePath(post.permalink)}>{post.title}</a></h2>
+        <h2><a href={sitePath(post.permalink)}>{post.title}<WritingSourceBadge tags={post.tags} /></a></h2>
         <p>{deriveExcerpt(post.body)}</p>
       </div>
       <footer class="featured-meta">
         <time datetime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
-        <span>{post.tags.join(" / ")}</span>
+        <span>{topicTags(post.tags).join(" / ")}</span>
       </footer>
+      <PageStatistics path={post.permalink} compact />
     </article>
   ))}
 </section>

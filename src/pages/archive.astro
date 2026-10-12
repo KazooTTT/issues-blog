@@ -1,4 +1,5 @@
 ---
+import WritingSourceBadge from "@/components/WritingSourceBadge.astro";
 import { getSiteContent } from "@/data/site-content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { archiveDateParts, sitePath } from "@/utils/presentation";
@@ -69,7 +70,7 @@ const archive = Object.keys(postsByYear)
                 {monthPosts.map(({ post, date }) => (
                   <li>
                     <time datetime={post.publishedAt}>{date.day}日</time>
-                    <a href={sitePath(post.permalink)}>{post.title}</a>
+                    <a href={sitePath(post.permalink)}>{post.title}<WritingSourceBadge tags={post.tags} /></a>
                   </li>
                 ))}
               </ol>

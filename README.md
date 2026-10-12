@@ -67,6 +67,22 @@ pnpm migrate:d1 \
 
 设计与领域决策见 [docs/MVP.md](docs/MVP.md)、[CONTEXT.md](CONTEXT.md) 和 [docs/adr](docs/adr)。
 
+## 文章访问统计
+
+文章详情、首页文章列表和精选区展示 GA4 的近 30 天浏览量（PV）与访客数
+（`totalUsers`）。统计为 GA4 媒体资源时区内、截至昨天的 30 天，按当前站点域名
+及页面路径查询；访客数由 GA4 对整个时间范围去重，不累加每日 UV。
+
+Actions Secret `GA4_SERVICE_ACCOUNT_JSON` 保存服务账号的完整 JSON 凭据，
+Repository Variable `GA4_PROPERTY_ID` 保存数字媒体资源 ID。服务账号需要该
+GA4 媒体资源的查看者权限，其 Cloud 项目需要启用 Google Analytics Data API。
+凭据仅在构建进程使用，不进入公开页面。每天北京时间 10:00 定时重建，文章变更
+及手动部署也会刷新统计；GA4 自身的数据处理可能有延迟。
+
+未配置凭据或查询失败时隐藏统计，文章仍可正常构建。有效报表中未出现的路径
+显示 0；未配置凭据的本地演示不显示统计。为避免重复访客相加，带尾斜杠路径
+优先匹配，无该记录时才匹配不带尾斜杠的路径。
+
 ## 站点自有数据
 
 GitHub Issues 负责文章、About、评论和运动复盘。友链保存在

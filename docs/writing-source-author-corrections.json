@@ -1,0 +1,115 @@
+[
+  {
+    "number": 100,
+    "source": "AI 写作为主",
+    "confirmedBy": "作者",
+    "originalLabels": [
+      "blog:publish",
+      "开源",
+      "笔记",
+      "obsidian"
+    ],
+    "verified": true
+  },
+  {
+    "number": 82,
+    "source": "人工写作为主",
+    "confirmedBy": "作者",
+    "originalLabels": [
+      "blog:publish",
+      "ai",
+      "OPC",
+      "现实生活",
+      "个人思考",
+      "blog:featured"
+    ],
+    "verified": true
+  },
+  {
+    "number": 81,
+    "source": "AI 写作为主",
+    "confirmedBy": "作者",
+    "originalLabels": [
+      "blog:publish",
+      "提示词",
+      "备份"
+    ],
+    "verified": true
+  },
+  {
+    "number": 77,
+    "source": "人工写作为主",
+    "confirmedBy": "作者",
+    "originalLabels": [
+      "blog:publish",
+      "摄影",
+      "健身",
+      "生活复盘",
+      "舞蹈",
+      "学习"
+    ],
+    "verified": true
+  },
+  {
+    "number": 56,
+    "source": "人工写作为主",
+    "confirmedBy": "作者",
+    "originalLabels": [
+      "blog:publish",
+      "笔记",
+      "macos",
+      "大模型",
+      "听写",
+      "文本润色",
+      "语音输入"
+    ],
+    "verified": true
+  },
+  {
+    "number": 55,
+    "source": "人工写作为主",
+    "confirmedBy": "作者",
+    "originalLabels": [
+      "blog:publish",
+      "随笔",
+      "离职",
+      "思考",
+      "vj"
+    ],
+    "verified": true
+  },
+  {
+    "number": 48,
+    "source": "人工写作为主",
+    "confirmedBy": "作者",
+    "originalLabels": [
+      "blog:publish",
+      "笔记",
+      "obsidian",
+      "astro",
+      "remark",
+      "wiki-link"
+    ],
+    "verified": true
+  },
+  {
+    "number": 43,
+    "source": "人工写作为主",
+    "confirmedBy": "作者",
+    "originalLabels": [
+      "blog:publish",
+      "笔记",
+      "react",
+      "react-router",
+      "vite",
+      "vite-plugin-pages"
+    ],
+    "verified": true
+  },
+  {
+    "number": 73,
+    "source": "AI 写作为主",
+    "confirmedBy": "作者",
+    "operation": "添加来源标签"
+  }
+]

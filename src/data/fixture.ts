@@ -25,6 +25,7 @@ export const fixtureIssues: SourceIssue[] = [
       labels: [
         "blog:publish",
         ...(index < 2 ? ["blog:featured"] : []),
+        ...(index < 4 ? [index % 2 === 0 ? "人工写作为主" : "AI 写作为主"] : []),
         topics[index % topics.length]!,
         ...(index === 0 ? ["周报"] : []),
         ...(index === 1 ? ["月报"] : []),
