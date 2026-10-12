@@ -1,0 +1,46 @@
+<label class="writing-filter" title="仅展示标记为「人工写作为主」的文章">
+  <input type="checkbox" role="switch" data-writing-filter />
+  <span class="writing-filter-track" aria-hidden="true"></span>
+  <span>只看人工</span>
+</label>
+
+<script>
+  const key = "human-writing-only";
+  const toggle = document.querySelector<HTMLInputElement>("[data-writing-filter]");
+  const read = () => {
+    try { return localStorage.getItem(key) === "true"; }
+    catch { return document.documentElement.dataset.humanWritingOnly === "true"; }
+  };
+  const apply = (enabled: boolean) => {
+    document.documentElement.dataset.humanWritingOnly = String(enabled);
+    if (toggle) toggle.checked = enabled;
+    document.querySelectorAll<HTMLElement>("[data-writing-group]").forEach((group) => {
+      group.hidden = enabled && !group.querySelector('[data-writing-source="人工写作为主"]');
+    });
+    document.querySelectorAll<HTMLElement>("[data-writing-list]").forEach((list) => {
+      const empty = list.nextElementSibling;
+      if (empty instanceof HTMLElement && empty.classList.contains("writing-filter-empty")) {
+        empty.hidden = !enabled || !!list.querySelector('[data-writing-source="人工写作为主"]');
+      }
+    });
+  };
+  toggle?.addEventListener("change", () => {
+    apply(toggle.checked);
+    try { localStorage.setItem(key, String(toggle.checked)); } catch {}
+  });
+  window.addEventListener("pageshow", () => apply(read()));
+  window.addEventListener("storage", (event) => {
+    if (event.key === key || event.key === null) apply(read());
+  });
+  apply(read());
+</script>
+
+<style>
+  .writing-filter { display: inline-flex; align-items: center; gap: 8px; position: relative; cursor: pointer; white-space: nowrap; font-size: 13px; min-height: 44px; }
+  input { position: absolute; width: 100%; height: 100%; opacity: 0; margin: 0; cursor: pointer; }
+  .writing-filter-track { width: 30px; height: 18px; border-radius: 20px; background: var(--muted); padding: 3px; transition: background .15s; }
+  .writing-filter-track::after { content: ""; display: block; width: 12px; height: 12px; border-radius: 50%; background: var(--paper); transition: transform .15s; }
+  input:checked + .writing-filter-track { background: var(--accent-dark); }
+  input:checked + .writing-filter-track::after { transform: translateX(12px); }
+  input:focus-visible + .writing-filter-track { outline: 2px solid var(--accent-dark); outline-offset: 4px; }
+</style>

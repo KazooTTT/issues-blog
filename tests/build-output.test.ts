@@ -20,6 +20,20 @@ describe("static blog build", () => {
     });
   }, 30_000);
 
+  it("marks writing sources consistently for the persisted navigation filter", () => {
+    const home = readFileSync(resolve(root, "dist/index.html"), "utf8");
+    const archive = readFileSync(resolve(root, "dist/archive/index.html"), "utf8");
+    for (const html of [home, archive]) {
+      expect(html).toContain('role="switch"');
+      expect(html).toContain("只看人工");
+      expect(html).toContain('data-writing-source="人工写作为主"');
+      expect(html).toContain('data-writing-source="AI 写作为主"');
+      expect(html).toContain('data-writing-source="unknown"');
+      expect(html).toContain("暂无以人工写作为主的文章。");
+    }
+    expect(archive).toContain("data-writing-group");
+  });
+
   it("provides a popular page with an honest fallback and groups navigation into three dropdowns", () => {
     const popular = readFileSync(resolve(root, "dist/popular/index.html"), "utf8");
     expect(popular).toContain("热门文章");

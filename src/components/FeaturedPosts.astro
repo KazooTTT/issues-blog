@@ -2,7 +2,7 @@
 import type { Post } from "@/domain/types";
 import PageStatistics from "@/components/PageStatistics.astro";
 import WritingSourceBadge from "@/components/WritingSourceBadge.astro";
-import { topicTags } from "@/utils/writing-source";
+import { topicTags, writingSource } from "@/utils/writing-source";
 import { deriveExcerpt } from "@/rendering/content";
 import { formatDate, sitePath } from "@/utils/presentation";
 
@@ -13,9 +13,9 @@ interface Props {
 const { posts } = Astro.props;
 ---
 
-<section class="featured-list" aria-label="精选文章">
+<section class="featured-list" aria-label="精选文章" data-writing-list>
   {posts.map((post, index) => (
-    <article class="featured-item">
+    <article class="featured-item" data-writing-source={writingSource(post.tags) ?? "unknown"}>
       <span class="featured-index">{String(index + 1).padStart(2, "0")}</span>
       <div class="featured-content">
         <span class="eyebrow">精选</span>
@@ -34,3 +34,4 @@ const { posts } = Astro.props;
     </article>
   ))}
 </section>
+<p class="writing-filter-empty" role="status" hidden>暂无以人工写作为主的精选文章。</p>

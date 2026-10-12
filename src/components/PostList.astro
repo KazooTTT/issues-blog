@@ -2,7 +2,7 @@
 import type { Post } from "@/domain/types";
 import PageStatistics from "@/components/PageStatistics.astro";
 import WritingSourceBadge from "@/components/WritingSourceBadge.astro";
-import { topicTags } from "@/utils/writing-source";
+import { topicTags, writingSource } from "@/utils/writing-source";
 import { formatDate } from "@/utils/presentation";
 import { sitePath } from "@/utils/presentation";
 
@@ -14,9 +14,9 @@ interface Props {
 const { posts, ranked = false } = Astro.props;
 ---
 
-<ol class="post-list">
+<ol class="post-list" data-writing-list>
   {posts.map((post, index) => (
-    <li>
+    <li data-writing-source={writingSource(post.tags) ?? "unknown"}>
       <a href={sitePath(post.permalink)}>
         <span class="post-list-title">{ranked && <span class="post-rank" aria-label={`第 ${index + 1} 名`}>{String(index + 1).padStart(2, "0")}</span>}{post.title}<WritingSourceBadge tags={post.tags} /></span>
         <time datetime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
@@ -28,6 +28,7 @@ const { posts, ranked = false } = Astro.props;
     </li>
   ))}
 </ol>
+<p class="writing-filter-empty" role="status" hidden>暂无以人工写作为主的文章。</p>
 
 <style>
   .post-rank { display: inline-block; margin-inline-end: 12px; color: var(--accent-dark); font-size: 14px; font-variant-numeric: tabular-nums; }

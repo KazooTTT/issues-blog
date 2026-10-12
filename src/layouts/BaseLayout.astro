@@ -1,5 +1,6 @@
 ---
 import { siteConfig } from "@/config";
+import WritingFilter from "@/components/WritingFilter.astro";
 import NavigationDropdown from "@/components/NavigationDropdown.astro";
 import Analytics from "@/components/Analytics.astro";
 import ContentEnhancements from "@/components/ContentEnhancements.astro";
@@ -116,6 +117,13 @@ const articleActive =
           y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
       })(window, document, "clarity", "script", "pohe09gc22");
     </script>
+    <script is:inline>
+      try {
+        if (localStorage.getItem("human-writing-only") === "true") {
+          document.documentElement.dataset.humanWritingOnly = "true";
+        }
+      } catch {}
+    </script>
     <Analytics />
   </head>
   <body id="page-top">
@@ -168,6 +176,7 @@ const articleActive =
             class:list={{ "nav-link-active": routeStartsWith("/about/") }}
             href={sitePath("/about/")}
           >关于</a>
+          <WritingFilter />
           <button class="theme-toggle" type="button" aria-label="切换明暗主题" data-theme-toggle>
             <span aria-hidden="true">◐</span>
           </button>
