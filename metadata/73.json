@@ -12,7 +12,8 @@
     "效率",
     "ai",
     "方法论",
-    "pkm"
+    "pkm",
+    "AI 写作为主"
   ],
   "labelEvents": [
     {
@@ -38,6 +39,10 @@
     {
       "label": "blog:featured",
       "createdAt": "2026-07-29T07:46:58Z"
+    },
+    {
+      "label": "AI 写作为主",
+      "createdAt": "2026-10-12T03:28:08Z"
     }
   ],
   "reactions": [],
