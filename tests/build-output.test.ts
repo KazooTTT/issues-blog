@@ -20,6 +20,20 @@ describe("static blog build", () => {
     });
   }, 30_000);
 
+  it("provides a popular page with an honest fallback and groups navigation into three dropdowns", () => {
+    const popular = readFileSync(resolve(root, "dist/popular/index.html"), "utf8");
+    expect(popular).toContain("热门文章");
+    expect(popular).toContain("访问统计暂时不可用");
+    expect(popular).toContain('href="/blog/archive/"');
+    const navigation = popular.match(/<nav aria-label="主导航">([\s\S]*?)<\/nav>/)?.[1] ?? "";
+    expect(navigation.match(/<details /g)).toHaveLength(3);
+    expect(navigation.match(/<summary /g)).toHaveLength(3);
+    for (const path of ["popular", "archive", "tags", "projects", "tools", "workouts", "friends", "about"]) {
+      expect(navigation).toContain(`href="/blog/${path}/"`);
+    }
+    expect(navigation).toMatch(/<summary[^>]*nav-link-active[^>]*>文章<\/summary>/);
+  });
+
   it("shares About discussion on home and About with older messages collapsed", () => {
     for (const route of ["index.html", "about/index.html"]) {
       const page = readFileSync(resolve(root, "dist", route), "utf8");

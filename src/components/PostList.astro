@@ -8,16 +8,17 @@ import { sitePath } from "@/utils/presentation";
 
 interface Props {
   posts: Post[];
+  ranked?: boolean;
 }
 
-const { posts } = Astro.props;
+const { posts, ranked = false } = Astro.props;
 ---
 
 <ol class="post-list">
-  {posts.map((post) => (
+  {posts.map((post, index) => (
     <li>
       <a href={sitePath(post.permalink)}>
-        <span class="post-list-title">{post.title}<WritingSourceBadge tags={post.tags} /></span>
+        <span class="post-list-title">{ranked && <span class="post-rank" aria-label={`第 ${index + 1} 名`}>{String(index + 1).padStart(2, "0")}</span>}{post.title}<WritingSourceBadge tags={post.tags} /></span>
         <time datetime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
       </a>
       <div class="tag-row">
@@ -27,3 +28,7 @@ const { posts } = Astro.props;
     </li>
   ))}
 </ol>
+
+<style>
+  .post-rank { display: inline-block; margin-inline-end: 12px; color: var(--accent-dark); font-size: 14px; font-variant-numeric: tabular-nums; }
+</style>

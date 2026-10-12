@@ -38,7 +38,7 @@
 | [#57 与被我荒废的 7 年告别，从头开始](https://github.com/KazooTTT/issues-blog/issues/57) | 人工写作为主 | 待作者复核 |
 | [#56 使用macOS自带的语音听写功能作为输入方式，省时省力](https://github.com/KazooTTT/issues-blog/issues/56) | 人工写作为主 | 作者已确认 |
 | [#55 写在离职之后](https://github.com/KazooTTT/issues-blog/issues/55) | 人工写作为主 | 作者已确认 |
-| [#54 如何运行 ts 文件](https://github.com/KazooTTT/issues-blog/issues/54) | AI 写作为主 | 待作者复核 |
+| [#54 如何运行 ts 文件](https://github.com/KazooTTT/issues-blog/issues/54) | 人工写作为主 | 作者已确认 |
 | [#53 2025-W09 工作流升级](https://github.com/KazooTTT/issues-blog/issues/53) | 人工写作为主 | 待作者复核 |
 | [#52 2025-W08](https://github.com/KazooTTT/issues-blog/issues/52) | 人工写作为主 | 待作者复核 |
 | [#51 openwebui长时间白屏解决方案](https://github.com/KazooTTT/issues-blog/issues/51) | 人工写作为主 | 待作者复核 |

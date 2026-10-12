@@ -111,5 +111,11 @@
     "source": "AI 写作为主",
     "confirmedBy": "作者",
     "operation": "添加来源标签"
+  },
+  {
+    "number": 54,
+    "source": "人工写作为主",
+    "confirmedBy": "作者",
+    "operation": "移除 AI 写作为主，添加人工写作为主"
   }
 ]
