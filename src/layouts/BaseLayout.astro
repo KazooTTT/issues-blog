@@ -46,7 +46,7 @@ const articleActive =
     <meta name="theme-color" content="#f6f4ef" />
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
-    <link rel="icon" href={sitePath("/favicon.svg")} type="image/svg+xml" />
+    <link rel="icon" href={sitePath("/favicon.svg?v=terracotta-1")} type="image/svg+xml" />
     <link rel="alternate" type="application/rss+xml" title={siteConfig.title} href={sitePath("/rss.xml")} />
     <meta property="og:type" content={type} />
     <meta property="og:title" content={pageTitle} />
@@ -118,7 +118,7 @@ const articleActive =
     </script>
     <Analytics />
   </head>
-  <body>
+  <body id="page-top">
     <div class="site-shell">
       <header class="site-header">
         <a class="brand" href={sitePath("/")} aria-label={`${siteConfig.title} 首页`}>
@@ -179,6 +179,12 @@ const articleActive =
     </div>
     <ContentEnhancements />
     <script is:inline>
+      const header = document.querySelector(".site-header");
+      const updateHeaderHeight = () => {
+        if (header) document.documentElement.style.setProperty("--header-height", `${header.getBoundingClientRect().height}px`);
+      };
+      updateHeaderHeight();
+      if (header && "ResizeObserver" in window) new ResizeObserver(updateHeaderHeight).observe(header);
       document.querySelector("[data-theme-toggle]")?.addEventListener("click", () => {
         const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
         window.blogTheme?.apply(next);

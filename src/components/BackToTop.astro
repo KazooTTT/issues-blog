@@ -1,0 +1,30 @@
+<a class="back-to-top" href="#page-top" aria-label="回到顶部">
+  <span aria-hidden="true">↑</span>
+  <span>回到顶部</span>
+</a>
+
+<style>
+  .back-to-top {
+    position: fixed;
+    right: max(20px, env(safe-area-inset-right));
+    bottom: calc(24px + env(safe-area-inset-bottom));
+    z-index: 90;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 10px 14px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--card);
+    box-shadow: var(--shadow);
+    color: var(--accent-dark);
+    font-size: 13px;
+  }
+  .back-to-top:hover { border-color: var(--accent); background: var(--paper-deep); }
+  .back-to-top span:first-child { font-size: 20px; line-height: 1; }
+  @media (max-width: 760px) {
+    .back-to-top { right: max(14px, env(safe-area-inset-right)); padding: 10px 12px; }
+  }
+</style>

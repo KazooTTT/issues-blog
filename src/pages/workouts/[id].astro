@@ -1,5 +1,6 @@
 ---
 import WorkoutDetails from "@/components/WorkoutDetails.astro";
+import BackToTop from "@/components/BackToTop.astro";
 import { getSiteContent } from "@/data/site-content";
 import { workouts, type Workout } from "@/data/workouts";
 import type { WorkoutReview } from "@/domain/types";
@@ -110,4 +111,5 @@ const reviewHtml = review ? await renderMarkdown(review.body) : undefined;
       </nav>
     </div>
   </article>
+  <BackToTop />
 </BaseLayout>

@@ -1,5 +1,6 @@
 ---
 import Discussion from "@/components/Discussion.astro";
+import BackToTop from "@/components/BackToTop.astro";
 import ReactionBar from "@/components/ReactionBar.astro";
 import PageStatistics from "@/components/PageStatistics.astro";
 import WritingSourceBadge from "@/components/WritingSourceBadge.astro";
@@ -67,4 +68,5 @@ const { html, references } = await renderMarkdownDocument(post.body, Astro.site)
   </article>
 
   <Discussion issue={post} title="讨论" />
+  <BackToTop />
 </BaseLayout>

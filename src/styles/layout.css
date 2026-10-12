@@ -1,7 +1,16 @@
 /* C editorial direction: bold type, open columns and fine rules. */
 body { background: var(--paper); }
 .site-shell { width: min(1140px, calc(100% - 80px)); }
-.site-header { min-height: 112px; gap: 32px; border-bottom-color: var(--ink); }
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--paper);
+  box-shadow: 0 1px 0 var(--line);
+  min-height: 112px;
+  gap: 32px;
+  border-bottom-color: var(--ink);
+}
 .brand { gap: 0; min-width: 0; }
 .brand-mark { display: none; }
 .brand strong::before { content: ""; display: inline-block; width: 9px; height: 9px; margin-right: 10px; background: var(--accent); vertical-align: .15em; }

@@ -37,6 +37,11 @@ html {
   color: var(--ink);
   font-family: var(--sans);
   scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-height, 112px) + 16px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
 }
 
 body {
