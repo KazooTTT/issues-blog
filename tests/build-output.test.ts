@@ -115,7 +115,9 @@ describe("static blog build", () => {
     );
 
     expect(home).toContain('href="/blog/collections/summary/">总结</a>');
-    expect(home).not.toContain('href="/blog/tags/%E5%91%A8%E6%8A%A5/">周报</a>');
+    const navigation = home.match(/<nav aria-label="主导航">([\s\S]*?)<\/nav>/)?.[1];
+    expect(navigation).toBeDefined();
+    expect(navigation).not.toContain('href="/blog/tags/%E5%91%A8%E6%8A%A5/">周报</a>');
     expect(summary).toContain("欢迎来到我的博客");
     expect(summary).toContain("第 100 次记录");
     expect(summary).toContain("第 99 次记录");

@@ -1,28 +1,28 @@
 /* Editorial palette shared by every page. */
 :root {
   color-scheme: light;
-  --paper: #f8f9fd;
-  --paper-deep: #edf0f8;
-  --ink: #292b38;
-  --muted: #727587;
-  --line: #e3e5ef;
-  --accent: #7863ce;
-  --accent-dark: #6250b4;
-  --card: #ffffff;
-  --shadow: 0 12px 34px rgb(32 36 44 / .08);
+  --paper: #f6f4ef;
+  --paper-deep: #ebe7df;
+  --ink: #292824;
+  --muted: #716b62;
+  --line: #ded9cf;
+  --accent: #a45f43;
+  --accent-dark: #85472f;
+  --card: #fffdf8;
+  --shadow: 0 12px 34px rgb(49 40 29 / .06);
   --sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
   --serif: var(--sans);
 }
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --paper: #15181e;
-  --paper-deep: #20252e;
-  --ink: #eef1f6;
-  --muted: #a8b1c0;
-  --line: #343c49;
-  --accent: #b9a8ff;
-  --accent-dark: #b9a8ff;
-  --card: #1b2028;
+  --paper: #1c1b18;
+  --paper-deep: #292721;
+  --ink: #ece7dc;
+  --muted: #b2aa9d;
+  --line: #413d34;
+  --accent: #d69a79;
+  --accent-dark: #e2ac8e;
+  --card: #24221d;
   --shadow: 0 12px 34px rgb(0 0 0 / .2);
 }
 

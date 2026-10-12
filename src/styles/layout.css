@@ -184,7 +184,7 @@ time { color: var(--muted); font-size: 13px; }
 .hero {
   min-height: 350px; padding: 50px 330px 50px 48px; margin: 20px 0 38px;
   border: 1px solid color-mix(in srgb, var(--accent) 12%, var(--line)); border-radius: 28px;
-  background: linear-gradient(115deg, color-mix(in srgb, var(--accent) 9%, var(--card)), color-mix(in srgb, var(--accent) 3%, var(--card)));
+  background: var(--card);
 }
 .hero .eyebrow { color: var(--accent-dark); letter-spacing: .13em; font-size: 12px; }
 .hero .hero-slogan { font-size: clamp(30px, 3.2vw, 39px); line-height: 1.65; margin-top: 24px; font-weight: 650; letter-spacing: -.04em; }
@@ -192,7 +192,7 @@ time { color: var(--muted); font-size: 13px; }
 .avatar-orbit { top: 30px; right: 20px; transform: scale(.78); }
 .avatar-orbit-ring { border-color: color-mix(in srgb, var(--accent) 25%, var(--line)); }
 .avatar-orbit-ring::after { border-color: color-mix(in srgb, var(--accent) 25%, var(--line)); }
-.avatar-orbit-item { box-shadow: 0 8px 24px rgb(54 47 91 / .08); border: 3px solid var(--card); }
+.avatar-orbit-item { box-shadow: 0 8px 24px rgb(49 40 29 / .08); border: 3px solid var(--card); }
 .home-editorial { border: 0; grid-template-columns: 1fr; gap: 38px; padding: 0 0 38px; }
 .home-featured { border: 0; padding: 0 !important; }
 .section-heading { align-items: center; margin-bottom: 22px; }
@@ -212,8 +212,25 @@ time { color: var(--muted); font-size: 13px; }
 .home-latest .post-list li { padding: 23px 0; }
 .home-latest .post-list li:last-child { border-bottom: 0; }
 .home-latest .post-list-title { font-size: 20px; font-weight: 600; }
-.tag { color: var(--muted); font-size: 13px; }
-.tag:hover { color: var(--accent-dark); }
+.tag {
+  display: inline-block;
+  max-width: 100%;
+  padding: 3px 9px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper-deep);
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+.tag:hover {
+  color: var(--accent-dark);
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, var(--card));
+}
+.featured-tags { display: flex; flex-wrap: wrap; gap: 7px; }
 .home-latest .view-all { font-size: 14px; }
 .home-section { border-top: 0; }
 .social-link { border-radius: 14px; margin: 0; padding: 20px; background: var(--card); }

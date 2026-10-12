@@ -24,7 +24,11 @@ const { posts } = Astro.props;
       </div>
       <footer class="featured-meta">
         <time datetime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
-        <span>{topicTags(post.tags).join(" / ")}</span>
+        <div class="featured-tags">
+          {topicTags(post.tags).map((tag) => (
+            <a class="tag" href={sitePath(`/tags/${encodeURIComponent(tag)}/`)}>{tag}</a>
+          ))}
+        </div>
       </footer>
       <PageStatistics path={post.permalink} compact />
     </article>

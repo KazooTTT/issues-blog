@@ -9,7 +9,7 @@ const source = writingSource(Astro.props.tags);
 ---
 
 {source && (
-  <span class:list={["writing-source", { "writing-source-ai": source === "AI 写作为主" }]}
+  <span class:list={["writing-source", { "writing-source-human": source === "人工写作为主" }]}
     title={`写作来源：${source}`} aria-label={`写作来源：${source}`}>
     {source === "AI 写作为主" ? "AI 主写" : "人工主写"}
   </span>
@@ -31,7 +31,7 @@ const source = writingSource(Astro.props.tags);
     vertical-align: middle;
     white-space: nowrap;
   }
-  .writing-source-ai {
+  .writing-source-human {
     border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
     background: color-mix(in srgb, var(--accent) 10%, var(--card));
     color: var(--accent-dark);
