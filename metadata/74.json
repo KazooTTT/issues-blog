@@ -12,7 +12,8 @@
     "笔记",
     "大模型",
     "技术调研",
-    "skills"
+    "skills",
+    "AI 写作为主"
   ],
   "labelEvents": [
     {
@@ -34,6 +35,10 @@
     {
       "label": "skills",
       "createdAt": "2026-07-24T10:22:44Z"
+    },
+    {
+      "label": "AI 写作为主",
+      "createdAt": "2026-10-12T03:23:39Z"
     }
   ],
   "reactions": [],

@@ -19,7 +19,8 @@
     "design",
     "llm",
     "nextjs",
-    "videdesign"
+    "videdesign",
+    "人工写作为主"
   ],
   "labelEvents": [
     {
@@ -69,6 +70,10 @@
     {
       "label": "videdesign",
       "createdAt": "2026-07-24T10:21:19Z"
+    },
+    {
+      "label": "人工写作为主",
+      "createdAt": "2026-10-12T03:23:47Z"
     }
   ],
   "reactions": [],

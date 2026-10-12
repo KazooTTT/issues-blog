@@ -9,7 +9,8 @@
   "author": "KazooTTT",
   "labels": [
     "blog:publish",
-    "周报"
+    "周报",
+    "人工写作为主"
   ],
   "labelEvents": [
     {
@@ -19,6 +20,10 @@
     {
       "label": "周报",
       "createdAt": "2026-07-24T10:20:57Z"
+    },
+    {
+      "label": "人工写作为主",
+      "createdAt": "2026-10-12T03:23:48Z"
     }
   ],
   "reactions": [],

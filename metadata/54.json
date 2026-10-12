@@ -15,7 +15,8 @@
     "code",
     "runner",
     "ts-node",
-    "vscode"
+    "vscode",
+    "AI 写作为主"
   ],
   "labelEvents": [
     {
@@ -49,6 +50,10 @@
     {
       "label": "vscode",
       "createdAt": "2026-07-24T10:20:20Z"
+    },
+    {
+      "label": "AI 写作为主",
+      "createdAt": "2026-10-12T03:23:50Z"
     }
   ],
   "reactions": [],

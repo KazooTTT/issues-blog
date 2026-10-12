@@ -10,7 +10,8 @@
   "labels": [
     "blog:publish",
     "总结",
-    "工具"
+    "工具",
+    "AI 写作为主"
   ],
   "labelEvents": [
     {
@@ -24,6 +25,10 @@
     {
       "label": "blog:publish",
       "createdAt": "2026-09-22T02:15:07Z"
+    },
+    {
+      "label": "AI 写作为主",
+      "createdAt": "2026-10-12T03:23:34Z"
     }
   ],
   "reactions": [],

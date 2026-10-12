@@ -13,7 +13,8 @@
     "插件开发",
     "日历",
     "知识管理",
-    "Periodic Notes"
+    "Periodic Notes",
+    "AI 写作为主"
   ],
   "labelEvents": [
     {
@@ -43,6 +44,10 @@
     {
       "label": "blog:featured",
       "createdAt": "2026-07-29T07:46:46Z"
+    },
+    {
+      "label": "AI 写作为主",
+      "createdAt": "2026-10-12T03:23:37Z"
     }
   ],
   "reactions": [],

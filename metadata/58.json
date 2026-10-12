@@ -10,7 +10,8 @@
   "labels": [
     "blog:publish",
     "随笔",
-    "鉴抄"
+    "鉴抄",
+    "人工写作为主"
   ],
   "labelEvents": [
     {
@@ -24,6 +25,10 @@
     {
       "label": "鉴抄",
       "createdAt": "2026-07-24T10:20:43Z"
+    },
+    {
+      "label": "人工写作为主",
+      "createdAt": "2026-10-12T03:23:49Z"
     }
   ],
   "reactions": [],

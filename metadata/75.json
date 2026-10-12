@@ -14,7 +14,8 @@
     "chart",
     "frontend",
     "public",
-    "sort"
+    "sort",
+    "AI 写作为主"
   ],
   "labelEvents": [
     {
@@ -44,6 +45,10 @@
     {
       "label": "sort",
       "createdAt": "2026-07-24T10:23:02Z"
+    },
+    {
+      "label": "AI 写作为主",
+      "createdAt": "2026-10-12T03:23:38Z"
     }
   ],
   "reactions": [],

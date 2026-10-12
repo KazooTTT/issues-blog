@@ -9,7 +9,8 @@
   "author": "KazooTTT",
   "labels": [
     "blog:publish",
-    "随笔"
+    "随笔",
+    "人工写作为主"
   ],
   "labelEvents": [
     {
@@ -19,6 +20,10 @@
     {
       "label": "随笔",
       "createdAt": "2026-07-24T10:21:04Z"
+    },
+    {
+      "label": "人工写作为主",
+      "createdAt": "2026-10-12T03:23:47Z"
     }
   ],
   "reactions": [],

@@ -14,7 +14,8 @@
     "前端",
     "博客开发",
     "cloudflare",
-    "astro"
+    "astro",
+    "AI 写作为主"
   ],
   "labelEvents": [
     {
@@ -44,6 +45,10 @@
     {
       "label": "笔记",
       "createdAt": "2026-07-31T06:37:21Z"
+    },
+    {
+      "label": "AI 写作为主",
+      "createdAt": "2026-10-12T03:23:35Z"
     }
   ],
   "reactions": [],

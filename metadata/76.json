@@ -15,7 +15,8 @@
     "bugfix",
     "frontend",
     "axios",
-    "json-bigint"
+    "json-bigint",
+    "AI 写作为主"
   ],
   "labelEvents": [
     {
@@ -49,6 +50,10 @@
     {
       "label": "json-bigint",
       "createdAt": "2026-07-24T10:23:09Z"
+    },
+    {
+      "label": "AI 写作为主",
+      "createdAt": "2026-10-12T03:23:38Z"
     }
   ],
   "reactions": [],

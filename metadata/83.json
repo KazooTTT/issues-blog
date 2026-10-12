@@ -12,7 +12,8 @@
     "前端",
     "CORS",
     "PDF",
-    "OSS"
+    "OSS",
+    "AI 写作为主"
   ],
   "labelEvents": [
     {
@@ -34,6 +35,10 @@
     {
       "label": "OSS",
       "createdAt": "2026-07-24T10:24:03Z"
+    },
+    {
+      "label": "AI 写作为主",
+      "createdAt": "2026-10-12T03:23:36Z"
     }
   ],
   "reactions": [],

@@ -12,7 +12,8 @@
     "随笔",
     "chatgpt",
     "atlas",
-    "openai"
+    "openai",
+    "人工写作为主"
   ],
   "labelEvents": [
     {
@@ -34,6 +35,10 @@
     {
       "label": "openai",
       "createdAt": "2026-07-24T10:21:53Z"
+    },
+    {
+      "label": "人工写作为主",
+      "createdAt": "2026-10-12T03:23:44Z"
     }
   ],
   "reactions": [],

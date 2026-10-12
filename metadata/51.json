@@ -13,7 +13,8 @@
     "docker",
     "ollama",
     "碎片",
-    "openwebui"
+    "openwebui",
+    "人工写作为主"
   ],
   "labelEvents": [
     {

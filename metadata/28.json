@@ -23,7 +23,8 @@
     "react",
     "react-three-fiber",
     "stockcharts",
-    "three.js"
+    "three.js",
+    "人工写作为主"
   ],
   "labelEvents": [
     {

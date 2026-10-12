@@ -11,7 +11,8 @@
     "blog:publish",
     "obsidian",
     "linter",
-    "thino"
+    "thino",
+    "AI 写作为主"
   ],
   "labelEvents": [
     {
@@ -29,6 +30,10 @@
     {
       "label": "thino",
       "createdAt": "2026-07-24T10:23:30Z"
+    },
+    {
+      "label": "AI 写作为主",
+      "createdAt": "2026-10-12T03:23:37Z"
     }
   ],
   "reactions": [],

@@ -11,7 +11,8 @@
     "blog:publish",
     "frontend",
     "font",
-    "typography"
+    "typography",
+    "AI 写作为主"
   ],
   "labelEvents": [
     {
@@ -29,6 +30,10 @@
     {
       "label": "typography",
       "createdAt": "2026-07-24T10:23:24Z"
+    },
+    {
+      "label": "AI 写作为主",
+      "createdAt": "2026-10-12T03:23:37Z"
     }
   ],
   "reactions": [],

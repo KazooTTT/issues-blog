@@ -10,7 +10,8 @@
   "labels": [
     "blog:publish",
     "随笔",
-    "反思"
+    "反思",
+    "人工写作为主"
   ],
   "labelEvents": [
     {
@@ -24,6 +25,10 @@
     {
       "label": "反思",
       "createdAt": "2026-07-24T10:21:30Z"
+    },
+    {
+      "label": "人工写作为主",
+      "createdAt": "2026-10-12T03:23:46Z"
     }
   ],
   "reactions": [],
