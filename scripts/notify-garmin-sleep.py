@@ -768,18 +768,29 @@ OPENROUTER_MODEL = "openrouter/free"
 LLM_ATTEMPTS = 3
 LLM_TEMPERATURE = 0.3
 LLM_MAX_TOKENS = 512
+LLM_TIMEOUT_SECONDS = 60
 NARRATIVE_MIN_CHARS = 40
 NARRATIVE_MAX_CHARS = 160
+MAX_NARRATIVE_NUMBERS = 3
 THINK_BLOCK = re.compile(r"<think\b[^>]*>.*?</think>", re.IGNORECASE | re.DOTALL)
 THINK_OPEN = re.compile(r"<think\b[^>]*>.*", re.IGNORECASE | re.DOTALL)
+DATE_START = re.compile(
+    r"^\s*\d{4}\s*[-/.年]\s*\d{1,2}(?:\s*[-/.月]\s*\d{1,2})?"
+)
+SENTENCE_END = re.compile(r"[。！？]")
 
 SYSTEM_PROMPT = (
-    "你是睡眠晨报的第一段文案作者。用户会跳舞，也做力量训练，"
+    "你是睡眠晨报的第一段作者。用户会跳舞，也做力量训练，"
     "恢复建议要考虑到排练和训练后的负担。"
-    "用中文，语气温和、自然、简短，不要夸张，不要做医疗诊断。"
-    "只写一段状态总结和恢复建议，大约六十到一百个字。"
-    "不要列数据清单，不要标题，不要 Markdown，不要输出思考过程或 <think> 标签。"
-    "只能使用用户消息里给出的数字，不要编造任何没有给出的数字、时长或指标。"
+    "只写 2 到 3 句自然的中文解读，大约六十到一百个字。"
+    "直接输出正文，不要标题，不要 Markdown，不要列表，不要思考过程或 <think>。"
+    "不要输出日期。不要罗列指标。"
+    "最多引用 1 到 2 个核心数字，只从总时长和评分里选。"
+    "深睡、浅睡、REM、清醒、心率、身体电量和 HRV 只用来判断状态，不要把这些数字写进正文。"
+    "语气温和、自然，不要夸张，不要做医疗诊断。"
+    "示例只用来学语气和句式，不要照抄示例里的数字。\n"
+    "示例一：昨晚睡得踏实，一共 8 小时，评分 91。跳舞和力量训练之后这样够恢复，今天力量可以照常安排。\n"
+    "示例二：昨晚睡得短了些，一共 5 小时。排练和训练先放轻一点，今晚早点休息。"
 )
 
 
@@ -962,10 +973,15 @@ def validate_narrative(text: str, summary: dict[str, Any]) -> str:
     length = len(compact)
     if length < NARRATIVE_MIN_CHARS or length > NARRATIVE_MAX_CHARS:
         raise SleepCopyError(f"output length {length} is outside 40-160")
+    if DATE_START.match(text):
+        raise SleepCopyError("output starts with a date")
+    if len(SENTENCE_END.findall(text)) < 2:
+        raise SleepCopyError("output does not contain enough sentences")
+    numbers = re.findall(r"\d+", text)
+    if len(numbers) > MAX_NARRATIVE_NUMBERS:
+        raise SleepCopyError(f"output lists too many numbers ({len(numbers)})")
     allowed = allowed_numbers(summary)
-    unexpected = [
-        token for token in re.findall(r"\d+", text) if token not in allowed
-    ]
+    unexpected = [token for token in numbers if token not in allowed]
     if unexpected:
         shown = ", ".join(unexpected[:6])
         raise SleepCopyError(f"output contains numbers that were not provided: {shown}")
@@ -1006,7 +1022,10 @@ def request_openrouter_narrative(
                 {
                     "role": "user",
                     "content": (
-                        "请只写第一段。下面这些数字可以直接用，不要新增别的数字。\n"
+                        "请写 2 到 3 句自然的中文解读，直接输出正文。\n"
+                        "不要罗列指标，不要写日期，不要列表。\n"
+                        "最多提总时长和评分里的 1 到 2 个数字，其余数字只用于判断，不要复述。\n"
+                        "睡眠数据：\n"
                         + "\n".join(sleep_fact_lines(summary))
                     ),
                 },
@@ -1026,7 +1045,7 @@ def request_openrouter_narrative(
         method="POST",
     )
     try:
-        with opener(request, timeout=45) as response:
+        with opener(request, timeout=LLM_TIMEOUT_SECONDS) as response:
             raw = response.read()
     except urllib.error.HTTPError as error:
         detail = error.read().decode("utf-8", errors="replace")[:180]

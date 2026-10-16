@@ -781,7 +781,7 @@ class GarminSleepFieldFallbackTest(unittest.TestCase):
 
 
 AI_NARRATIVE = (
-    "昨晚睡得踏实，23:26 睡到 07:30，一共 8 小时 1 分，评分 91。"
+    "昨晚睡得踏实，一共 8 小时，评分 91。"
     "跳舞和力量训练之后这样够恢复，今天力量可以照常安排，不要再额外加量。"
 )
 
@@ -831,9 +831,10 @@ class ScriptedOpener:
     def __init__(self, steps: list[object]) -> None:
         self.steps = list(steps)
         self.calls: list[object] = []
+        self.timeouts: list[int] = []
 
     def __call__(self, request: object, timeout: int = 45) -> Response:
-        del timeout
+        self.timeouts.append(timeout)
         self.calls.append(request)
         step = self.steps.pop(0)
         if isinstance(step, BaseException):
@@ -883,6 +884,10 @@ class SleepCopyGenerationTest(unittest.TestCase):
         self.assertEqual(body["max_tokens"], 512)
         self.assertIn("跳舞", body["messages"][0]["content"])
         self.assertIn("力量训练", body["messages"][0]["content"])
+        self.assertIn("示例一", body["messages"][0]["content"])
+        self.assertIn("不要罗列指标", body["messages"][1]["content"])
+        self.assertIn("不要写日期", body["messages"][1]["content"])
+        self.assertEqual(opener.timeouts, [60])
         self.assertEqual(request.get_header("Authorization"), "Bearer sk-or-test-secret")
 
     def test_uses_reasoning_content_when_content_is_empty(self) -> None:
@@ -943,6 +948,47 @@ class SleepCopyGenerationTest(unittest.TestCase):
         self.assertIn("OpenRouter 3 次都失败，改用固定模板。", logs)
         self.assertNotIn("sk-or-test-secret", logs)
         self.assertEqual(MODULE.describe_sleep_copy(copy), "文案来源: 固定模板")
+
+    def test_listing_style_output_counts_as_a_failed_attempt(self) -> None:
+        listing = (
+            "2026-10-16 睡8小时2分，评分91，深睡55分，浅睡5小时35分，"
+            "REM1小时32分，清醒3分，静息56，夜间61，电量+48，HRV65，"
+            "恢复良好，建议排练后适度伸展、补水。"
+        )
+        opener = ScriptedOpener([chat_response(listing), chat_response(AI_NARRATIVE)])
+        copy, logs = self.compose(opener)
+        self.assertEqual(copy.source, "llm")
+        self.assertEqual(copy.attempt, 2)
+        self.assertTrue(copy.text.startswith(AI_NARRATIVE))
+        self.assertIn("output starts with a date", logs)
+        self.assertEqual(len(opener.calls), 2)
+
+    def test_rejects_a_date_a_metric_list_and_a_run_on_line(self) -> None:
+        summary = llm_summary()
+        with self.assertRaises(MODULE.SleepCopyError) as started:
+            MODULE.validate_narrative(
+                "2026-10-16 昨晚睡得踏实。跳舞和力量训练之后这样够恢复，今天可以照常安排，别再额外加量。",
+                summary,
+            )
+        self.assertIn("date", str(started.exception))
+
+        with self.assertRaises(MODULE.SleepCopyError) as listed:
+            MODULE.validate_narrative(
+                "昨晚睡了 8 小时，评分 91，深睡 55 分，心率 56。今天排练之后可以照常做力量训练，别再加量。",
+                summary,
+            )
+        self.assertIn("too many numbers", str(listed.exception))
+
+        with self.assertRaises(MODULE.SleepCopyError) as unpunctuated:
+            MODULE.validate_narrative(
+                "昨晚睡得踏实一共八小时评分也不错跳舞和力量训练之后恢复够用今天可以照常安排别再加量就好",
+                summary,
+            )
+        self.assertIn("enough sentences", str(unpunctuated.exception))
+
+        with self.assertRaises(MODULE.SleepCopyError) as too_long:
+            MODULE.validate_narrative("昨晚睡得还行。" * 40, summary)
+        self.assertIn("length", str(too_long.exception))
 
     def test_invalid_numbers_fall_back_to_the_template(self) -> None:
         opener = ScriptedOpener([chat_response(f"{AI_NARRATIVE}再补 12 小时。")] * 3)
