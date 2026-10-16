@@ -9,6 +9,7 @@ on:
     paths-ignore:
       - "docs/**"
       - "CONTEXT.md"
+      - "data/telegram/**"
   issues:
     types: [opened, edited, closed, reopened, labeled, unlabeled, deleted]
   issue_comment:

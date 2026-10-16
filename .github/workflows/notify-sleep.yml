@@ -1,0 +1,53 @@
+name: Notify Garmin sleep
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "睡眠日期 YYYY-MM-DD；留空则用 Asia/Shanghai 的今天"
+        required: false
+        default: ""
+      dry_run:
+        description: "只打印消息，不发送到 Telegram"
+        type: boolean
+        default: false
+  schedule:
+    # 00:00 UTC is 08:00 in Asia/Shanghai. China has no daylight saving time.
+    - cron: "0 0 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: telegram-sleep
+  cancel-in-progress: false
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    env:
+      GARMIN_EMAIL: ${{ secrets.GARMIN_EMAIL }}
+      GARMIN_PASSWORD: ${{ secrets.GARMIN_PASSWORD }}
+      GARMIN_IS_CN: ${{ vars.GARMIN_IS_CN || 'true' }}
+      TELEGRAM_MEMOS_BOT_TOKEN: ${{ secrets.TELEGRAM_MEMOS_BOT_TOKEN }}
+      TELEGRAM_MEMOS_CHAT_ID: ${{ secrets.TELEGRAM_MEMOS_CHAT_ID || vars.TELEGRAM_MEMOS_CHAT_ID }}
+      SLEEP_DATE: ${{ github.event_name == 'workflow_dispatch' && inputs.date || '' }}
+      DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run == true }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: python -m pip install "garminconnect==0.3.6"
+      - name: Test sleep notification
+        run: python -m unittest tests/test_notify_garmin_sleep.py tests/test_telegram_memos.py
+      - name: Send sleep summary
+        run: |
+          args=(python scripts/notify-garmin-sleep.py)
+          if [ -n "$SLEEP_DATE" ]; then
+            args+=(--date "$SLEEP_DATE")
+          fi
+          if [ "$DRY_RUN" = "true" ]; then
+            args+=(--dry-run)
+          fi
+          "${args[@]}"

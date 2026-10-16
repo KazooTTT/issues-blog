@@ -1,0 +1,75 @@
+name: Notify blog RSS
+
+on:
+  workflow_dispatch:
+    inputs:
+      seed:
+        description: "只把当前 RSS 记为已推送，不发送消息（首次必跑，避免刷屏）"
+        type: boolean
+        default: false
+      dry_run:
+        description: "只打印将发送的内容，不调用 Telegram，也不改状态"
+        type: boolean
+        default: false
+      resend_latest:
+        description: "把 feed 中最新一篇再发一次，用于测试机器人；不修改状态"
+        type: boolean
+        default: false
+  schedule:
+    - cron: "17 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: telegram-rss
+  cancel-in-progress: false
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    env:
+      TELEGRAM_MEMOS_BOT_TOKEN: ${{ secrets.TELEGRAM_MEMOS_BOT_TOKEN }}
+      TELEGRAM_MEMOS_CHAT_ID: ${{ secrets.TELEGRAM_MEMOS_CHAT_ID || vars.TELEGRAM_MEMOS_CHAT_ID }}
+      SEED: ${{ github.event_name == 'workflow_dispatch' && inputs.seed == true }}
+      DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run == true }}
+      RESEND_LATEST: ${{ github.event_name == 'workflow_dispatch' && inputs.resend_latest == true }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Test RSS notification
+        run: python -m unittest tests/test_notify_rss.py tests/test_telegram_memos.py
+      - name: Notify new posts or seed state
+        id: notify
+        run: |
+          set +e
+          args=(python scripts/notify-rss.py --state data/telegram/rss-seen.json)
+          if [ "$SEED" = "true" ]; then
+            args+=(--seed)
+          fi
+          if [ "$DRY_RUN" = "true" ]; then
+            args+=(--dry-run)
+          fi
+          if [ "$RESEND_LATEST" = "true" ]; then
+            args+=(--resend-latest)
+          fi
+          "${args[@]}"
+          code=$?
+          set -e
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          exit "$code"
+      - name: Commit RSS notification state
+        if: always() && steps.notify.outputs.exit_code != ''
+        run: |
+          if [ -z "$(git status --porcelain -- data/telegram/rss-seen.json)" ]; then
+            echo "RSS state unchanged"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add data/telegram/rss-seen.json
+            git commit -m "update RSS notification state"
+            git push
+          fi
+          exit "${{ steps.notify.outputs.exit_code }}"

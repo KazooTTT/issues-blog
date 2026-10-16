@@ -61,3 +61,9 @@ pnpm test && pnpm check && pnpm build   # 提交前验证
 
 - `archive` 分支由工作流维护，仅用于灾难恢复，不要手动编辑
 - 部署只有在测试与构建全部成功后才会替换线上版本
+
+## Telegram 备忘
+
+- `notify-sleep.yml`：每天北京时间 08:00 把 Garmin 睡眠发到 Telegram。只发消息，不创建 Issue，不加 `blog:publish`。
+- `notify-rss.yml`：每小时检查 `https://blog.kazoottt.top/rss.xml`。首次必须在 Actions 里用 `seed` 记下已有文章，否则任务失败而不是刷屏。状态文件是 `data/telegram/rss-seen.json`。
+- Secret / Variable 见 README「Telegram 备忘」。不要把 `TELEGRAM_MEMOS_BOT_TOKEN` 写进代码或日志。
