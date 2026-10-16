@@ -95,7 +95,16 @@ class TelegramMemosTest(unittest.TestCase):
         self.assertNotIn(TOKEN, stdout.getvalue())
         self.assertIn("Telegram message sent", stdout.getvalue())
         self.assertEqual(seen[0]["chat_id"], "@kazootttmemos")
-        self.assertIn("新文章：标题", seen[0]["text"])
+        self.assertEqual(
+            seen[0]["text"],
+            f"{MODULE.BOT_SIGNATURE}\n\n新文章：标题\nhttps://blog.kazoottt.top/posts/1/",
+        )
+
+    def test_sign_message_adds_one_signature_line(self) -> None:
+        body = "新文章：标题\nhttps://blog.kazoottt.top/posts/1/"
+        signed = MODULE.sign_message(body)
+        self.assertEqual(signed, f"{MODULE.BOT_SIGNATURE}\n\n{body}")
+        self.assertEqual(MODULE.sign_message(signed), signed)
 
 
 if __name__ == "__main__":

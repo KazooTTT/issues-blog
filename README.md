@@ -147,6 +147,7 @@ cat /path/to/workouts.json | python scripts/fetch-garmin-workouts.py --merge --i
 - Secret `OPENROUTER_API_KEY`：睡眠晨报第一段。脚本调用 OpenRouter 的
   `openrouter/free` 写状态和恢复建议，再自己拼一段核心数据。最多试 3 次，
   全部失败就改发一段写好的模板，把入睡、起床、时长和评分填进去。不要把 key 写进日志。
+- 睡眠晨报和 RSS 推送发出去时，第一行都是 `🤖 佳明日报 BOT 自动发送`，空一行后再接正文。署名由脚本加上，不交给模型写。
 
 把机器人加为频道管理员，否则 Telegram 会拒绝发送。
 
@@ -184,7 +185,7 @@ python scripts/notify-garmin-sleep.py --input sleep.json --dry-run
 
 ### 博客 RSS
 
-每小时第 17 分检查 <https://blog.kazoottt.top/rss.xml>。新文章只发送标题和链接。
+每小时第 17 分检查 <https://blog.kazoottt.top/rss.xml>。新文章发送标题和链接，前面另有一行 BOT 署名。
 已推送的 guid 记在 `data/telegram/rss-seen.json`，由 workflow 提交回当前分支。
 只改这个文件的推送不会触发站点部署。
 

@@ -1457,12 +1457,13 @@ def main() -> None:
     if assessment.summary is None:
         raise SystemExit(f"Sleep summary for {sleep_date} is missing")
     copy = compose_sleep_message(assessment.summary)
+    message = telegram_memos.sign_message(copy.text)
     print(describe_sleep_copy(copy))
-    print(copy.text)
+    print(message)
     if args.dry_run:
         print("Dry run; Telegram message not sent")
         return
-    telegram_memos.send_message(copy.text)
+    telegram_memos.send_message(message)
     updated = remember_sent_date(sent_dates, assessment.summary["date"])
     if save_sent_dates(args.state, updated):
         print(f"Recorded sent sleep date {assessment.summary['date']} in {args.state}")
