@@ -16,6 +16,8 @@ import telegram_memos
 
 SHANGHAI = ZoneInfo("Asia/Shanghai")
 WAKE_MATCH_WINDOW_MS = 5 * 60 * 1000
+DEFAULT_STATE_PATH = Path("data/telegram/sleep-sent.json")
+MAX_SENT_DATES = 60
 
 
 def env_bool(name: str, default: bool) -> bool:
@@ -245,12 +247,11 @@ def extract_body_battery(
 def sleep_bounds(dto: dict[str, Any]) -> tuple[datetime | None, datetime | None]:
     start = parse_timestamp(dto.get("sleepStartTimestampGMT"), local_wall=False)
     end = parse_timestamp(dto.get("sleepEndTimestampGMT"), local_wall=False)
-    if start is not None and end is not None:
-        return start, end
-    return (
-        parse_timestamp(dto.get("sleepStartTimestampLocal"), local_wall=True),
-        parse_timestamp(dto.get("sleepEndTimestampLocal"), local_wall=True),
-    )
+    if start is None:
+        start = parse_timestamp(dto.get("sleepStartTimestampLocal"), local_wall=True)
+    if end is None:
+        end = parse_timestamp(dto.get("sleepEndTimestampLocal"), local_wall=True)
+    return start, end
 
 
 def summarize_sleep(
@@ -297,6 +298,110 @@ def summarize_sleep(
             woke_at,
         ),
     }
+
+
+class SleepAssessment:
+    def __init__(
+        self,
+        complete: bool,
+        reason: str,
+        summary: dict[str, Any] | None,
+    ) -> None:
+        self.complete = complete
+        self.reason = reason
+        self.summary = summary
+
+
+def assess_sleep(
+    bundle: dict[str, Any],
+    *,
+    now: datetime,
+    fallback_date: str | None = None,
+) -> SleepAssessment:
+    """A night is complete only when it has already finished.
+
+    That means total sleep is greater than zero, a wake time (sleep end
+    timestamp) is present, and that wake time is at or before ``now``.
+    A missing record, a zero duration, a missing wake time, or an end time
+    still in the future is treated as not synced or still in progress.
+    """
+    if now.tzinfo is None:
+        now = now.replace(tzinfo=SHANGHAI)
+    try:
+        summary = summarize_sleep(bundle, fallback_date=fallback_date)
+    except ValueError as error:
+        return SleepAssessment(False, str(error), None)
+    if fallback_date and summary["date"] != fallback_date:
+        return SleepAssessment(
+            False,
+            "sleep calendar date does not match the requested date",
+            None,
+        )
+    woke_at = summary.get("woke_at")
+    if woke_at is None:
+        return SleepAssessment(False, "wake time is missing", None)
+    if woke_at.tzinfo is None:
+        woke_at = woke_at.replace(tzinfo=SHANGHAI)
+    if woke_at > now:
+        return SleepAssessment(False, "sleep has not ended yet", None)
+    return SleepAssessment(True, "", summary)
+
+
+def plan_sleep_notification(
+    assessment: SleepAssessment,
+    sent_dates: list[str],
+    *,
+    force: bool,
+) -> str:
+    if not assessment.complete:
+        return "skip-incomplete"
+    sleep_date = assessment.summary["date"] if assessment.summary else ""
+    if sleep_date in sent_dates and not force:
+        return "skip-already-sent"
+    return "send"
+
+
+def load_sent_dates(path: Path) -> list[str]:
+    if not path.exists():
+        return []
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as error:
+        raise SystemExit(f"Sleep state file is not valid JSON: {path}: {error}") from None
+    if not isinstance(data, dict) or not isinstance(data.get("sentDates"), list):
+        raise SystemExit(
+            f"Sleep state file must be an object with a sentDates list: {path}"
+        )
+    sent: list[str] = []
+    for item in data["sentDates"]:
+        if not isinstance(item, str):
+            raise SystemExit(f"Sleep state file has an invalid date: {path}")
+        try:
+            datetime.strptime(item, "%Y-%m-%d")
+        except ValueError:
+            raise SystemExit(f"Sleep state file has an invalid date: {path}") from None
+        sent.append(item)
+    return sent
+
+
+def remember_sent_date(
+    sent_dates: list[str],
+    sleep_date: str,
+    *,
+    limit: int = MAX_SENT_DATES,
+) -> list[str]:
+    merged = [item for item in sent_dates if item != sleep_date]
+    merged.append(sleep_date)
+    return merged[-limit:]
+
+
+def save_sent_dates(path: Path, sent_dates: list[str]) -> bool:
+    text = json.dumps({"sentDates": sent_dates}, ensure_ascii=False, indent=2) + "\n"
+    if path.exists() and path.read_text(encoding="utf-8") == text:
+        return False
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+    return True
 
 
 def format_duration(seconds: int) -> str:
@@ -448,9 +553,24 @@ def parse_args() -> argparse.Namespace:
         help="Read a sleep JSON bundle from a file, or - for stdin, instead of Garmin.",
     )
     parser.add_argument(
+        "--state",
+        type=Path,
+        default=DEFAULT_STATE_PATH,
+        help="JSON file of sleep dates already sent.",
+    )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Send again even if this sleep date was already sent.",
+    )
+    parser.add_argument(
         "--dry-run",
         action="store_true",
-        help="Print the message without calling Telegram.",
+        help="Print the message without calling Telegram or recording state.",
+    )
+    parser.add_argument(
+        "--now",
+        help="Override the current time as an ISO-8601 timestamp. For tests.",
     )
     args = parser.parse_args()
     if args.date:
@@ -458,27 +578,54 @@ def parse_args() -> argparse.Namespace:
             datetime.strptime(args.date, "%Y-%m-%d")
         except ValueError:
             parser.error("--date must use YYYY-MM-DD")
+    if args.now:
+        try:
+            parsed_now = datetime.fromisoformat(args.now.replace("Z", "+00:00"))
+        except ValueError:
+            parser.error("--now must be an ISO-8601 timestamp")
+        if parsed_now.tzinfo is None:
+            parser.error("--now must include a timezone offset")
     return args
+
+
+def current_time(value: str | None) -> datetime:
+    if not value:
+        return datetime.now(SHANGHAI)
+    parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    if parsed.tzinfo is None:
+        return parsed.replace(tzinfo=SHANGHAI)
+    return parsed
 
 
 def main() -> None:
     args = parse_args()
-    sleep_date = args.date or datetime.now(SHANGHAI).date().isoformat()
+    now = current_time(args.now)
+    sleep_date = args.date or now.astimezone(SHANGHAI).date().isoformat()
     print(f"Preparing Garmin sleep summary for {sleep_date} (Asia/Shanghai)")
     bundle = load_bundle(args.input) if args.input else fetch_sleep_bundle(sleep_date)
-    try:
-        summary = summarize_sleep(bundle, fallback_date=sleep_date)
-    except ValueError as error:
-        raise SystemExit(
-            f"No usable Garmin sleep data for {sleep_date}. {error} "
-            "If the watch has not synced, re-run this workflow later."
-        ) from None
-    message = format_sleep_message(summary)
+    assessment = assess_sleep(bundle, now=now, fallback_date=sleep_date)
+    sent_dates = load_sent_dates(args.state)
+    decision = plan_sleep_notification(assessment, sent_dates, force=args.force)
+    if decision == "skip-incomplete":
+        print(
+            f"Skipping sleep notification for {sleep_date}: {assessment.reason}. "
+            "The next scheduled run will try again."
+        )
+        return
+    if decision == "skip-already-sent":
+        print(f"Sleep summary for {sleep_date} was already sent; skipping")
+        return
+    if assessment.summary is None:
+        raise SystemExit(f"Sleep summary for {sleep_date} is missing")
+    message = format_sleep_message(assessment.summary)
     print(message)
     if args.dry_run:
         print("Dry run; Telegram message not sent")
         return
     telegram_memos.send_message(message)
+    updated = remember_sent_date(sent_dates, assessment.summary["date"])
+    if save_sent_dates(args.state, updated):
+        print(f"Recorded sent sleep date {assessment.summary['date']} in {args.state}")
 
 
 if __name__ == "__main__":
