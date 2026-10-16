@@ -5,7 +5,7 @@ import json
 import math
 import os
 import sys
-from datetime import date, datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
@@ -760,24 +760,103 @@ def format_duration(seconds: int) -> str:
     return f"{minutes}分"
 
 
-def format_moment(moment: datetime, report_date: date) -> str:
+SHORT_NIGHT_SECONDS = 6 * 60 * 60
+DEEP_SLEEP_SHORT_SECONDS = 45 * 60
+
+
+def format_duration_spaced(seconds: int) -> str:
+    minutes_total = (seconds + 30) // 60
+    hours, minutes = divmod(minutes_total, 60)
+    if hours and minutes:
+        return f"{hours} 小时 {minutes} 分"
+    if hours:
+        return f"{hours} 小时"
+    return f"{minutes} 分"
+
+
+def format_clock(moment: datetime) -> str:
     if moment.tzinfo is None:
         moment = moment.replace(tzinfo=SHANGHAI)
-    local = moment.astimezone(SHANGHAI)
-    clock = local.strftime("%H:%M")
-    if local.date() == report_date:
-        return clock
-    return f"{local.month}月{local.day}日 {clock}"
+    return moment.astimezone(SHANGHAI).strftime("%H:%M")
+
+
+def deep_sleep_is_low(summary: dict[str, Any]) -> bool:
+    deep = summary.get("deep_sleep_seconds")
+    total = summary.get("total_sleep_seconds") or 0
+    if deep is None or total <= 0:
+        return False
+    if deep < DEEP_SLEEP_SHORT_SECONDS:
+        return True
+    return total >= SHORT_NIGHT_SECONDS and deep / total < 0.10
+
+
+def sleep_headline(summary: dict[str, Any]) -> str:
+    score = summary.get("sleep_score")
+    short = summary["total_sleep_seconds"] < SHORT_NIGHT_SECONDS
+    if score is None:
+        return "昨晚睡得短了些" if short else "昨晚的睡眠"
+    if score >= 90 and not short:
+        if deep_sleep_is_low(summary):
+            return "昨晚睡得不错"
+        return "昨晚睡得不错 😴"
+    if score >= 80 and not short:
+        return "昨晚睡得可以"
+    if score >= 70 and not short:
+        return "昨晚睡得一般"
+    if short and score >= 70:
+        return "昨晚睡得短了些"
+    return "昨晚睡得不太踏实"
+
+
+def sleep_reminder(summary: dict[str, Any]) -> str | None:
+    notes: list[str] = []
+    score = summary.get("sleep_score")
+    if score is not None and score < 70:
+        notes.append("评分偏低")
+    if summary["total_sleep_seconds"] < SHORT_NIGHT_SECONDS:
+        notes.append("睡眠不到 6 小时")
+    if deep_sleep_is_low(summary):
+        notes.append("深睡偏少")
+    if not notes:
+        return None
+    if notes == ["评分偏低"]:
+        return "评分偏低，今晚可以早点休息。"
+    if notes == ["睡眠不到 6 小时"]:
+        return "不到 6 小时，有空的话补一小觉也好。"
+    if notes == ["深睡偏少"]:
+        return "深睡偏少，不用太担心，今晚少看会儿屏幕试试。"
+    return "、".join(notes) + "，今晚早点休息就好。"
+
+
+def format_score_text(summary: dict[str, Any]) -> str | None:
+    score = summary.get("sleep_score")
+    if score is None:
+        return None
+    qualifier = QUALIFIER_LABELS.get(summary.get("sleep_score_qualifier") or "")
+    if qualifier:
+        return f"{score}（{qualifier}）"
+    return str(score)
 
 
 def format_sleep_message(summary: dict[str, Any]) -> str:
-    report_date = datetime.strptime(summary["date"], "%Y-%m-%d").date()
-    lines = [f"睡眠 {report_date.month}月{report_date.day}日"]
-    if summary.get("woke_at") is not None:
-        lines.append(f"起床 {format_moment(summary['woke_at'], report_date)}")
-    if summary.get("fell_asleep_at") is not None:
-        lines.append(f"入眠 {format_moment(summary['fell_asleep_at'], report_date)}")
-    lines.append(f"总睡眠 {format_duration(summary['total_sleep_seconds'])}")
+    details: list[str] = []
+    fell_asleep_at = summary.get("fell_asleep_at")
+    woke_at = summary.get("woke_at")
+    if fell_asleep_at is not None and woke_at is not None:
+        details.append(f"{format_clock(fell_asleep_at)} 睡，{format_clock(woke_at)} 起")
+    elif woke_at is not None:
+        details.append(f"{format_clock(woke_at)} 起")
+    elif fell_asleep_at is not None:
+        details.append(f"{format_clock(fell_asleep_at)} 睡")
+    details.append(f"一共 {format_duration_spaced(summary['total_sleep_seconds'])}")
+    score_text = format_score_text(summary)
+    if score_text is not None:
+        details.append(f"评分 {score_text}")
+    narrative = f"{sleep_headline(summary)} {'，'.join(details)}。"
+    reminder = sleep_reminder(summary)
+    if reminder:
+        narrative = f"{narrative}{reminder}"
+
     stages = []
     if summary.get("deep_sleep_seconds") is not None:
         stages.append(f"深睡 {format_duration(summary['deep_sleep_seconds'])}")
@@ -785,29 +864,25 @@ def format_sleep_message(summary: dict[str, Any]) -> str:
         stages.append(f"浅睡 {format_duration(summary['light_sleep_seconds'])}")
     if summary.get("rem_sleep_seconds") is not None:
         stages.append(f"REM {format_duration(summary['rem_sleep_seconds'])}")
-    if stages:
-        lines.append(" · ".join(stages))
     if summary.get("awake_sleep_seconds") is not None:
-        lines.append(f"清醒 {format_duration(summary['awake_sleep_seconds'])}")
-    if summary.get("sleep_score") is not None:
-        qualifier = QUALIFIER_LABELS.get(summary.get("sleep_score_qualifier") or "")
-        if qualifier:
-            lines.append(f"睡眠评分 {summary['sleep_score']}（{qualifier}）")
-        else:
-            lines.append(f"睡眠评分 {summary['sleep_score']}")
+        stages.append(f"清醒 {format_duration(summary['awake_sleep_seconds'])}")
+    metrics = []
     if summary.get("resting_heart_rate") is not None:
-        lines.append(f"静息心率 {summary['resting_heart_rate']}")
-    if summary.get("night_heart_rate") is not None:
-        lines.append(f"夜间平均心率 {summary['night_heart_rate']}")
-    if summary.get("body_battery") is not None:
-        lines.append(f"身体电量 {summary['body_battery']}")
+        metrics.append(f"静息心率 {summary['resting_heart_rate']}")
     change = summary.get("body_battery_change")
     if change is not None:
         sign = "+" if change > 0 else ""
-        lines.append(f"身体电量变化 {sign}{change}")
+        metrics.append(f"身体电量 {sign}{change}")
     if summary.get("average_hrv") is not None:
-        lines.append(f"平均 HRV {summary['average_hrv']}ms")
-    return "\n".join(lines)
+        metrics.append(f"HRV {summary['average_hrv']}ms")
+    data_lines = []
+    if stages:
+        data_lines.append(" · ".join(stages))
+    if metrics:
+        data_lines.append(" · ".join(metrics))
+    if not data_lines:
+        return narrative
+    return narrative + "\n\n" + "\n".join(data_lines)
 
 
 def optional_garmin_call(client: Any, method_name: str, *args: Any, label: str) -> Any:

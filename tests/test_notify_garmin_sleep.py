@@ -80,14 +80,10 @@ class GarminSleepMessageTest(unittest.TestCase):
             MODULE.format_sleep_message(summary),
             "\n".join(
                 [
-                    "睡眠 10月16日",
-                    "起床 07:42",
-                    "入眠 10月15日 23:18",
-                    "总睡眠 7小时24分",
+                    "昨晚睡得可以 23:18 睡，07:42 起，一共 7 小时 24 分，评分 82（良好）。",
+                    "",
                     "深睡 1小时30分 · 浅睡 4小时 · REM 1小时54分",
-                    "睡眠评分 82（良好）",
                     "静息心率 51",
-                    "身体电量 68",
                 ]
             ),
         )
@@ -111,11 +107,11 @@ class GarminSleepMessageTest(unittest.TestCase):
         self.assertEqual(summary["fell_asleep_at"].timestamp(), fell_asleep.timestamp())
         self.assertEqual(summary["woke_at"].timestamp(), woke.timestamp())
         message = MODULE.format_sleep_message(summary)
-        self.assertIn("起床 07:42", message)
-        self.assertIn("入眠 10月15日 23:18", message)
+        self.assertIn("23:18 睡，07:42 起", message)
+        self.assertIn("一共 7 小时 24 分", message)
         self.assertNotIn("静息心率", message)
         self.assertNotIn("身体电量", message)
-        self.assertNotIn("睡眠评分", message)
+        self.assertNotIn("评分", message)
         self.assertNotIn("深睡", message)
 
     def test_omits_missing_stages_and_reads_optional_fallbacks(self) -> None:
@@ -148,7 +144,8 @@ class GarminSleepMessageTest(unittest.TestCase):
         self.assertNotIn("浅睡", message)
         self.assertNotIn("REM", message)
         self.assertIn("静息心率 48", message)
-        self.assertIn("身体电量 77", message)
+        self.assertNotIn("身体电量", message)
+        self.assertIn("睡眠不到 6 小时、深睡偏少", message)
 
     def test_rejects_empty_sleep(self) -> None:
         with self.assertRaises(ValueError) as caught:
@@ -343,8 +340,8 @@ class GarminSleepMessageTest(unittest.TestCase):
                     text=True,
                 )
                 self.assertEqual(result.returncode, 0, result.stderr)
-                self.assertIn("总睡眠 3小时", result.stdout)
-                self.assertIn("睡眠评分 80", result.stdout)
+                self.assertIn("一共 3 小时", result.stdout)
+                self.assertIn("评分 80", result.stdout)
                 self.assertIn("Dry run; Telegram message not sent", result.stdout)
                 self.assertNotIn("TELEGRAM_MEMOS_BOT_TOKEN", result.stdout + result.stderr)
                 self.assertFalse(state.exists())
@@ -439,7 +436,7 @@ class GarminSleepMessageTest(unittest.TestCase):
                 text=True,
             )
             self.assertEqual(forced.returncode, 0, forced.stderr)
-            self.assertIn("总睡眠 3小时", forced.stdout)
+            self.assertIn("一共 3 小时", forced.stdout)
             self.assertIn("Dry run; Telegram message not sent", forced.stdout)
             self.assertEqual(
                 json.loads(state.read_text(encoding="utf-8"))["sentDates"],
@@ -538,17 +535,10 @@ class GarminSleepFieldFallbackTest(unittest.TestCase):
             MODULE.format_sleep_message(summary),
             "\n".join(
                 [
-                    "睡眠 10月16日",
-                    "起床 07:30",
-                    "入眠 10月15日 23:26",
-                    "总睡眠 8小时1分",
-                    "深睡 55分 · 浅睡 5小时35分 · REM 1小时32分",
-                    "清醒 3分",
-                    "睡眠评分 91（优秀）",
-                    "静息心率 56",
-                    "夜间平均心率 61",
-                    "身体电量变化 +48",
-                    "平均 HRV 65ms",
+                    "昨晚睡得不错 😴 23:26 睡，07:30 起，一共 8 小时 1 分，评分 91（优秀）。",
+                    "",
+                    "深睡 55分 · 浅睡 5小时35分 · REM 1小时32分 · 清醒 3分",
+                    "静息心率 56 · 身体电量 +48 · HRV 65ms",
                 ]
             ),
         )
@@ -577,9 +567,9 @@ class GarminSleepFieldFallbackTest(unittest.TestCase):
 
         self.assertEqual(summary["total_sleep_seconds"], REAL_SLEEP_SECONDS)
         message = MODULE.format_sleep_message(summary)
-        self.assertIn("总睡眠 8小时1分", message)
-        self.assertNotIn("总睡眠 1小时", message)
-        self.assertIn("入眠 10月15日 23:26", message)
+        self.assertIn("一共 8 小时 1 分", message)
+        self.assertNotIn("一共 1 小时", message)
+        self.assertIn("23:26 睡", message)
 
     def test_reads_root_fields_and_sleep_levels_when_the_dto_is_a_fragment(self) -> None:
         woke = datetime(2026, 10, 16, 7, 30, tzinfo=SHANGHAI)
@@ -635,9 +625,9 @@ class GarminSleepFieldFallbackTest(unittest.TestCase):
         self.assertEqual(summary["average_hrv"], 65)
         self.assertEqual(summary["night_heart_rate"], 61)
         message = MODULE.format_sleep_message(summary)
-        self.assertIn("总睡眠 8小时1分", message)
+        self.assertIn("一共 8 小时 1 分", message)
         self.assertIn("深睡 55分", message)
-        self.assertIn("睡眠评分 91（优秀）", message)
+        self.assertIn("评分 91（优秀）", message)
         self.assertNotIn("424242", message)
 
     def test_sums_sleep_levels_when_stage_fields_are_missing(self) -> None:
@@ -685,7 +675,7 @@ class GarminSleepFieldFallbackTest(unittest.TestCase):
         )
         self.assertEqual(summary["rem_sleep_seconds"], REAL_REM_SECONDS)
         self.assertEqual(summary["awake_sleep_seconds"], REAL_AWAKE_SECONDS)
-        self.assertIn("总睡眠 8小时2分", MODULE.format_sleep_message(summary))
+        self.assertIn("一共 8 小时 2 分", MODULE.format_sleep_message(summary))
 
     def test_reads_a_nested_sleep_time_seconds_object(self) -> None:
         summary = MODULE.summarize_sleep(
@@ -780,3 +770,98 @@ class GarminSleepFieldFallbackTest(unittest.TestCase):
         self.assertNotIn("8675309", result.stdout)
         self.assertNotIn("person@example.com", result.stdout)
         self.assertNotIn("Dry run; Telegram message not sent", result.stdout)
+
+
+class SleepMessageCopyTest(unittest.TestCase):
+    def test_good_night_is_two_paragraphs(self) -> None:
+        message = MODULE.format_sleep_message(
+            {
+                "date": "2026-10-16",
+                "fell_asleep_at": datetime(2026, 10, 16, 1, 25, tzinfo=SHANGHAI),
+                "woke_at": datetime(2026, 10, 16, 9, 30, tzinfo=SHANGHAI),
+                "total_sleep_seconds": 8 * 3600 + 2 * 60,
+                "deep_sleep_seconds": 90 * 60,
+                "light_sleep_seconds": 5 * 3600,
+                "rem_sleep_seconds": 92 * 60,
+                "awake_sleep_seconds": 8 * 60,
+                "sleep_score": 91,
+                "sleep_score_qualifier": "EXCELLENT",
+                "resting_heart_rate": 56,
+                "night_heart_rate": 61,
+                "body_battery": 80,
+                "body_battery_change": 48,
+                "average_hrv": 65,
+            }
+        )
+        self.assertEqual(
+            message,
+            "\n".join(
+                [
+                    "昨晚睡得不错 😴 01:25 睡，09:30 起，一共 8 小时 2 分，评分 91（优秀）。",
+                    "",
+                    "深睡 1小时30分 · 浅睡 5小时 · REM 1小时32分 · 清醒 8分",
+                    "静息心率 56 · 身体电量 +48 · HRV 65ms",
+                ]
+            ),
+        )
+        self.assertNotIn("夜间平均心率", message)
+        self.assertNotIn("身体电量 80", message)
+
+    def test_low_score_adds_one_gentle_reminder(self) -> None:
+        message = MODULE.format_sleep_message(
+            {
+                "date": "2026-10-16",
+                "fell_asleep_at": datetime(2026, 10, 15, 23, 30, tzinfo=SHANGHAI),
+                "woke_at": datetime(2026, 10, 16, 7, 30, tzinfo=SHANGHAI),
+                "total_sleep_seconds": 8 * 3600,
+                "deep_sleep_seconds": 80 * 60,
+                "sleep_score": 64,
+                "sleep_score_qualifier": "POOR",
+            }
+        )
+        self.assertEqual(
+            message.split("\n\n")[0],
+            "昨晚睡得不太踏实 23:30 睡，07:30 起，一共 8 小时，评分 64（较差）。"
+            "评分偏低，今晚可以早点休息。",
+        )
+        self.assertNotIn("不到 6 小时", message)
+        self.assertNotIn("深睡偏少", message)
+
+    def test_short_night_adds_one_gentle_reminder(self) -> None:
+        message = MODULE.format_sleep_message(
+            {
+                "date": "2026-10-16",
+                "fell_asleep_at": datetime(2026, 10, 16, 2, 0, tzinfo=SHANGHAI),
+                "woke_at": datetime(2026, 10, 16, 7, 0, tzinfo=SHANGHAI),
+                "total_sleep_seconds": 5 * 3600,
+                "deep_sleep_seconds": 70 * 60,
+                "sleep_score": 82,
+                "sleep_score_qualifier": "GOOD",
+            }
+        )
+        self.assertEqual(
+            message.split("\n\n")[0],
+            "昨晚睡得短了些 02:00 睡，07:00 起，一共 5 小时，评分 82（良好）。"
+            "不到 6 小时，有空的话补一小觉也好。",
+        )
+
+    def test_low_deep_sleep_adds_one_gentle_reminder(self) -> None:
+        message = MODULE.format_sleep_message(
+            {
+                "date": "2026-10-16",
+                "fell_asleep_at": datetime(2026, 10, 15, 23, 0, tzinfo=SHANGHAI),
+                "woke_at": datetime(2026, 10, 16, 7, 0, tzinfo=SHANGHAI),
+                "total_sleep_seconds": 8 * 3600,
+                "deep_sleep_seconds": 20 * 60,
+                "light_sleep_seconds": 6 * 3600,
+                "rem_sleep_seconds": 100 * 60,
+                "sleep_score": 88,
+                "sleep_score_qualifier": "GOOD",
+            }
+        )
+        self.assertEqual(
+            message.split("\n\n")[0],
+            "昨晚睡得可以 23:00 睡，07:00 起，一共 8 小时，评分 88（良好）。"
+            "深睡偏少，不用太担心，今晚少看会儿屏幕试试。",
+        )
+        self.assertNotIn("😴", message)
