@@ -130,3 +130,51 @@ cat /path/to/workouts.json | python scripts/fetch-garmin-workouts.py --merge --i
 
 同步采用增量快照语义：新活动和最近 14 天内的修改会覆盖同 ID 记录，更早的
 历史记录会保留；若一次运行遇到主分支并发更新而推送失败，下次定时运行会重试。
+
+## Telegram 备忘
+
+`.github/workflows/notify-sleep.yml` 和 `.github/workflows/notify-rss.yml`
+只把消息发到 [Telegram 频道](https://t.me/kazootttmemos)。它们不会创建 Issue，
+也不会添加 `blog:publish`。
+
+### 配置
+
+- Secret `TELEGRAM_MEMOS_BOT_TOKEN`：机器人 token。不要写进代码、工作流或日志。
+- Secret 或 Variable `TELEGRAM_MEMOS_CHAT_ID`：频道用户名 `@kazootttmemos`，
+  或数字 chat id。两处都填时使用 Secret。
+- 睡眠日报复用已有的 `GARMIN_EMAIL`、`GARMIN_PASSWORD`，以及可选 Variable
+  `GARMIN_IS_CN`（默认 `true`，中国区）。脚本使用 `garminconnect==0.3.6`。
+
+把机器人加为频道管理员，否则 Telegram 会拒绝发送。
+
+### 睡眠日报
+
+每天 `0 0 * * *` UTC（北京时间 08:00）读取 Garmin 睡眠，整理成短消息：起床、入眠、
+总睡眠、深睡/浅睡/REM、睡眠评分；接口里有静息心率或身体电量时一并带上。
+
+在 Actions 页面手动运行 `Notify Garmin sleep` 即可试跑。`date` 留空时用
+Asia/Shanghai 的今天；勾选 `dry_run` 只在日志里打印消息，不发送。手表尚未同步时
+任务会失败，日志不含密码或 token，同步后再跑一次即可。
+
+```bash
+python scripts/notify-garmin-sleep.py --input sleep.json --dry-run
+```
+
+### 博客 RSS
+
+每小时第 17 分检查 <https://blog.kazoottt.top/rss.xml>。新文章只发送标题和链接。
+已推送的 guid 记在 `data/telegram/rss-seen.json`，由 workflow 提交回当前分支。
+只改这个文件的推送不会触发站点部署。
+
+首次启用要先播种，否则定时任务会失败，而不是把历史文章发进频道：
+
+1. 打开 Actions → `Notify blog RSS` → Run workflow。
+2. 勾选 `seed`。不要同时勾选 `resend_latest`。
+3. 这一步不发消息，只把当前 feed 里的条目标成已推送，并提交状态文件。
+
+之后只有新文章会发送。`dry_run` 只打印将要发送的内容。`resend_latest`
+把 feed 里最新一篇再发一次，用来确认机器人能发言；它不修改状态，也不能代替 seed。
+
+状态文件丢失时，定时任务同样失败且不发送。重新勾选 `seed` 即可。再次 seed
+会把当时 feed 里的文章全部标成已推送，包括还没发过的新文章。若消息已经发出
+但状态提交失败，下次运行可能会再发一次。
