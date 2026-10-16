@@ -152,10 +152,17 @@ cat /path/to/workouts.json | python scripts/fetch-garmin-workouts.py --merge --i
 北京时间 07:00–14:00 每小时读一次 Garmin 睡眠。对应 UTC cron 是 `0 23 * * *`
 （07:00）和 `0 0-6 * * *`（08:00–14:00）。中国没有夏令时。
 
-一条记录算完整，才会发消息：总睡眠大于 0，并且有起床时间（睡眠结束时间），
-而且这个时间已经到了或不晚于当前时间。没有记录、时长为 0、没有起床时间，
-或结束时间还在未来，都视为还在睡或手表还没同步。这种情况只在日志里说明原因，
-不发消息，workflow 也不会失败。登录或 Telegram 发送失败仍会让任务失败。
+一条记录算完整，才会发消息：总睡眠不少于 3 小时，有睡眠评分，并且有起床时间
+（睡眠结束时间），而且这个时间已经到了或不晚于当前时间。没有记录、时长为 0、
+总睡眠不足 3 小时、没有评分、没有起床时间，或结束时间还在未来，都视为还在睡、
+只是开始睡眠的片段，或手表还没同步。这种情况只在日志里说明原因，不发消息，
+workflow 也不会失败。登录或 Telegram 发送失败仍会让任务失败。
+
+总睡眠优先读 `dailySleepDTO.sleepTimeSeconds`（`garminconnect` 0.3.6
+`get_sleep_data` 的正式字段，单位是秒）。如果这个字段只是一段很短的睡眠，
+而同一份响应里另有完整夜晚（其他时长字段、深睡+浅睡+REM，或 `sleepLevels`），
+就改用完整夜晚。深睡、浅睡、REM、清醒、评分、静息心率、夜间平均心率、
+身体电量变化和平均 HRV 也会从 DTO、响应根节点和可选的 HRV 接口里按候选字段回退。
 
 发出去之后把日期写入 `data/telegram/sleep-sent.json` 并提交。同一天后续的
 整点检查看到这个日期就跳过。14:00 之后当天不再自动尝试；如果那时还没有完整
@@ -164,7 +171,9 @@ cat /path/to/workouts.json | python scripts/fetch-garmin-workouts.py --merge --i
 在 Actions 页面手动运行 `Notify Garmin sleep` 即可试跑。`date` 留空时用
 Asia/Shanghai 的今天。`dry_run` 只打印将要发送的消息，不调用 Telegram，也不
 记录已发送。`force` 在数据完整时再发一次，用来覆盖“今天已经发过”；数据不完整
-时即使勾选 `force` 也仍然跳过。
+时即使勾选 `force` 也仍然跳过。`debug` 只在手动运行时可用，把 `get_sleep_data`
+返回的 `dailySleepDTO` 相关字段名和数值打到日志里，并去掉用户、设备一类个人标识，
+方便核对字段；它不改变是否发送。
 
 ```bash
 python scripts/notify-garmin-sleep.py --input sleep.json --dry-run

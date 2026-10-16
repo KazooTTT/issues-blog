@@ -15,6 +15,10 @@ on:
         description: "即使该日期已经发过，也再发一次。数据不完整时仍然跳过"
         type: boolean
         default: false
+      debug:
+        description: "打印 dailySleepDTO 相关字段和数值（去掉个人标识）。只在手动运行时生效"
+        type: boolean
+        default: false
   schedule:
     # 07:00–14:00 Asia/Shanghai, every hour. CST is UTC+8 all year.
     # 07:00 CST is 23:00 UTC; 08:00–14:00 CST is 00:00–06:00 UTC.
@@ -40,6 +44,7 @@ jobs:
       SLEEP_DATE: ${{ github.event_name == 'workflow_dispatch' && inputs.date || '' }}
       DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run == true }}
       FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force == true }}
+      DEBUG_SLEEP: ${{ github.event_name == 'workflow_dispatch' && inputs.debug == true }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v6
@@ -61,6 +66,9 @@ jobs:
           fi
           if [ "$FORCE" = "true" ]; then
             args+=(--force)
+          fi
+          if [ "$DEBUG_SLEEP" = "true" ]; then
+            args+=(--debug)
           fi
           "${args[@]}"
           code=$?
