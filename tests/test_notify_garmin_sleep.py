@@ -164,10 +164,109 @@ class GarminSleepMessageTest(unittest.TestCase):
             )
         self.assertIn("sleepTimeSeconds", str(caught.exception))
 
+    def test_complete_sleep_has_ended_with_a_positive_duration(self) -> None:
+        woke = datetime(2026, 10, 16, 7, 42, tzinfo=SHANGHAI)
+        bundle = {
+            "sleep": {
+                "dailySleepDTO": {
+                    "calendarDate": "2026-10-16",
+                    "sleepTimeSeconds": 26640,
+                    "sleepStartTimestampGMT": epoch_ms(
+                        datetime(2026, 10, 15, 23, 18, tzinfo=SHANGHAI),
+                    ),
+                    "sleepEndTimestampGMT": epoch_ms(woke),
+                }
+            }
+        }
+        now = datetime(2026, 10, 16, 8, 0, tzinfo=SHANGHAI)
+        assessment = MODULE.assess_sleep(bundle, now=now, fallback_date="2026-10-16")
+        self.assertTrue(assessment.complete)
+        self.assertEqual(assessment.summary["woke_at"], woke)
+        ended_at_now = MODULE.assess_sleep(bundle, now=woke, fallback_date="2026-10-16")
+        self.assertTrue(ended_at_now.complete)
+        self.assertEqual(
+            MODULE.plan_sleep_notification(assessment, [], force=False),
+            "send",
+        )
+        self.assertEqual(
+            MODULE.plan_sleep_notification(assessment, ["2026-10-16"], force=False),
+            "skip-already-sent",
+        )
+        self.assertEqual(
+            MODULE.plan_sleep_notification(assessment, ["2026-10-16"], force=True),
+            "send",
+        )
+
+    def test_incomplete_sleep_is_skipped_until_it_has_ended(self) -> None:
+        now = datetime(2026, 10, 16, 8, 0, tzinfo=SHANGHAI)
+        missing = MODULE.assess_sleep({}, now=now, fallback_date="2026-10-16")
+        self.assertFalse(missing.complete)
+        self.assertIn("dailySleepDTO", missing.reason)
+
+        zero = MODULE.assess_sleep(
+            {
+                "sleep": {
+                    "dailySleepDTO": {
+                        "calendarDate": "2026-10-16",
+                        "sleepTimeSeconds": 0,
+                        "sleepEndTimestampGMT": epoch_ms(now),
+                    }
+                }
+            },
+            now=now,
+            fallback_date="2026-10-16",
+        )
+        self.assertFalse(zero.complete)
+        self.assertIn("sleepTimeSeconds", zero.reason)
+
+        no_wake = MODULE.assess_sleep(
+            {
+                "sleep": {
+                    "dailySleepDTO": {
+                        "calendarDate": "2026-10-16",
+                        "sleepTimeSeconds": 3600,
+                    }
+                }
+            },
+            now=now,
+            fallback_date="2026-10-16",
+        )
+        self.assertFalse(no_wake.complete)
+        self.assertEqual(no_wake.reason, "wake time is missing")
+
+        still_asleep = MODULE.assess_sleep(
+            {
+                "sleep": {
+                    "dailySleepDTO": {
+                        "calendarDate": "2026-10-16",
+                        "sleepTimeSeconds": 3600,
+                        "sleepEndTimestampGMT": epoch_ms(
+                            datetime(2026, 10, 16, 9, 0, tzinfo=SHANGHAI),
+                        ),
+                    }
+                }
+            },
+            now=now,
+            fallback_date="2026-10-16",
+        )
+        self.assertFalse(still_asleep.complete)
+        self.assertEqual(still_asleep.reason, "sleep has not ended yet")
+        self.assertEqual(
+            MODULE.plan_sleep_notification(still_asleep, [], force=True),
+            "skip-incomplete",
+        )
+
+    def test_sent_dates_keep_the_newest_entries(self) -> None:
+        self.assertEqual(
+            MODULE.remember_sent_date(["2026-10-14", "2026-10-15"], "2026-10-16", limit=2),
+            ["2026-10-15", "2026-10-16"],
+        )
+
     def test_cli_dry_run_prints_message_without_telegram(self) -> None:
         with self.subTest("fixture"):
             with tempfile.TemporaryDirectory() as directory:
                 bundle = Path(directory) / "sleep.json"
+                state = Path(directory) / "sleep-sent.json"
                 bundle.write_text(
                     json.dumps(
                         {
@@ -175,6 +274,9 @@ class GarminSleepMessageTest(unittest.TestCase):
                                 "dailySleepDTO": {
                                     "calendarDate": "2026-10-16",
                                     "sleepTimeSeconds": 3600,
+                                    "sleepEndTimestampGMT": epoch_ms(
+                                        datetime(2026, 10, 16, 7, 30, tzinfo=SHANGHAI),
+                                    ),
                                     "sleepScores": {"overall": {"value": 80}},
                                 }
                             }
@@ -188,6 +290,10 @@ class GarminSleepMessageTest(unittest.TestCase):
                         str(SCRIPT_PATH),
                         "--input",
                         str(bundle),
+                        "--state",
+                        str(state),
+                        "--now",
+                        "2026-10-16T08:00:00+08:00",
                         "--dry-run",
                     ],
                     check=False,
@@ -199,6 +305,7 @@ class GarminSleepMessageTest(unittest.TestCase):
                 self.assertIn("睡眠评分 80", result.stdout)
                 self.assertIn("Dry run; Telegram message not sent", result.stdout)
                 self.assertNotIn("TELEGRAM_MEMOS_BOT_TOKEN", result.stdout + result.stderr)
+                self.assertFalse(state.exists())
 
         result = subprocess.run(
             [sys.executable, str(SCRIPT_PATH), "--date", "16-10-2026", "--dry-run"],
@@ -225,15 +332,115 @@ class GarminSleepMessageTest(unittest.TestCase):
                 encoding="utf-8",
             )
             missing = subprocess.run(
-                [sys.executable, str(SCRIPT_PATH), "--input", str(empty), "--dry-run"],
+                [
+                    sys.executable,
+                    str(SCRIPT_PATH),
+                    "--input",
+                    str(empty),
+                    "--now",
+                    "2026-10-16T08:00:00+08:00",
+                    "--dry-run",
+                ],
                 check=False,
                 capture_output=True,
                 text=True,
             )
-            self.assertNotEqual(missing.returncode, 0)
-            self.assertIn("sleepTimeSeconds", missing.stderr)
-            self.assertIn("re-run", missing.stderr)
+            self.assertEqual(missing.returncode, 0, missing.stderr)
+            self.assertIn("Skipping sleep notification", missing.stdout)
+            self.assertIn("sleepTimeSeconds", missing.stdout)
+            self.assertNotIn("总睡眠", missing.stdout)
 
+    def test_cli_skips_a_date_already_sent_unless_forced(self) -> None:
+        woke = epoch_ms(datetime(2026, 10, 16, 7, 30, tzinfo=SHANGHAI))
+        with tempfile.TemporaryDirectory() as directory:
+            bundle = Path(directory) / "sleep.json"
+            state = Path(directory) / "sleep-sent.json"
+            bundle.write_text(
+                json.dumps(
+                    {
+                        "sleep": {
+                            "dailySleepDTO": {
+                                "calendarDate": "2026-10-16",
+                                "sleepTimeSeconds": 3600,
+                                "sleepEndTimestampGMT": woke,
+                            }
+                        }
+                    }
+                ),
+                encoding="utf-8",
+            )
+            state.write_text(
+                json.dumps({"sentDates": ["2026-10-16"]}, indent=2) + "\n",
+                encoding="utf-8",
+            )
+            command = [
+                sys.executable,
+                str(SCRIPT_PATH),
+                "--input",
+                str(bundle),
+                "--state",
+                str(state),
+                "--now",
+                "2026-10-16T10:00:00+08:00",
+                "--dry-run",
+            ]
+            skipped = subprocess.run(command, check=False, capture_output=True, text=True)
+            self.assertEqual(skipped.returncode, 0, skipped.stderr)
+            self.assertIn("already sent", skipped.stdout)
+            self.assertNotIn("总睡眠", skipped.stdout)
 
-if __name__ == "__main__":
-    unittest.main()
+            forced = subprocess.run(
+                [*command, "--force"],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(forced.returncode, 0, forced.stderr)
+            self.assertIn("总睡眠 1小时", forced.stdout)
+            self.assertIn("Dry run; Telegram message not sent", forced.stdout)
+            self.assertEqual(
+                json.loads(state.read_text(encoding="utf-8"))["sentDates"],
+                ["2026-10-16"],
+            )
+
+    def test_records_the_date_after_a_successful_send(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            bundle = Path(directory) / "sleep.json"
+            state = Path(directory) / "sleep-sent.json"
+            bundle.write_text(
+                json.dumps(
+                    {
+                        "sleep": {
+                            "dailySleepDTO": {
+                                "calendarDate": "2026-10-16",
+                                "sleepTimeSeconds": 3600,
+                                "sleepEndTimestampGMT": epoch_ms(
+                                    datetime(2026, 10, 16, 7, 30, tzinfo=SHANGHAI),
+                                ),
+                            }
+                        }
+                    }
+                ),
+                encoding="utf-8",
+            )
+            original = MODULE.telegram_memos.send_message
+            argv = sys.argv
+            MODULE.telegram_memos.send_message = lambda message: None
+            try:
+                sys.argv = [
+                    "notify-garmin-sleep.py",
+                    "--input",
+                    str(bundle),
+                    "--state",
+                    str(state),
+                    "--now",
+                    "2026-10-16T08:00:00+08:00",
+                ]
+                MODULE.main()
+            finally:
+                sys.argv = argv
+                MODULE.telegram_memos.send_message = original
+            self.assertEqual(
+                json.loads(state.read_text(encoding="utf-8"))["sentDates"],
+                ["2026-10-16"],
+            )
