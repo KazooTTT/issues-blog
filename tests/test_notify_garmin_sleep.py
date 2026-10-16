@@ -85,7 +85,7 @@ class GarminSleepMessageTest(unittest.TestCase):
                     "入眠 10月15日 23:18",
                     "总睡眠 7小时24分",
                     "深睡 1小时30分 · 浅睡 4小时 · REM 1小时54分",
-                    "睡眠评分 82",
+                    "睡眠评分 82（良好）",
                     "静息心率 51",
                     "身体电量 68",
                 ]
@@ -175,6 +175,7 @@ class GarminSleepMessageTest(unittest.TestCase):
                         datetime(2026, 10, 15, 23, 18, tzinfo=SHANGHAI),
                     ),
                     "sleepEndTimestampGMT": epoch_ms(woke),
+                    "sleepScores": {"overall": {"value": 82}},
                 }
             }
         }
@@ -256,6 +257,47 @@ class GarminSleepMessageTest(unittest.TestCase):
             "skip-incomplete",
         )
 
+        short_night = MODULE.assess_sleep(
+            {
+                "sleep": {
+                    "dailySleepDTO": {
+                        "calendarDate": "2026-10-16",
+                        "sleepTimeSeconds": 3600,
+                        "sleepEndTimestampGMT": epoch_ms(
+                            datetime(2026, 10, 16, 7, 30, tzinfo=SHANGHAI),
+                        ),
+                        "sleepScores": {"overall": {"value": 91}},
+                    }
+                }
+            },
+            now=now,
+            fallback_date="2026-10-16",
+        )
+        self.assertFalse(short_night.complete)
+        self.assertEqual(short_night.reason, "total sleep is under 3 hours")
+        self.assertEqual(
+            MODULE.plan_sleep_notification(short_night, [], force=True),
+            "skip-incomplete",
+        )
+
+        unscored = MODULE.assess_sleep(
+            {
+                "sleep": {
+                    "dailySleepDTO": {
+                        "calendarDate": "2026-10-16",
+                        "sleepTimeSeconds": 28860,
+                        "sleepEndTimestampGMT": epoch_ms(
+                            datetime(2026, 10, 16, 7, 30, tzinfo=SHANGHAI),
+                        ),
+                    }
+                }
+            },
+            now=now,
+            fallback_date="2026-10-16",
+        )
+        self.assertFalse(unscored.complete)
+        self.assertEqual(unscored.reason, "sleep score is missing")
+
     def test_sent_dates_keep_the_newest_entries(self) -> None:
         self.assertEqual(
             MODULE.remember_sent_date(["2026-10-14", "2026-10-15"], "2026-10-16", limit=2),
@@ -273,7 +315,7 @@ class GarminSleepMessageTest(unittest.TestCase):
                             "sleep": {
                                 "dailySleepDTO": {
                                     "calendarDate": "2026-10-16",
-                                    "sleepTimeSeconds": 3600,
+                                    "sleepTimeSeconds": 10800,
                                     "sleepEndTimestampGMT": epoch_ms(
                                         datetime(2026, 10, 16, 7, 30, tzinfo=SHANGHAI),
                                     ),
@@ -301,7 +343,7 @@ class GarminSleepMessageTest(unittest.TestCase):
                     text=True,
                 )
                 self.assertEqual(result.returncode, 0, result.stderr)
-                self.assertIn("总睡眠 1小时", result.stdout)
+                self.assertIn("总睡眠 3小时", result.stdout)
                 self.assertIn("睡眠评分 80", result.stdout)
                 self.assertIn("Dry run; Telegram message not sent", result.stdout)
                 self.assertNotIn("TELEGRAM_MEMOS_BOT_TOKEN", result.stdout + result.stderr)
@@ -361,8 +403,9 @@ class GarminSleepMessageTest(unittest.TestCase):
                         "sleep": {
                             "dailySleepDTO": {
                                 "calendarDate": "2026-10-16",
-                                "sleepTimeSeconds": 3600,
+                                "sleepTimeSeconds": 10800,
                                 "sleepEndTimestampGMT": woke,
+                                "sleepScores": {"overall": {"value": 80}},
                             }
                         }
                     }
@@ -396,7 +439,7 @@ class GarminSleepMessageTest(unittest.TestCase):
                 text=True,
             )
             self.assertEqual(forced.returncode, 0, forced.stderr)
-            self.assertIn("总睡眠 1小时", forced.stdout)
+            self.assertIn("总睡眠 3小时", forced.stdout)
             self.assertIn("Dry run; Telegram message not sent", forced.stdout)
             self.assertEqual(
                 json.loads(state.read_text(encoding="utf-8"))["sentDates"],
@@ -413,10 +456,11 @@ class GarminSleepMessageTest(unittest.TestCase):
                         "sleep": {
                             "dailySleepDTO": {
                                 "calendarDate": "2026-10-16",
-                                "sleepTimeSeconds": 3600,
+                                "sleepTimeSeconds": 10800,
                                 "sleepEndTimestampGMT": epoch_ms(
                                     datetime(2026, 10, 16, 7, 30, tzinfo=SHANGHAI),
                                 ),
+                                "sleepScores": {"overall": {"value": 80}},
                             }
                         }
                     }
@@ -444,3 +488,295 @@ class GarminSleepMessageTest(unittest.TestCase):
                 json.loads(state.read_text(encoding="utf-8"))["sentDates"],
                 ["2026-10-16"],
             )
+
+
+REAL_SLEEP_SECONDS = 8 * 3600 + 60
+REAL_DEEP_SECONDS = 55 * 60
+REAL_LIGHT_SECONDS = 5 * 3600 + 35 * 60
+REAL_REM_SECONDS = 1 * 3600 + 32 * 60
+REAL_AWAKE_SECONDS = 3 * 60
+
+
+def real_night_dto(**overrides: object) -> dict:
+    woke = datetime(2026, 10, 16, 7, 30, tzinfo=SHANGHAI)
+    fell_asleep = datetime(2026, 10, 15, 23, 26, tzinfo=SHANGHAI)
+    dto = {
+        "calendarDate": "2026-10-16",
+        "sleepTimeSeconds": REAL_SLEEP_SECONDS,
+        "deepSleepSeconds": REAL_DEEP_SECONDS,
+        "lightSleepSeconds": REAL_LIGHT_SECONDS,
+        "remSleepSeconds": REAL_REM_SECONDS,
+        "awakeSleepSeconds": REAL_AWAKE_SECONDS,
+        "sleepStartTimestampGMT": epoch_ms(fell_asleep),
+        "sleepEndTimestampGMT": epoch_ms(woke),
+        "sleepScores": {"overall": {"value": 91, "qualifierKey": "EXCELLENT"}},
+        "restingHeartRate": 56,
+        "averageSleepHeartRate": 61,
+        "bodyBatteryChange": 48,
+        "avgSleepHRV": 65,
+    }
+    dto.update(overrides)
+    return dto
+
+
+class GarminSleepFieldFallbackTest(unittest.TestCase):
+    def test_formats_the_china_export_for_2026_10_16(self) -> None:
+        summary = MODULE.summarize_sleep(
+            {"sleep": {"dailySleepDTO": real_night_dto()}},
+            fallback_date="2026-10-16",
+        )
+        now = datetime(2026, 10, 16, 8, 0, tzinfo=SHANGHAI)
+        assessment = MODULE.assess_sleep(
+            {"sleep": {"dailySleepDTO": real_night_dto()}},
+            now=now,
+            fallback_date="2026-10-16",
+        )
+
+        self.assertTrue(assessment.complete)
+        self.assertEqual(summary["total_sleep_seconds"], REAL_SLEEP_SECONDS)
+        self.assertEqual(
+            MODULE.format_sleep_message(summary),
+            "\n".join(
+                [
+                    "睡眠 10月16日",
+                    "起床 07:30",
+                    "入眠 10月15日 23:26",
+                    "总睡眠 8小时1分",
+                    "深睡 55分 · 浅睡 5小时35分 · REM 1小时32分",
+                    "清醒 3分",
+                    "睡眠评分 91（优秀）",
+                    "静息心率 56",
+                    "夜间平均心率 61",
+                    "身体电量变化 +48",
+                    "平均 HRV 65ms",
+                ]
+            ),
+        )
+
+    def test_prefers_a_full_night_when_sleep_time_seconds_is_a_fragment(self) -> None:
+        woke = datetime(2026, 10, 16, 7, 30, tzinfo=SHANGHAI)
+        summary = MODULE.summarize_sleep(
+            {
+                "sleep": {
+                    "dailySleepDTO": {
+                        "calendarDate": "2026-10-16",
+                        "sleepTimeSeconds": 3600,
+                        "sleepTimeInSeconds": REAL_SLEEP_SECONDS,
+                        "deepSleepSeconds": REAL_DEEP_SECONDS,
+                        "lightSleepSeconds": REAL_LIGHT_SECONDS,
+                        "remSleepSeconds": REAL_REM_SECONDS,
+                        "awakeSleepSeconds": REAL_AWAKE_SECONDS,
+                        "sleepEndTimestampGMT": epoch_ms(woke),
+                        "sleepScores": {
+                            "overall": {"value": 91, "qualifierKey": "EXCELLENT"},
+                        },
+                    }
+                }
+            }
+        )
+
+        self.assertEqual(summary["total_sleep_seconds"], REAL_SLEEP_SECONDS)
+        message = MODULE.format_sleep_message(summary)
+        self.assertIn("总睡眠 8小时1分", message)
+        self.assertNotIn("总睡眠 1小时", message)
+        self.assertIn("入眠 10月15日 23:26", message)
+
+    def test_reads_root_fields_and_sleep_levels_when_the_dto_is_a_fragment(self) -> None:
+        woke = datetime(2026, 10, 16, 7, 30, tzinfo=SHANGHAI)
+        base = 1_700_000_000
+        cursor = base
+        levels = []
+        for activity, seconds in (
+            (0, REAL_DEEP_SECONDS),
+            (1, REAL_LIGHT_SECONDS),
+            (2, REAL_REM_SECONDS),
+            (3, REAL_AWAKE_SECONDS),
+        ):
+            levels.append(
+                {
+                    "activityLevel": activity,
+                    "startTimeInSeconds": cursor,
+                    "endTimeInSeconds": cursor + seconds,
+                }
+            )
+            cursor += seconds
+        bundle = {
+            "sleep": {
+                "dailySleepDTO": {
+                    "calendarDate": "2026-10-16",
+                    "userProfilePK": 424242,
+                    "sleepTimeSeconds": 3600,
+                    "sleepEndTimestampGMT": epoch_ms(woke),
+                },
+                "sleepTimeSeconds": REAL_SLEEP_SECONDS,
+                "deepSleepSeconds": REAL_DEEP_SECONDS,
+                "lightSleepSeconds": REAL_LIGHT_SECONDS,
+                "remSleepSeconds": REAL_REM_SECONDS,
+                "awakeSleepSeconds": REAL_AWAKE_SECONDS,
+                "sleepLevels": levels,
+                "sleepScores": {"overall": {"value": 91, "qualifierKey": "EXCELLENT"}},
+                "restingHeartRate": 56,
+                "avgHeartRate": 61,
+                "bodyBatteryChange": 48,
+                "avgOvernightHrv": 65,
+            },
+            "hrv": {"hrvSummary": {"lastNightAvg": 40}},
+        }
+        summary = MODULE.summarize_sleep(bundle)
+        assessment = MODULE.assess_sleep(
+            bundle,
+            now=datetime(2026, 10, 16, 8, 0, tzinfo=SHANGHAI),
+            fallback_date="2026-10-16",
+        )
+
+        self.assertTrue(assessment.complete)
+        self.assertEqual(summary["total_sleep_seconds"], REAL_SLEEP_SECONDS)
+        self.assertEqual(summary["deep_sleep_seconds"], REAL_DEEP_SECONDS)
+        self.assertEqual(summary["average_hrv"], 65)
+        self.assertEqual(summary["night_heart_rate"], 61)
+        message = MODULE.format_sleep_message(summary)
+        self.assertIn("总睡眠 8小时1分", message)
+        self.assertIn("深睡 55分", message)
+        self.assertIn("睡眠评分 91（优秀）", message)
+        self.assertNotIn("424242", message)
+
+    def test_sums_sleep_levels_when_stage_fields_are_missing(self) -> None:
+        base = 1_700_000_000
+        cursor = base
+        levels = []
+        for activity, seconds in (
+            (0.0, REAL_DEEP_SECONDS),
+            (1.0, REAL_LIGHT_SECONDS),
+            (2.0, REAL_REM_SECONDS),
+            (3.0, REAL_AWAKE_SECONDS),
+        ):
+            levels.append(
+                {
+                    "activityLevel": activity,
+                    "startGMT": datetime.fromtimestamp(cursor, timezone.utc).strftime(
+                        "%Y-%m-%dT%H:%M:%S.0",
+                    ),
+                    "endGMT": datetime.fromtimestamp(
+                        cursor + seconds,
+                        timezone.utc,
+                    ).strftime("%Y-%m-%dT%H:%M:%S.0"),
+                }
+            )
+            cursor += seconds
+        summary = MODULE.summarize_sleep(
+            {
+                "sleep": {
+                    "dailySleepDTO": {
+                        "calendarDate": "2026-10-16",
+                        "sleepTimeSeconds": 3600,
+                        "sleepEndTimestampGMT": epoch_ms(
+                            datetime(2026, 10, 16, 7, 30, tzinfo=SHANGHAI),
+                        ),
+                        "sleepScores": {"overall": {"value": 91}},
+                    },
+                    "sleepLevels": levels,
+                }
+            }
+        )
+
+        self.assertEqual(
+            summary["total_sleep_seconds"],
+            REAL_DEEP_SECONDS + REAL_LIGHT_SECONDS + REAL_REM_SECONDS,
+        )
+        self.assertEqual(summary["rem_sleep_seconds"], REAL_REM_SECONDS)
+        self.assertEqual(summary["awake_sleep_seconds"], REAL_AWAKE_SECONDS)
+        self.assertIn("总睡眠 8小时2分", MODULE.format_sleep_message(summary))
+
+    def test_reads_a_nested_sleep_time_seconds_object(self) -> None:
+        summary = MODULE.summarize_sleep(
+            {
+                "sleep": {
+                    "dailySleepDTO": real_night_dto(
+                        sleepTimeSeconds={"seconds": REAL_SLEEP_SECONDS},
+                    ),
+                }
+            }
+        )
+        self.assertEqual(summary["total_sleep_seconds"], REAL_SLEEP_SECONDS)
+
+    def test_hrv_falls_back_to_get_hrv_data_summary(self) -> None:
+        summary = MODULE.summarize_sleep(
+            {
+                "sleep": {"dailySleepDTO": real_night_dto(avgSleepHRV=None)},
+                "hrv": {"hrvSummary": {"lastNightAvg": 65}},
+            }
+        )
+        self.assertEqual(summary["average_hrv"], 65)
+
+    def test_debug_snapshot_keeps_metrics_and_drops_identifiers(self) -> None:
+        lines = MODULE.debug_sleep_lines(
+            {
+                "dailySleepDTO": {
+                    "userProfilePK": 12345,
+                    "displayName": "someone@example.com",
+                    "calendarDate": "2026-10-16",
+                    "sleepTimeSeconds": 3600,
+                    "sleepScores": {
+                        "overall": {"value": 91, "qualifierKey": "EXCELLENT"},
+                    },
+                    "sleepMovement": [{"start": 1}] * 20,
+                },
+                "avgOvernightHrv": 65,
+                "restingHeartRate": 56,
+            }
+        )
+        text = "\n".join(lines)
+        self.assertIn("sleepTimeSeconds=3600", text)
+        self.assertIn("91", text)
+        self.assertIn("root.avgOvernightHrv=65", text)
+        self.assertIn("root.restingHeartRate=56", text)
+        self.assertNotIn("12345", text)
+        self.assertNotIn("someone@example.com", text)
+        self.assertNotIn("userProfilePK", text)
+        self.assertNotIn("sleepMovement", text)
+
+    def test_cli_skips_the_one_hour_fragment_seen_in_dry_run(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            bundle = Path(directory) / "sleep.json"
+            bundle.write_text(
+                json.dumps(
+                    {
+                        "sleep": {
+                            "dailySleepDTO": {
+                                "calendarDate": "2026-10-16",
+                                "userProfilePK": 8675309,
+                                "displayName": "person@example.com",
+                                "sleepTimeSeconds": 3600,
+                                "sleepEndTimestampGMT": epoch_ms(
+                                    datetime(2026, 10, 16, 7, 30, tzinfo=SHANGHAI),
+                                ),
+                            }
+                        }
+                    }
+                ),
+                encoding="utf-8",
+            )
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(SCRIPT_PATH),
+                    "--input",
+                    str(bundle),
+                    "--now",
+                    "2026-10-16T08:00:00+08:00",
+                    "--dry-run",
+                    "--force",
+                    "--debug",
+                ],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("total sleep is under 3 hours", result.stdout)
+        self.assertIn("sleepTimeSeconds=3600", result.stdout)
+        self.assertNotIn("总睡眠 1小时", result.stdout)
+        self.assertNotIn("8675309", result.stdout)
+        self.assertNotIn("person@example.com", result.stdout)
+        self.assertNotIn("Dry run; Telegram message not sent", result.stdout)
