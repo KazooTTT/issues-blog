@@ -349,6 +349,14 @@ class GarminSleepMessageTest(unittest.TestCase):
                 self.assertIn("一共 3 小时", result.stdout)
                 self.assertIn("评分 80", result.stdout)
                 self.assertIn("文案来源: 固定模板", result.stdout)
+                self.assertIn(
+                    f"{MODULE.telegram_memos.BOT_SIGNATURE}\n\n",
+                    result.stdout,
+                )
+                self.assertLess(
+                    result.stdout.index(MODULE.telegram_memos.BOT_SIGNATURE),
+                    result.stdout.index("一共 3 小时"),
+                )
                 self.assertIn("Dry run; Telegram message not sent", result.stdout)
                 self.assertNotIn("TELEGRAM_MEMOS_BOT_TOKEN", result.stdout + result.stderr)
                 self.assertFalse(state.exists())
@@ -474,7 +482,8 @@ class GarminSleepMessageTest(unittest.TestCase):
             original = MODULE.telegram_memos.send_message
             argv = sys.argv
             previous_key = os.environ.pop("OPENROUTER_API_KEY", None)
-            MODULE.telegram_memos.send_message = lambda message: None
+            sent: list[str] = []
+            MODULE.telegram_memos.send_message = sent.append
             try:
                 sys.argv = [
                     "notify-garmin-sleep.py",
@@ -497,6 +506,12 @@ class GarminSleepMessageTest(unittest.TestCase):
                 json.loads(state.read_text(encoding="utf-8"))["sentDates"],
                 ["2026-10-16"],
             )
+            self.assertEqual(len(sent), 1)
+            signature, body = sent[0].split("\n\n", 1)
+            self.assertEqual(signature, MODULE.telegram_memos.BOT_SIGNATURE)
+            self.assertIn("一共 3 小时", body)
+            self.assertIn("评分 80", body)
+            self.assertNotIn("\n", body)
 
 
 REAL_SLEEP_SECONDS = 8 * 3600 + 60
@@ -1079,6 +1094,85 @@ class SleepCopyGenerationTest(unittest.TestCase):
         self.assertNotIn("\n\n", copy.text)
         self.assertIn("numbers that were not provided: 12", logs)
         self.assertEqual(len(opener.calls), 3)
+
+    def test_signature_stays_outside_the_model_text(self) -> None:
+        signature = MODULE.telegram_memos.BOT_SIGNATURE
+        opener = ScriptedOpener([chat_response(AI_NARRATIVE)])
+        copy, _logs = self.compose(opener)
+        signed = MODULE.telegram_memos.sign_message(copy.text)
+        self.assertEqual(signed, f"{signature}\n\n{copy.text}")
+        self.assertTrue(copy.text.startswith(AI_NARRATIVE))
+        self.assertIn("\n\n深睡 55分", copy.text)
+        self.assertNotIn(signature, copy.text)
+        request = json.loads(opener.calls[0].data.decode("utf-8"))
+        prompt = "\n".join(message["content"] for message in request["messages"])
+        self.assertNotIn(signature, prompt)
+        self.assertNotIn("佳明日报", prompt)
+
+        os.environ.pop("OPENROUTER_API_KEY", None)
+        fallback, _logs = self.compose(ScriptedOpener([]))
+        signed_fallback = MODULE.telegram_memos.sign_message(fallback.text)
+        self.assertEqual(signed_fallback, f"{signature}\n\n{fallback.text}")
+        self.assertNotIn("\n", fallback.text)
+        self.assertIn("昨晚 23:26 睡，07:30 起", signed_fallback)
+
+    def test_dry_run_prints_the_signed_ai_message(self) -> None:
+        signature = MODULE.telegram_memos.BOT_SIGNATURE
+        body = f"{AI_NARRATIVE}\n\n深睡 55分 · 浅睡 5小时35分"
+        sent: list[str] = []
+
+        def fake_compose(summary: dict, **kwargs: object) -> object:
+            del summary, kwargs
+            return MODULE.SleepCopy(body, "llm", 2)
+
+        with tempfile.TemporaryDirectory() as directory:
+            bundle = Path(directory) / "sleep.json"
+            state = Path(directory) / "sleep-sent.json"
+            bundle.write_text(
+                json.dumps(
+                    {
+                        "sleep": {
+                            "dailySleepDTO": {
+                                "calendarDate": "2026-10-16",
+                                "sleepTimeSeconds": 10800,
+                                "sleepEndTimestampGMT": epoch_ms(
+                                    datetime(2026, 10, 16, 7, 30, tzinfo=SHANGHAI),
+                                ),
+                                "sleepScores": {"overall": {"value": 80}},
+                            }
+                        }
+                    }
+                ),
+                encoding="utf-8",
+            )
+            original_compose = MODULE.compose_sleep_message
+            original_send = MODULE.telegram_memos.send_message
+            argv = sys.argv
+            MODULE.compose_sleep_message = fake_compose
+            MODULE.telegram_memos.send_message = sent.append
+            try:
+                sys.argv = [
+                    "notify-garmin-sleep.py",
+                    "--input",
+                    str(bundle),
+                    "--state",
+                    str(state),
+                    "--now",
+                    "2026-10-16T08:00:00+08:00",
+                    "--dry-run",
+                ]
+                stdout = io.StringIO()
+                with _redirect(stdout):
+                    MODULE.main()
+            finally:
+                sys.argv = argv
+                MODULE.compose_sleep_message = original_compose
+                MODULE.telegram_memos.send_message = original_send
+            output = stdout.getvalue()
+            self.assertIn(f"文案来源: AI（第 2 次尝试）\n{signature}\n\n{body}", output)
+            self.assertIn("Dry run; Telegram message not sent", output)
+            self.assertEqual(sent, [])
+            self.assertFalse(state.exists())
 
     def test_missing_key_uses_the_template_without_calling_the_network(self) -> None:
         os.environ.pop("OPENROUTER_API_KEY", None)

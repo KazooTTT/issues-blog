@@ -8,6 +8,18 @@ import urllib.request
 from typing import Any, Callable
 
 BOT_TOKEN_PATTERN = re.compile(r"bot\d+:[A-Za-z0-9_-]+")
+BOT_SIGNATURE = "🤖 佳明日报 BOT 自动发送"
+
+
+def sign_message(text: str) -> str:
+    """Put the shared bot signature on its own line above the message body."""
+    body = text.strip()
+    if not body:
+        return BOT_SIGNATURE
+    signed = f"{BOT_SIGNATURE}\n\n{body}"
+    if body == BOT_SIGNATURE or body.startswith(f"{BOT_SIGNATURE}\n"):
+        return body
+    return signed
 
 
 def redact(text: str) -> str:
@@ -36,6 +48,7 @@ def send_message(
         )
     if not text.strip():
         raise SystemExit("Refusing to send an empty Telegram message")
+    text = sign_message(text)
 
     payload = json.dumps(
         {"chat_id": chat_id, "text": text},

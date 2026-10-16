@@ -316,7 +316,11 @@ class RssNotificationTest(unittest.TestCase):
                 text=True,
             )
             self.assertEqual(preview.returncode, 0, preview.stderr)
-            self.assertIn("新文章：刚发布\nhttps://blog.kazoottt.top/posts/4/", preview.stdout)
+            self.assertIn(
+                f"{MODULE.telegram_memos.BOT_SIGNATURE}\n\n"
+                "新文章：刚发布\nhttps://blog.kazoottt.top/posts/4/",
+                preview.stdout,
+            )
             self.assertIn("RSS state not updated", preview.stdout)
             self.assertEqual(json.loads(state.read_text(encoding="utf-8"))["seen"], ["issue-3", "issue-1"])
 

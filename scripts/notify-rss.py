@@ -232,7 +232,7 @@ def main() -> None:
     if args.resend_latest:
         if not items:
             raise SystemExit("RSS feed has no items to send")
-        message = format_rss_message(items[0])
+        message = telegram_memos.sign_message(format_rss_message(items[0]))
         print(message)
         if args.dry_run:
             print("Dry run; Telegram message not sent")
@@ -266,15 +266,16 @@ def main() -> None:
     print(f"{len(plan.messages)} new RSS item(s)")
     if args.dry_run:
         for message in plan.messages:
-            print(message)
+            print(telegram_memos.sign_message(message))
             print("---")
         print("Dry run; Telegram messages not sent and RSS state not updated")
         return
 
     def send_and_log(message: str) -> None:
-        print(message)
+        signed = telegram_memos.sign_message(message)
+        print(signed)
         print("---")
-        telegram_memos.send_message(message)
+        telegram_memos.send_message(signed)
 
     sent_ids, failure = send_planned_messages(plan, send_and_log)
     if sent_ids:
