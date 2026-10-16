@@ -144,6 +144,9 @@ cat /path/to/workouts.json | python scripts/fetch-garmin-workouts.py --merge --i
   或数字 chat id。两处都填时使用 Secret。
 - 睡眠日报复用已有的 `GARMIN_EMAIL`、`GARMIN_PASSWORD`，以及可选 Variable
   `GARMIN_IS_CN`（默认 `true`，中国区）。脚本使用 `garminconnect==0.3.6`。
+- Secret `OPENROUTER_API_KEY`：睡眠晨报第一段。脚本调用 OpenRouter 的
+  `openrouter/free` 写状态和恢复建议，再自己拼一段核心数据。最多试 3 次，
+  全部失败就改发一段写好的模板，把入睡、起床、时长和评分填进去。不要把 key 写进日志。
 
 把机器人加为频道管理员，否则 Telegram 会拒绝发送。
 
@@ -170,7 +173,7 @@ workflow 也不会失败。登录或 Telegram 发送失败仍会让任务失败�
 
 在 Actions 页面手动运行 `Notify Garmin sleep` 即可试跑。`date` 留空时用
 Asia/Shanghai 的今天。`dry_run` 只打印将要发送的消息，不调用 Telegram，也不
-记录已发送。`force` 在数据完整时再发一次，用来覆盖“今天已经发过”；数据不完整
+记录已发送，并标明这段文案是 AI 生成还是固定模板。`force` 在数据完整时再发一次，用来覆盖“今天已经发过”；数据不完整
 时即使勾选 `force` 也仍然跳过。`debug` 只在手动运行时可用，把 `get_sleep_data`
 返回的 `dailySleepDTO` 相关字段名和数值打到日志里，并去掉用户、设备一类个人标识，
 方便核对字段；它不改变是否发送。

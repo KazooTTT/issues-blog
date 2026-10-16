@@ -4,8 +4,11 @@ import argparse
 import json
 import math
 import os
+import re
 import sys
-from datetime import date, datetime, timedelta, timezone
+import urllib.error
+import urllib.request
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
@@ -760,54 +763,455 @@ def format_duration(seconds: int) -> str:
     return f"{minutes}分"
 
 
-def format_moment(moment: datetime, report_date: date) -> str:
+OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
+OPENROUTER_MODEL = "openrouter/free"
+LLM_ATTEMPTS = 3
+LLM_TEMPERATURE = 0.3
+LLM_MAX_TOKENS = 200
+LLM_TIMEOUT_SECONDS = 60
+NARRATIVE_MIN_CHARS = 40
+NARRATIVE_MAX_CHARS = 200
+MAX_NARRATIVE_NUMBERS = 3
+THINK_BLOCK = re.compile(r"<think\b[^>]*>.*?</think>", re.IGNORECASE | re.DOTALL)
+THINK_OPEN = re.compile(r"<think\b[^>]*>.*", re.IGNORECASE | re.DOTALL)
+DATE_START = re.compile(
+    r"^\s*\d{4}\s*[-/.年]\s*\d{1,2}(?:\s*[-/.月]\s*\d{1,2})?"
+)
+SENTENCE_END = re.compile(r"[。！？]")
+REASONING_LINE = re.compile(
+    r"^(?:思考|分析|草稿|推理|推理过程|思考过程|分析过程|draft|reasoning|thoughts?|"
+    r"let me|okay|ok|首先|让我|我先|我需要|用户希望|用户要求|下面是|以下是)"
+    r"(?:[:：\s]|$)",
+    re.IGNORECASE,
+)
+REASONING_LABEL_ONLY = re.compile(
+    r"^(?:思考|分析|草稿|推理|推理过程|思考过程|分析过程|draft|reasoning|thoughts?)"
+    r"\s*[:：]?\s*$",
+    re.IGNORECASE,
+)
+REASONING_LABEL_BODY = re.compile(
+    r"^(?:思考|分析|草稿|推理|推理过程|思考过程|分析过程|draft|reasoning|thoughts?)"
+    r"\s*[:：]\s*(.+)$",
+    re.IGNORECASE,
+)
+SECTION_LABEL_ONLY = re.compile(r"(?:正文|最终|输出)\s*[:：]?", re.IGNORECASE)
+
+SYSTEM_PROMPT = (
+    "你是睡眠晨报的第一段作者。用户会跳舞，也做力量训练，恢复建议要考虑排练和训练。"
+    "只输出 2 句话，总共不超过 100 个汉字，不要任何其他内容。"
+    "不要标题，不要列表，不要日期，不要思考、分析或 Draft。"
+    "最多引用总时长和评分里的 1 个或 2 个数字。其他指标只用于判断，不要写出来。"
+    "语气温和，不要夸张，不要医疗诊断。示例不要照抄数字。\n"
+    "示例一：昨晚睡得踏实，一共 8 小时，评分 91。跳舞和力量训练之后这样够恢复，今天力量可以照常安排。\n"
+    "示例二：昨晚睡得短了些，一共 5 小时。排练和训练先放轻一点，今晚早点休息。"
+)
+
+
+def format_duration_spaced(seconds: int) -> str:
+    minutes_total = (seconds + 30) // 60
+    hours, minutes = divmod(minutes_total, 60)
+    if hours and minutes:
+        return f"{hours} 小时 {minutes} 分"
+    if hours:
+        return f"{hours} 小时"
+    return f"{minutes} 分"
+
+
+def format_clock(moment: datetime) -> str:
     if moment.tzinfo is None:
         moment = moment.replace(tzinfo=SHANGHAI)
-    local = moment.astimezone(SHANGHAI)
-    clock = local.strftime("%H:%M")
-    if local.date() == report_date:
-        return clock
-    return f"{local.month}月{local.day}日 {clock}"
+    return moment.astimezone(SHANGHAI).strftime("%H:%M")
 
 
-def format_sleep_message(summary: dict[str, Any]) -> str:
-    report_date = datetime.strptime(summary["date"], "%Y-%m-%d").date()
-    lines = [f"睡眠 {report_date.month}月{report_date.day}日"]
-    if summary.get("woke_at") is not None:
-        lines.append(f"起床 {format_moment(summary['woke_at'], report_date)}")
-    if summary.get("fell_asleep_at") is not None:
-        lines.append(f"入眠 {format_moment(summary['fell_asleep_at'], report_date)}")
-    lines.append(f"总睡眠 {format_duration(summary['total_sleep_seconds'])}")
-    stages = []
+def format_score_text(summary: dict[str, Any]) -> str | None:
+    score = summary.get("sleep_score")
+    if score is None:
+        return None
+    qualifier = QUALIFIER_LABELS.get(summary.get("sleep_score_qualifier") or "")
+    if qualifier:
+        return f"{score}（{qualifier}）"
+    return str(score)
+
+
+def stage_bits(summary: dict[str, Any]) -> list[str]:
+    bits = []
     if summary.get("deep_sleep_seconds") is not None:
-        stages.append(f"深睡 {format_duration(summary['deep_sleep_seconds'])}")
+        bits.append(f"深睡 {format_duration(summary['deep_sleep_seconds'])}")
     if summary.get("light_sleep_seconds") is not None:
-        stages.append(f"浅睡 {format_duration(summary['light_sleep_seconds'])}")
+        bits.append(f"浅睡 {format_duration(summary['light_sleep_seconds'])}")
     if summary.get("rem_sleep_seconds") is not None:
-        stages.append(f"REM {format_duration(summary['rem_sleep_seconds'])}")
-    if stages:
-        lines.append(" · ".join(stages))
+        bits.append(f"REM {format_duration(summary['rem_sleep_seconds'])}")
     if summary.get("awake_sleep_seconds") is not None:
-        lines.append(f"清醒 {format_duration(summary['awake_sleep_seconds'])}")
-    if summary.get("sleep_score") is not None:
-        qualifier = QUALIFIER_LABELS.get(summary.get("sleep_score_qualifier") or "")
-        if qualifier:
-            lines.append(f"睡眠评分 {summary['sleep_score']}（{qualifier}）")
-        else:
-            lines.append(f"睡眠评分 {summary['sleep_score']}")
+        bits.append(f"清醒 {format_duration(summary['awake_sleep_seconds'])}")
+    return bits
+
+
+def metric_bits(summary: dict[str, Any]) -> list[str]:
+    bits = []
     if summary.get("resting_heart_rate") is not None:
-        lines.append(f"静息心率 {summary['resting_heart_rate']}")
-    if summary.get("night_heart_rate") is not None:
-        lines.append(f"夜间平均心率 {summary['night_heart_rate']}")
-    if summary.get("body_battery") is not None:
-        lines.append(f"身体电量 {summary['body_battery']}")
+        bits.append(f"静息心率 {summary['resting_heart_rate']}")
     change = summary.get("body_battery_change")
     if change is not None:
         sign = "+" if change > 0 else ""
-        lines.append(f"身体电量变化 {sign}{change}")
+        bits.append(f"身体电量 {sign}{change}")
     if summary.get("average_hrv") is not None:
-        lines.append(f"平均 HRV {summary['average_hrv']}ms")
+        bits.append(f"HRV {summary['average_hrv']}ms")
+    return bits
+
+
+def format_sleep_data(summary: dict[str, Any]) -> str:
+    """Core numbers shown under an AI paragraph. Empty when nothing is present."""
+    lines = []
+    stages = stage_bits(summary)
+    metrics = metric_bits(summary)
+    if stages:
+        lines.append(" · ".join(stages))
+    if metrics:
+        lines.append(" · ".join(metrics))
     return "\n".join(lines)
+
+
+def format_sleep_message(summary: dict[str, Any]) -> str:
+    """Fixed one-paragraph template used when the model does not return copy."""
+    bits = []
+    fell_asleep_at = summary.get("fell_asleep_at")
+    woke_at = summary.get("woke_at")
+    if fell_asleep_at is not None and woke_at is not None:
+        bits.append(f"{format_clock(fell_asleep_at)} 睡，{format_clock(woke_at)} 起")
+    elif woke_at is not None:
+        bits.append(f"{format_clock(woke_at)} 起")
+    elif fell_asleep_at is not None:
+        bits.append(f"{format_clock(fell_asleep_at)} 睡")
+    bits.append(f"一共 {format_duration_spaced(summary['total_sleep_seconds'])}")
+    score_text = format_score_text(summary)
+    if score_text is not None:
+        bits.append(f"评分 {score_text}")
+    lead = "，".join(bits)
+    if fell_asleep_at is not None or woke_at is not None:
+        lead = f"昨晚 {lead}"
+    sentences = [f"{lead}。"]
+    stages = stage_bits(summary)
+    metrics = metric_bits(summary)
+    if stages:
+        sentences.append(f"{'，'.join(stages)}。")
+    if metrics:
+        sentences.append(f"{'，'.join(metrics)}。")
+    return "".join(sentences)
+
+
+def sleep_fact_lines(summary: dict[str, Any]) -> list[str]:
+    lines = [f"日期: {summary['date']}"]
+    fell_asleep_at = summary.get("fell_asleep_at")
+    woke_at = summary.get("woke_at")
+    if fell_asleep_at is not None:
+        lines.append(f"入睡: {format_clock(fell_asleep_at)}")
+    if woke_at is not None:
+        lines.append(f"起床: {format_clock(woke_at)}")
+    lines.append(f"总睡眠: {format_duration_spaced(summary['total_sleep_seconds'])}")
+    score_text = format_score_text(summary)
+    if score_text is not None:
+        lines.append(f"评分: {score_text}")
+    for label, key in (
+        ("深睡", "deep_sleep_seconds"),
+        ("浅睡", "light_sleep_seconds"),
+        ("REM", "rem_sleep_seconds"),
+        ("清醒", "awake_sleep_seconds"),
+    ):
+        if summary.get(key) is not None:
+            lines.append(f"{label}: {format_duration(summary[key])}")
+    if summary.get("resting_heart_rate") is not None:
+        lines.append(f"静息心率: {summary['resting_heart_rate']}")
+    if summary.get("night_heart_rate") is not None:
+        lines.append(f"夜间平均心率: {summary['night_heart_rate']}")
+    change = summary.get("body_battery_change")
+    if change is not None:
+        sign = "+" if change > 0 else ""
+        lines.append(f"身体电量变化: {sign}{change}")
+    if summary.get("average_hrv") is not None:
+        lines.append(f"平均HRV: {summary['average_hrv']}ms")
+    return lines
+
+
+def allowed_numbers(summary: dict[str, Any]) -> set[str]:
+    allowed = set(re.findall(r"\d+", "\n".join(sleep_fact_lines(summary))))
+    allowed.update(token.lstrip("0") or "0" for token in list(allowed))
+    return allowed
+
+
+def strip_think_tags(text: str) -> str:
+    cleaned = THINK_BLOCK.sub("", text)
+    cleaned = THINK_OPEN.sub("", cleaned)
+    return cleaned.strip()
+
+
+def coerce_model_text(value: Any) -> str:
+    if isinstance(value, str):
+        return value
+    if isinstance(value, list):
+        parts: list[str] = []
+        for item in value:
+            if isinstance(item, str):
+                parts.append(item)
+            elif isinstance(item, dict):
+                text = item.get("text", item.get("content", ""))
+                if isinstance(text, str):
+                    parts.append(text)
+        return "".join(parts)
+    return ""
+
+
+def paragraph_reading(paragraph: str) -> str:
+    """Drop a leading 思考/分析/Draft label and keep the reading after it."""
+    kept: list[str] = []
+    for raw_line in paragraph.splitlines():
+        stripped = raw_line.strip().lstrip("#").strip()
+        if kept:
+            kept.append(raw_line.strip())
+            continue
+        if not stripped or REASONING_LABEL_ONLY.match(stripped):
+            continue
+        if SECTION_LABEL_ONLY.fullmatch(stripped):
+            continue
+        labeled = REASONING_LABEL_BODY.match(stripped)
+        if labeled:
+            kept.append(labeled.group(1).strip())
+            continue
+        if REASONING_LINE.match(stripped):
+            continue
+        kept.append(raw_line.strip())
+    return "\n".join(kept).strip()
+
+
+def closing_sentences(text: str) -> str:
+    sentences = re.findall(r"[^。！？\n]+[。！？]", text)
+    if len(sentences) >= 2:
+        return "".join(sentences[-2:]).strip()
+    if sentences:
+        return sentences[-1].strip()
+    return ""
+
+
+def final_interpretation(text: str) -> str:
+    """Drop think tags and reasoning paragraphs, then keep the closing reading."""
+    text = strip_think_tags(text)
+    for marker in ("最终解读：", "最终解读:", "正文：", "正文:", "输出：", "输出:"):
+        if marker in text:
+            text = text.split(marker)[-1]
+    paragraphs = [part.strip() for part in re.split(r"\n\s*\n", text) if part.strip()]
+    kept = [paragraph_reading(paragraph) for paragraph in paragraphs]
+    kept = [paragraph for paragraph in kept if paragraph]
+    candidate = kept[-1].strip() if kept else ""
+    if not candidate:
+        return ""
+    compact_length = len(re.sub(r"\s+", "", candidate))
+    if compact_length > NARRATIVE_MAX_CHARS:
+        shortened = closing_sentences(candidate)
+        if shortened:
+            candidate = shortened
+    return candidate.strip()
+
+
+def narrative_from_message(message: Any) -> tuple[str, str, str]:
+    """Return the reading, the raw field it came from, and that field's name."""
+    if not isinstance(message, dict):
+        return "", "", ""
+    candidates: list[tuple[str, str, str]] = []
+    for key in ("content", "reasoning_content", "reasoning"):
+        raw = coerce_model_text(message.get(key))
+        if not raw.strip():
+            continue
+        candidates.append((key, final_interpretation(raw), raw))
+    for key, extracted, raw in candidates:
+        length = len(re.sub(r"\s+", "", extracted))
+        if NARRATIVE_MIN_CHARS <= length <= NARRATIVE_MAX_CHARS:
+            return extracted, raw, key
+    if candidates:
+        key, extracted, raw = candidates[0]
+        return extracted or raw, raw, key
+    return "", "", ""
+
+
+class ModelReply:
+    def __init__(
+        self,
+        text: str,
+        model: str,
+        fields: list[str],
+        raw: str,
+        used: str,
+    ) -> None:
+        self.text = text
+        self.model = model
+        self.fields = fields
+        self.raw = raw
+        self.used = used
+
+
+class SleepCopyError(Exception):
+    pass
+
+
+def validate_narrative(text: str, summary: dict[str, Any]) -> str:
+    if re.search(r"<\s*think\b", text, re.IGNORECASE):
+        raise SleepCopyError("output still contains a think tag")
+    compact = re.sub(r"\s+", "", text)
+    if not compact:
+        raise SleepCopyError("output is empty")
+    length = len(compact)
+    if length < NARRATIVE_MIN_CHARS or length > NARRATIVE_MAX_CHARS:
+        raise SleepCopyError(f"output length {length} is outside 40-200")
+    if DATE_START.match(text):
+        raise SleepCopyError("output starts with a date")
+    if len(SENTENCE_END.findall(text)) < 2:
+        raise SleepCopyError("output does not contain enough sentences")
+    numbers = re.findall(r"\d+", text)
+    if len(numbers) > MAX_NARRATIVE_NUMBERS:
+        raise SleepCopyError(f"output lists too many numbers ({len(numbers)})")
+    allowed = allowed_numbers(summary)
+    unexpected = [token for token in numbers if token not in allowed]
+    if unexpected:
+        shown = ", ".join(unexpected[:6])
+        raise SleepCopyError(f"output contains numbers that were not provided: {shown}")
+    return text
+
+
+def message_fields(message: Any) -> list[str]:
+    if not isinstance(message, dict):
+        return []
+    fields = []
+    for key in ("content", "reasoning", "reasoning_content"):
+        if coerce_model_text(message.get(key)).strip():
+            fields.append(key)
+    return fields
+
+
+def parse_openrouter_payload(raw: bytes) -> ModelReply:
+    try:
+        payload = json.loads(raw.decode("utf-8"))
+    except json.JSONDecodeError as error:
+        raise SleepCopyError("response was not JSON") from error
+    if not isinstance(payload, dict):
+        raise SleepCopyError("response was not an object")
+    error = payload.get("error")
+    if error:
+        detail = error.get("message") if isinstance(error, dict) else str(error)
+        raise SleepCopyError(f"API error: {detail}")
+    choices = payload.get("choices")
+    if not isinstance(choices, list) or not choices or not isinstance(choices[0], dict):
+        raise SleepCopyError("response has no choices")
+    message = choices[0].get("message")
+    text, raw_text, used = narrative_from_message(message)
+    model = payload.get("model")
+    return ModelReply(
+        text,
+        model if isinstance(model, str) else "",
+        message_fields(message),
+        raw_text,
+        used,
+    )
+
+
+def request_openrouter_narrative(
+    summary: dict[str, Any],
+    *,
+    opener: Any,
+    api_key: str,
+) -> ModelReply:
+    body = json.dumps(
+        {
+            "model": OPENROUTER_MODEL,
+            "temperature": LLM_TEMPERATURE,
+            "max_tokens": LLM_MAX_TOKENS,
+            "reasoning": {"effort": "low"},
+            "messages": [
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {
+                    "role": "user",
+                    "content": (
+                        "只输出 2 句话，总共不超过 100 个汉字，不要任何其他内容。\n"
+                        "不要罗列指标，不要写日期，不要解释判断过程。\n"
+                        "最多提总时长和评分。下面的数据只供判断：\n"
+                        + "\n".join(sleep_fact_lines(summary))
+                    ),
+                },
+            ],
+        },
+        ensure_ascii=False,
+    ).encode("utf-8")
+    request = urllib.request.Request(
+        OPENROUTER_URL,
+        data=body,
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+            "HTTP-Referer": "https://blog.kazoottt.top",
+            "X-Title": "issues-blog sleep",
+        },
+        method="POST",
+    )
+    try:
+        with opener(request, timeout=LLM_TIMEOUT_SECONDS) as response:
+            raw = response.read()
+    except urllib.error.HTTPError as error:
+        detail = error.read().decode("utf-8", errors="replace")[:180]
+        raise SleepCopyError(f"HTTP {error.code} {detail}") from None
+    except urllib.error.URLError as error:
+        raise SleepCopyError(f"network error: {error.reason}") from None
+    except TimeoutError as error:
+        raise SleepCopyError(f"network error: {error}") from None
+    return parse_openrouter_payload(raw)
+
+
+class SleepCopy:
+    def __init__(self, text: str, source: str, attempt: int | None) -> None:
+        self.text = text
+        self.source = source
+        self.attempt = attempt
+
+
+def describe_sleep_copy(copy: SleepCopy) -> str:
+    if copy.source == "llm" and copy.attempt is not None:
+        return f"文案来源: AI（第 {copy.attempt} 次尝试）"
+    return "文案来源: 固定模板"
+
+
+def failure_detail(error: SleepCopyError, reply: ModelReply | None) -> str:
+    detail = telegram_memos.redact(str(error))
+    if reply is None:
+        return detail
+    preview = telegram_memos.redact(re.sub(r"\s+", " ", reply.raw).strip())[:300]
+    fields = ", ".join(reply.fields) if reply.fields else "none"
+    model = reply.model or "unknown"
+    used = reply.used or "none"
+    return (
+        f"{detail}\n  model: {model}\n  fields: {fields}\n  used: {used}\n  raw: {preview}"
+    )
+
+
+def compose_sleep_message(
+    summary: dict[str, Any],
+    *,
+    opener: Any = urllib.request.urlopen,
+    attempts: int = LLM_ATTEMPTS,
+) -> SleepCopy:
+    fallback = format_sleep_message(summary)
+    api_key = os.environ.get("OPENROUTER_API_KEY", "").strip()
+    if not api_key:
+        print("未设置 OPENROUTER_API_KEY，改用固定模板。")
+        return SleepCopy(fallback, "fallback", None)
+    for attempt in range(1, attempts + 1):
+        reply: ModelReply | None = None
+        try:
+            reply = request_openrouter_narrative(summary, opener=opener, api_key=api_key)
+            narrative = validate_narrative(reply.text, summary)
+        except SleepCopyError as error:
+            print(f"OpenRouter 第 {attempt} 次失败: {failure_detail(error, reply)}")
+            continue
+        data = format_sleep_data(summary)
+        text = narrative if not data else f"{narrative}\n\n{data}"
+        return SleepCopy(text, "llm", attempt)
+    print(f"OpenRouter {attempts} 次都失败，改用固定模板。")
+    return SleepCopy(fallback, "fallback", None)
 
 
 def optional_garmin_call(client: Any, method_name: str, *args: Any, label: str) -> Any:
@@ -1052,12 +1456,13 @@ def main() -> None:
         return
     if assessment.summary is None:
         raise SystemExit(f"Sleep summary for {sleep_date} is missing")
-    message = format_sleep_message(assessment.summary)
-    print(message)
+    copy = compose_sleep_message(assessment.summary)
+    print(describe_sleep_copy(copy))
+    print(copy.text)
     if args.dry_run:
         print("Dry run; Telegram message not sent")
         return
-    telegram_memos.send_message(message)
+    telegram_memos.send_message(copy.text)
     updated = remember_sent_date(sent_dates, assessment.summary["date"])
     if save_sent_dates(args.state, updated):
         print(f"Recorded sent sleep date {assessment.summary['date']} in {args.state}")

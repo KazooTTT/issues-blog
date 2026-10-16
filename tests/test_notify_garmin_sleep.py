@@ -1,11 +1,15 @@
 from __future__ import annotations
 
 import importlib.util
+import io
 import json
+import os
 import subprocess
 import sys
 import tempfile
 import unittest
+import urllib.error
+from http.client import HTTPMessage
 from datetime import datetime, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -18,6 +22,13 @@ MODULE = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(MODULE)
 
 SHANGHAI = ZoneInfo("Asia/Shanghai")
+
+
+def run_script(*args: object, **kwargs: object) -> subprocess.CompletedProcess[str]:
+    env = os.environ.copy()
+    env.pop("OPENROUTER_API_KEY", None)
+    kwargs.setdefault("env", env)
+    return subprocess.run(*args, **kwargs)  # type: ignore[arg-type]
 
 
 def epoch_ms(moment: datetime) -> int:
@@ -78,19 +89,10 @@ class GarminSleepMessageTest(unittest.TestCase):
         self.assertEqual(summary["body_battery"], 68)
         self.assertEqual(
             MODULE.format_sleep_message(summary),
-            "\n".join(
-                [
-                    "睡眠 10月16日",
-                    "起床 07:42",
-                    "入眠 10月15日 23:18",
-                    "总睡眠 7小时24分",
-                    "深睡 1小时30分 · 浅睡 4小时 · REM 1小时54分",
-                    "睡眠评分 82（良好）",
-                    "静息心率 51",
-                    "身体电量 68",
-                ]
-            ),
+            "昨晚 23:18 睡，07:42 起，一共 7 小时 24 分，评分 82（良好）。"
+            "深睡 1小时30分，浅睡 4小时，REM 1小时54分。静息心率 51。",
         )
+        self.assertNotIn("\n", MODULE.format_sleep_message(summary))
 
     def test_local_timestamps_keep_shanghai_wall_clock_when_gmt_is_missing(self) -> None:
         fell_asleep = datetime(2026, 10, 15, 23, 18, tzinfo=SHANGHAI)
@@ -111,11 +113,11 @@ class GarminSleepMessageTest(unittest.TestCase):
         self.assertEqual(summary["fell_asleep_at"].timestamp(), fell_asleep.timestamp())
         self.assertEqual(summary["woke_at"].timestamp(), woke.timestamp())
         message = MODULE.format_sleep_message(summary)
-        self.assertIn("起床 07:42", message)
-        self.assertIn("入眠 10月15日 23:18", message)
+        self.assertIn("23:18 睡，07:42 起", message)
+        self.assertIn("一共 7 小时 24 分", message)
         self.assertNotIn("静息心率", message)
         self.assertNotIn("身体电量", message)
-        self.assertNotIn("睡眠评分", message)
+        self.assertNotIn("评分", message)
         self.assertNotIn("深睡", message)
 
     def test_omits_missing_stages_and_reads_optional_fallbacks(self) -> None:
@@ -148,7 +150,8 @@ class GarminSleepMessageTest(unittest.TestCase):
         self.assertNotIn("浅睡", message)
         self.assertNotIn("REM", message)
         self.assertIn("静息心率 48", message)
-        self.assertIn("身体电量 77", message)
+        self.assertNotIn("身体电量", message)
+        self.assertNotIn("\n", message)
 
     def test_rejects_empty_sleep(self) -> None:
         with self.assertRaises(ValueError) as caught:
@@ -326,7 +329,7 @@ class GarminSleepMessageTest(unittest.TestCase):
                     ),
                     encoding="utf-8",
                 )
-                result = subprocess.run(
+                result = run_script(
                     [
                         sys.executable,
                         str(SCRIPT_PATH),
@@ -343,13 +346,14 @@ class GarminSleepMessageTest(unittest.TestCase):
                     text=True,
                 )
                 self.assertEqual(result.returncode, 0, result.stderr)
-                self.assertIn("总睡眠 3小时", result.stdout)
-                self.assertIn("睡眠评分 80", result.stdout)
+                self.assertIn("一共 3 小时", result.stdout)
+                self.assertIn("评分 80", result.stdout)
+                self.assertIn("文案来源: 固定模板", result.stdout)
                 self.assertIn("Dry run; Telegram message not sent", result.stdout)
                 self.assertNotIn("TELEGRAM_MEMOS_BOT_TOKEN", result.stdout + result.stderr)
                 self.assertFalse(state.exists())
 
-        result = subprocess.run(
+        result = run_script(
             [sys.executable, str(SCRIPT_PATH), "--date", "16-10-2026", "--dry-run"],
             check=False,
             capture_output=True,
@@ -373,7 +377,7 @@ class GarminSleepMessageTest(unittest.TestCase):
                 ),
                 encoding="utf-8",
             )
-            missing = subprocess.run(
+            missing = run_script(
                 [
                     sys.executable,
                     str(SCRIPT_PATH),
@@ -427,19 +431,19 @@ class GarminSleepMessageTest(unittest.TestCase):
                 "2026-10-16T10:00:00+08:00",
                 "--dry-run",
             ]
-            skipped = subprocess.run(command, check=False, capture_output=True, text=True)
+            skipped = run_script(command, check=False, capture_output=True, text=True)
             self.assertEqual(skipped.returncode, 0, skipped.stderr)
             self.assertIn("already sent", skipped.stdout)
             self.assertNotIn("总睡眠", skipped.stdout)
 
-            forced = subprocess.run(
+            forced = run_script(
                 [*command, "--force"],
                 check=False,
                 capture_output=True,
                 text=True,
             )
             self.assertEqual(forced.returncode, 0, forced.stderr)
-            self.assertIn("总睡眠 3小时", forced.stdout)
+            self.assertIn("一共 3 小时", forced.stdout)
             self.assertIn("Dry run; Telegram message not sent", forced.stdout)
             self.assertEqual(
                 json.loads(state.read_text(encoding="utf-8"))["sentDates"],
@@ -469,6 +473,7 @@ class GarminSleepMessageTest(unittest.TestCase):
             )
             original = MODULE.telegram_memos.send_message
             argv = sys.argv
+            previous_key = os.environ.pop("OPENROUTER_API_KEY", None)
             MODULE.telegram_memos.send_message = lambda message: None
             try:
                 sys.argv = [
@@ -484,6 +489,10 @@ class GarminSleepMessageTest(unittest.TestCase):
             finally:
                 sys.argv = argv
                 MODULE.telegram_memos.send_message = original
+                if previous_key is None:
+                    os.environ.pop("OPENROUTER_API_KEY", None)
+                else:
+                    os.environ["OPENROUTER_API_KEY"] = previous_key
             self.assertEqual(
                 json.loads(state.read_text(encoding="utf-8"))["sentDates"],
                 ["2026-10-16"],
@@ -536,22 +545,11 @@ class GarminSleepFieldFallbackTest(unittest.TestCase):
         self.assertEqual(summary["total_sleep_seconds"], REAL_SLEEP_SECONDS)
         self.assertEqual(
             MODULE.format_sleep_message(summary),
-            "\n".join(
-                [
-                    "睡眠 10月16日",
-                    "起床 07:30",
-                    "入眠 10月15日 23:26",
-                    "总睡眠 8小时1分",
-                    "深睡 55分 · 浅睡 5小时35分 · REM 1小时32分",
-                    "清醒 3分",
-                    "睡眠评分 91（优秀）",
-                    "静息心率 56",
-                    "夜间平均心率 61",
-                    "身体电量变化 +48",
-                    "平均 HRV 65ms",
-                ]
-            ),
+            "昨晚 23:26 睡，07:30 起，一共 8 小时 1 分，评分 91（优秀）。"
+            "深睡 55分，浅睡 5小时35分，REM 1小时32分，清醒 3分。"
+            "静息心率 56，身体电量 +48，HRV 65ms。",
         )
+        self.assertNotIn("\n", MODULE.format_sleep_message(summary))
 
     def test_prefers_a_full_night_when_sleep_time_seconds_is_a_fragment(self) -> None:
         woke = datetime(2026, 10, 16, 7, 30, tzinfo=SHANGHAI)
@@ -577,9 +575,9 @@ class GarminSleepFieldFallbackTest(unittest.TestCase):
 
         self.assertEqual(summary["total_sleep_seconds"], REAL_SLEEP_SECONDS)
         message = MODULE.format_sleep_message(summary)
-        self.assertIn("总睡眠 8小时1分", message)
-        self.assertNotIn("总睡眠 1小时", message)
-        self.assertIn("入眠 10月15日 23:26", message)
+        self.assertIn("一共 8 小时 1 分", message)
+        self.assertNotIn("一共 1 小时", message)
+        self.assertIn("23:26 睡", message)
 
     def test_reads_root_fields_and_sleep_levels_when_the_dto_is_a_fragment(self) -> None:
         woke = datetime(2026, 10, 16, 7, 30, tzinfo=SHANGHAI)
@@ -635,9 +633,9 @@ class GarminSleepFieldFallbackTest(unittest.TestCase):
         self.assertEqual(summary["average_hrv"], 65)
         self.assertEqual(summary["night_heart_rate"], 61)
         message = MODULE.format_sleep_message(summary)
-        self.assertIn("总睡眠 8小时1分", message)
+        self.assertIn("一共 8 小时 1 分", message)
         self.assertIn("深睡 55分", message)
-        self.assertIn("睡眠评分 91（优秀）", message)
+        self.assertIn("评分 91（优秀）", message)
         self.assertNotIn("424242", message)
 
     def test_sums_sleep_levels_when_stage_fields_are_missing(self) -> None:
@@ -685,7 +683,7 @@ class GarminSleepFieldFallbackTest(unittest.TestCase):
         )
         self.assertEqual(summary["rem_sleep_seconds"], REAL_REM_SECONDS)
         self.assertEqual(summary["awake_sleep_seconds"], REAL_AWAKE_SECONDS)
-        self.assertIn("总睡眠 8小时2分", MODULE.format_sleep_message(summary))
+        self.assertIn("一共 8 小时 2 分", MODULE.format_sleep_message(summary))
 
     def test_reads_a_nested_sleep_time_seconds_object(self) -> None:
         summary = MODULE.summarize_sleep(
@@ -756,7 +754,7 @@ class GarminSleepFieldFallbackTest(unittest.TestCase):
                 ),
                 encoding="utf-8",
             )
-            result = subprocess.run(
+            result = run_script(
                 [
                     sys.executable,
                     str(SCRIPT_PATH),
@@ -780,3 +778,319 @@ class GarminSleepFieldFallbackTest(unittest.TestCase):
         self.assertNotIn("8675309", result.stdout)
         self.assertNotIn("person@example.com", result.stdout)
         self.assertNotIn("Dry run; Telegram message not sent", result.stdout)
+
+
+AI_NARRATIVE = (
+    "昨晚睡得踏实，一共 8 小时，评分 91。"
+    "跳舞和力量训练之后这样够恢复，今天力量可以照常安排，不要再额外加量。"
+)
+
+
+def llm_summary() -> dict:
+    return {
+        "date": "2026-10-16",
+        "fell_asleep_at": datetime(2026, 10, 15, 23, 26, tzinfo=SHANGHAI),
+        "woke_at": datetime(2026, 10, 16, 7, 30, tzinfo=SHANGHAI),
+        "total_sleep_seconds": 8 * 3600 + 60,
+        "deep_sleep_seconds": 55 * 60,
+        "light_sleep_seconds": 5 * 3600 + 35 * 60,
+        "rem_sleep_seconds": 92 * 60,
+        "awake_sleep_seconds": 3 * 60,
+        "sleep_score": 91,
+        "sleep_score_qualifier": "EXCELLENT",
+        "resting_heart_rate": 56,
+        "night_heart_rate": 61,
+        "body_battery": 80,
+        "body_battery_change": 48,
+        "average_hrv": 65,
+    }
+
+
+class Response:
+    def __init__(self, payload: dict) -> None:
+        self.raw = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+
+    def read(self) -> bytes:
+        return self.raw
+
+    def __enter__(self) -> "Response":
+        return self
+
+    def __exit__(self, *args: object) -> bool:
+        return False
+
+
+def chat_response(
+    content: object,
+    reasoning: str | None = None,
+    *,
+    model: str = "qwen/qwen-2.5-7b-instruct:free",
+    reasoning_alias: str | None = None,
+) -> Response:
+    message: dict[str, object] = {"role": "assistant", "content": content}
+    if reasoning is not None:
+        message["reasoning_content"] = reasoning
+    if reasoning_alias is not None:
+        message["reasoning"] = reasoning_alias
+    return Response({"model": model, "choices": [{"message": message}]})
+
+
+class ScriptedOpener:
+    def __init__(self, steps: list[object]) -> None:
+        self.steps = list(steps)
+        self.calls: list[object] = []
+        self.timeouts: list[int] = []
+
+    def __call__(self, request: object, timeout: int = 45) -> Response:
+        self.timeouts.append(timeout)
+        self.calls.append(request)
+        step = self.steps.pop(0)
+        if isinstance(step, BaseException):
+            raise step
+        return step  # type: ignore[return-value]
+
+
+class SleepCopyGenerationTest(unittest.TestCase):
+    def setUp(self) -> None:
+        self.previous = os.environ.get("OPENROUTER_API_KEY")
+        os.environ["OPENROUTER_API_KEY"] = "sk-or-test-secret"
+
+    def tearDown(self) -> None:
+        if self.previous is None:
+            os.environ.pop("OPENROUTER_API_KEY", None)
+        else:
+            os.environ["OPENROUTER_API_KEY"] = self.previous
+
+    def compose(self, opener: ScriptedOpener) -> tuple[object, str]:
+        stdout = io.StringIO()
+        with _redirect(stdout):
+            copy = MODULE.compose_sleep_message(llm_summary(), opener=opener)
+        return copy, stdout.getvalue()
+
+    def test_llm_success_keeps_script_data_as_the_second_paragraph(self) -> None:
+        opener = ScriptedOpener(
+            [chat_response(f"<think>先看时长</think>{AI_NARRATIVE}")]
+        )
+        copy, logs = self.compose(opener)
+        summary = llm_summary()
+        data = MODULE.format_sleep_data(summary)
+        self.assertEqual(copy.source, "llm")
+        self.assertEqual(copy.attempt, 1)
+        self.assertEqual(copy.text, f"{AI_NARRATIVE}\n\n{data}")
+        self.assertTrue(copy.text.startswith(AI_NARRATIVE))
+        self.assertIn("深睡 55分 · 浅睡 5小时35分 · REM 1小时32分 · 清醒 3分", copy.text)
+        self.assertIn("静息心率 56 · 身体电量 +48 · HRV 65ms", copy.text)
+        self.assertNotIn("夜间平均心率", copy.text)
+        self.assertNotIn("身体电量 80", copy.text)
+        self.assertNotIn("<think>", copy.text)
+        self.assertNotIn("sk-or-test-secret", logs)
+        self.assertEqual(MODULE.describe_sleep_copy(copy), "文案来源: AI（第 1 次尝试）")
+        request = opener.calls[0]
+        body = json.loads(request.data.decode("utf-8"))
+        self.assertEqual(body["model"], "openrouter/free")
+        self.assertEqual(body["temperature"], 0.3)
+        self.assertEqual(body["max_tokens"], 200)
+        self.assertIn("只输出 2 句话", body["messages"][0]["content"])
+        self.assertIn("不超过 100 个汉字", body["messages"][0]["content"])
+        self.assertIn("不要任何其他内容", body["messages"][0]["content"])
+        self.assertIn("跳舞", body["messages"][0]["content"])
+        self.assertIn("力量训练", body["messages"][0]["content"])
+        self.assertIn("示例一", body["messages"][0]["content"])
+        self.assertIn("只输出 2 句话", body["messages"][1]["content"])
+        self.assertIn("不超过 100 个汉字", body["messages"][1]["content"])
+        self.assertIn("不要罗列指标", body["messages"][1]["content"])
+        self.assertIn("不要写日期", body["messages"][1]["content"])
+        self.assertEqual(opener.timeouts, [60])
+        self.assertEqual(request.get_header("Authorization"), "Bearer sk-or-test-secret")
+
+    def test_uses_reasoning_content_when_content_is_empty(self) -> None:
+        opener = ScriptedOpener([chat_response(None, AI_NARRATIVE)])
+        copy, _logs = self.compose(opener)
+        self.assertEqual(copy.source, "llm")
+        self.assertTrue(copy.text.startswith(AI_NARRATIVE))
+
+    def test_strips_reasoning_preamble_and_keeps_the_closing_reading(self) -> None:
+        preamble = (
+            "<think>先比较深睡和心率，这些不要写出来</think>\n"
+            "思考：下面先分析，不要当正文。\n\n"
+            "分析：\n"
+            "时长够，评分高，训练可以照常。\n\n"
+            "Draft\n"
+            "这里是草稿，不要发出去。\n\n"
+            f"{AI_NARRATIVE}"
+        )
+        opener = ScriptedOpener([chat_response(preamble)])
+        copy, logs = self.compose(opener)
+        self.assertEqual(copy.source, "llm")
+        self.assertTrue(copy.text.startswith(AI_NARRATIVE))
+        self.assertNotIn("<think>", copy.text)
+        self.assertNotIn("不要当正文", copy.text)
+        self.assertNotIn("草稿", copy.text)
+        self.assertNotIn("sk-or-test-secret", logs)
+
+    def test_cuts_a_long_paragraph_down_to_the_last_two_sentences(self) -> None:
+        blob = "昨晚的判断需要写得自然一些。" * 30 + AI_NARRATIVE
+        opener = ScriptedOpener([chat_response(blob)])
+        copy, _logs = self.compose(opener)
+        self.assertEqual(copy.source, "llm")
+        self.assertTrue(copy.text.startswith(AI_NARRATIVE))
+        self.assertNotIn("需要写得自然一些", copy.text)
+
+    def test_uses_reasoning_content_when_content_is_only_a_preamble(self) -> None:
+        content = "思考：先看深睡。\n\n分析：再看心率。\n\nDraft\n"
+        opener = ScriptedOpener(
+            [
+                chat_response(
+                    content,
+                    AI_NARRATIVE,
+                    model="google/gemma-2-9b-it:free",
+                )
+            ]
+        )
+        copy, _logs = self.compose(opener)
+        self.assertEqual(copy.source, "llm")
+        self.assertTrue(copy.text.startswith(AI_NARRATIVE))
+
+    def test_overlong_output_logs_model_fields_and_a_raw_preview(self) -> None:
+        raw = "MARKER sk-or-test-secret " + ("甲" * 500) + "TAILSHOULDNOTAPPEAR"
+        other = "乙" * 400
+        opener = ScriptedOpener(
+            [
+                chat_response(
+                    raw,
+                    other,
+                    model="qwen/qwen-2.5-7b-instruct:free",
+                    reasoning_alias="丙" * 400,
+                )
+            ]
+            * 3
+        )
+        copy, logs = self.compose(opener)
+        self.assertEqual(copy.source, "fallback")
+        self.assertEqual(copy.text, MODULE.format_sleep_message(llm_summary()))
+        self.assertIn("output length", logs)
+        self.assertIn("model: qwen/qwen-2.5-7b-instruct:free", logs)
+        self.assertIn("fields: content, reasoning, reasoning_content", logs)
+        self.assertIn("used: content", logs)
+        self.assertIn("raw: MARKER ***", logs)
+        self.assertNotIn("sk-or-test-secret", logs)
+        self.assertNotIn("TAILSHOULDNOTAPPEAR", logs)
+        self.assertIn("OpenRouter 3 次都失败，改用固定模板。", logs)
+
+    def test_third_attempt_succeeds_after_two_failures(self) -> None:
+        opener = ScriptedOpener(
+            [
+                urllib.error.URLError("timed out"),
+                urllib.error.HTTPError(
+                    MODULE.OPENROUTER_URL,
+                    500,
+                    "error",
+                    HTTPMessage(),
+                    io.BytesIO(b"upstream failed"),
+                ),
+                chat_response(AI_NARRATIVE),
+            ]
+        )
+        copy, logs = self.compose(opener)
+        self.assertEqual(copy.source, "llm")
+        self.assertEqual(copy.attempt, 3)
+        self.assertIn(AI_NARRATIVE, copy.text)
+        self.assertIn("\n\n", copy.text)
+        self.assertIn("OpenRouter 第 1 次失败", logs)
+        self.assertIn("OpenRouter 第 2 次失败", logs)
+        self.assertIn("HTTP 500", logs)
+        self.assertNotIn("sk-or-test-secret", logs)
+        self.assertEqual(len(opener.calls), 3)
+        self.assertEqual(MODULE.describe_sleep_copy(copy), "文案来源: AI（第 3 次尝试）")
+
+    def test_three_failures_use_the_single_paragraph_template(self) -> None:
+        opener = ScriptedOpener(
+            [
+                urllib.error.URLError("timed out"),
+                urllib.error.HTTPError(
+                    MODULE.OPENROUTER_URL,
+                    429,
+                    "error",
+                    HTTPMessage(),
+                    io.BytesIO(b"slow down"),
+                ),
+                chat_response(""),
+            ]
+        )
+        copy, logs = self.compose(opener)
+        summary = llm_summary()
+        self.assertEqual(copy.source, "fallback")
+        self.assertIsNone(copy.attempt)
+        self.assertEqual(copy.text, MODULE.format_sleep_message(summary))
+        self.assertNotIn("\n", copy.text)
+        self.assertIn("昨晚 23:26 睡，07:30 起", copy.text)
+        self.assertIn("一共 8 小时 1 分", copy.text)
+        self.assertIn("评分 91（优秀）", copy.text)
+        self.assertIn("OpenRouter 3 次都失败，改用固定模板。", logs)
+        self.assertNotIn("sk-or-test-secret", logs)
+        self.assertEqual(MODULE.describe_sleep_copy(copy), "文案来源: 固定模板")
+
+    def test_listing_style_output_counts_as_a_failed_attempt(self) -> None:
+        listing = (
+            "2026-10-16 睡8小时2分，评分91，深睡55分，浅睡5小时35分，"
+            "REM1小时32分，清醒3分，静息56，夜间61，电量+48，HRV65，"
+            "恢复良好，建议排练后适度伸展、补水。"
+        )
+        opener = ScriptedOpener([chat_response(listing), chat_response(AI_NARRATIVE)])
+        copy, logs = self.compose(opener)
+        self.assertEqual(copy.source, "llm")
+        self.assertEqual(copy.attempt, 2)
+        self.assertTrue(copy.text.startswith(AI_NARRATIVE))
+        self.assertIn("output starts with a date", logs)
+        self.assertEqual(len(opener.calls), 2)
+
+    def test_rejects_a_date_a_metric_list_and_a_run_on_line(self) -> None:
+        summary = llm_summary()
+        with self.assertRaises(MODULE.SleepCopyError) as started:
+            MODULE.validate_narrative(
+                "2026-10-16 昨晚睡得踏实。跳舞和力量训练之后这样够恢复，今天可以照常安排，别再额外加量。",
+                summary,
+            )
+        self.assertIn("date", str(started.exception))
+
+        with self.assertRaises(MODULE.SleepCopyError) as listed:
+            MODULE.validate_narrative(
+                "昨晚睡了 8 小时，评分 91，深睡 55 分，心率 56。今天排练之后可以照常做力量训练，别再加量。",
+                summary,
+            )
+        self.assertIn("too many numbers", str(listed.exception))
+
+        with self.assertRaises(MODULE.SleepCopyError) as unpunctuated:
+            MODULE.validate_narrative(
+                "昨晚睡得踏实一共八小时评分也不错跳舞和力量训练之后恢复够用今天可以照常安排别再加量就好",
+                summary,
+            )
+        self.assertIn("enough sentences", str(unpunctuated.exception))
+
+        with self.assertRaises(MODULE.SleepCopyError) as too_long:
+            MODULE.validate_narrative("昨晚睡得还行。" * 40, summary)
+        self.assertIn("length", str(too_long.exception))
+
+    def test_invalid_numbers_fall_back_to_the_template(self) -> None:
+        opener = ScriptedOpener([chat_response(f"{AI_NARRATIVE}再补 12 小时。")] * 3)
+        copy, logs = self.compose(opener)
+        self.assertEqual(copy.source, "fallback")
+        self.assertEqual(copy.text, MODULE.format_sleep_message(llm_summary()))
+        self.assertNotIn("\n\n", copy.text)
+        self.assertIn("numbers that were not provided: 12", logs)
+        self.assertEqual(len(opener.calls), 3)
+
+    def test_missing_key_uses_the_template_without_calling_the_network(self) -> None:
+        os.environ.pop("OPENROUTER_API_KEY", None)
+        opener = ScriptedOpener([])
+        copy, logs = self.compose(opener)
+        self.assertEqual(copy.source, "fallback")
+        self.assertEqual(copy.text, MODULE.format_sleep_message(llm_summary()))
+        self.assertEqual(opener.calls, [])
+        self.assertIn("未设置 OPENROUTER_API_KEY", logs)
+
+
+def _redirect(stdout: io.StringIO):
+    import contextlib
+
+    return contextlib.redirect_stdout(stdout)
