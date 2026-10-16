@@ -820,11 +820,19 @@ class Response:
         return False
 
 
-def chat_response(content: object, reasoning: str | None = None) -> Response:
+def chat_response(
+    content: object,
+    reasoning: str | None = None,
+    *,
+    model: str = "qwen/qwen-2.5-7b-instruct:free",
+    reasoning_alias: str | None = None,
+) -> Response:
     message: dict[str, object] = {"role": "assistant", "content": content}
     if reasoning is not None:
         message["reasoning_content"] = reasoning
-    return Response({"choices": [{"message": message}]})
+    if reasoning_alias is not None:
+        message["reasoning"] = reasoning_alias
+    return Response({"model": model, "choices": [{"message": message}]})
 
 
 class ScriptedOpener:
@@ -881,10 +889,15 @@ class SleepCopyGenerationTest(unittest.TestCase):
         body = json.loads(request.data.decode("utf-8"))
         self.assertEqual(body["model"], "openrouter/free")
         self.assertEqual(body["temperature"], 0.3)
-        self.assertEqual(body["max_tokens"], 512)
+        self.assertEqual(body["max_tokens"], 200)
+        self.assertIn("只输出 2 句话", body["messages"][0]["content"])
+        self.assertIn("不超过 100 个汉字", body["messages"][0]["content"])
+        self.assertIn("不要任何其他内容", body["messages"][0]["content"])
         self.assertIn("跳舞", body["messages"][0]["content"])
         self.assertIn("力量训练", body["messages"][0]["content"])
         self.assertIn("示例一", body["messages"][0]["content"])
+        self.assertIn("只输出 2 句话", body["messages"][1]["content"])
+        self.assertIn("不超过 100 个汉字", body["messages"][1]["content"])
         self.assertIn("不要罗列指标", body["messages"][1]["content"])
         self.assertIn("不要写日期", body["messages"][1]["content"])
         self.assertEqual(opener.timeouts, [60])
@@ -895,6 +908,74 @@ class SleepCopyGenerationTest(unittest.TestCase):
         copy, _logs = self.compose(opener)
         self.assertEqual(copy.source, "llm")
         self.assertTrue(copy.text.startswith(AI_NARRATIVE))
+
+    def test_strips_reasoning_preamble_and_keeps_the_closing_reading(self) -> None:
+        preamble = (
+            "<think>先比较深睡和心率，这些不要写出来</think>\n"
+            "思考：下面先分析，不要当正文。\n\n"
+            "分析：\n"
+            "时长够，评分高，训练可以照常。\n\n"
+            "Draft\n"
+            "这里是草稿，不要发出去。\n\n"
+            f"{AI_NARRATIVE}"
+        )
+        opener = ScriptedOpener([chat_response(preamble)])
+        copy, logs = self.compose(opener)
+        self.assertEqual(copy.source, "llm")
+        self.assertTrue(copy.text.startswith(AI_NARRATIVE))
+        self.assertNotIn("<think>", copy.text)
+        self.assertNotIn("不要当正文", copy.text)
+        self.assertNotIn("草稿", copy.text)
+        self.assertNotIn("sk-or-test-secret", logs)
+
+    def test_cuts_a_long_paragraph_down_to_the_last_two_sentences(self) -> None:
+        blob = "昨晚的判断需要写得自然一些。" * 30 + AI_NARRATIVE
+        opener = ScriptedOpener([chat_response(blob)])
+        copy, _logs = self.compose(opener)
+        self.assertEqual(copy.source, "llm")
+        self.assertTrue(copy.text.startswith(AI_NARRATIVE))
+        self.assertNotIn("需要写得自然一些", copy.text)
+
+    def test_uses_reasoning_content_when_content_is_only_a_preamble(self) -> None:
+        content = "思考：先看深睡。\n\n分析：再看心率。\n\nDraft\n"
+        opener = ScriptedOpener(
+            [
+                chat_response(
+                    content,
+                    AI_NARRATIVE,
+                    model="google/gemma-2-9b-it:free",
+                )
+            ]
+        )
+        copy, _logs = self.compose(opener)
+        self.assertEqual(copy.source, "llm")
+        self.assertTrue(copy.text.startswith(AI_NARRATIVE))
+
+    def test_overlong_output_logs_model_fields_and_a_raw_preview(self) -> None:
+        raw = "MARKER sk-or-test-secret " + ("甲" * 500) + "TAILSHOULDNOTAPPEAR"
+        other = "乙" * 400
+        opener = ScriptedOpener(
+            [
+                chat_response(
+                    raw,
+                    other,
+                    model="qwen/qwen-2.5-7b-instruct:free",
+                    reasoning_alias="丙" * 400,
+                )
+            ]
+            * 3
+        )
+        copy, logs = self.compose(opener)
+        self.assertEqual(copy.source, "fallback")
+        self.assertEqual(copy.text, MODULE.format_sleep_message(llm_summary()))
+        self.assertIn("output length", logs)
+        self.assertIn("model: qwen/qwen-2.5-7b-instruct:free", logs)
+        self.assertIn("fields: content, reasoning, reasoning_content", logs)
+        self.assertIn("used: content", logs)
+        self.assertIn("raw: MARKER ***", logs)
+        self.assertNotIn("sk-or-test-secret", logs)
+        self.assertNotIn("TAILSHOULDNOTAPPEAR", logs)
+        self.assertIn("OpenRouter 3 次都失败，改用固定模板。", logs)
 
     def test_third_attempt_succeeds_after_two_failures(self) -> None:
         opener = ScriptedOpener(

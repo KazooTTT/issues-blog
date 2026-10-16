@@ -767,10 +767,10 @@ OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 OPENROUTER_MODEL = "openrouter/free"
 LLM_ATTEMPTS = 3
 LLM_TEMPERATURE = 0.3
-LLM_MAX_TOKENS = 512
+LLM_MAX_TOKENS = 200
 LLM_TIMEOUT_SECONDS = 60
 NARRATIVE_MIN_CHARS = 40
-NARRATIVE_MAX_CHARS = 160
+NARRATIVE_MAX_CHARS = 200
 MAX_NARRATIVE_NUMBERS = 3
 THINK_BLOCK = re.compile(r"<think\b[^>]*>.*?</think>", re.IGNORECASE | re.DOTALL)
 THINK_OPEN = re.compile(r"<think\b[^>]*>.*", re.IGNORECASE | re.DOTALL)
@@ -778,17 +778,30 @@ DATE_START = re.compile(
     r"^\s*\d{4}\s*[-/.年]\s*\d{1,2}(?:\s*[-/.月]\s*\d{1,2})?"
 )
 SENTENCE_END = re.compile(r"[。！？]")
+REASONING_LINE = re.compile(
+    r"^(?:思考|分析|草稿|推理|推理过程|思考过程|分析过程|draft|reasoning|thoughts?|"
+    r"let me|okay|ok|首先|让我|我先|我需要|用户希望|用户要求|下面是|以下是)"
+    r"(?:[:：\s]|$)",
+    re.IGNORECASE,
+)
+REASONING_LABEL_ONLY = re.compile(
+    r"^(?:思考|分析|草稿|推理|推理过程|思考过程|分析过程|draft|reasoning|thoughts?)"
+    r"\s*[:：]?\s*$",
+    re.IGNORECASE,
+)
+REASONING_LABEL_BODY = re.compile(
+    r"^(?:思考|分析|草稿|推理|推理过程|思考过程|分析过程|draft|reasoning|thoughts?)"
+    r"\s*[:：]\s*(.+)$",
+    re.IGNORECASE,
+)
+SECTION_LABEL_ONLY = re.compile(r"(?:正文|最终|输出)\s*[:：]?", re.IGNORECASE)
 
 SYSTEM_PROMPT = (
-    "你是睡眠晨报的第一段作者。用户会跳舞，也做力量训练，"
-    "恢复建议要考虑到排练和训练后的负担。"
-    "只写 2 到 3 句自然的中文解读，大约六十到一百个字。"
-    "直接输出正文，不要标题，不要 Markdown，不要列表，不要思考过程或 <think>。"
-    "不要输出日期。不要罗列指标。"
-    "最多引用 1 到 2 个核心数字，只从总时长和评分里选。"
-    "深睡、浅睡、REM、清醒、心率、身体电量和 HRV 只用来判断状态，不要把这些数字写进正文。"
-    "语气温和、自然，不要夸张，不要做医疗诊断。"
-    "示例只用来学语气和句式，不要照抄示例里的数字。\n"
+    "你是睡眠晨报的第一段作者。用户会跳舞，也做力量训练，恢复建议要考虑排练和训练。"
+    "只输出 2 句话，总共不超过 100 个汉字，不要任何其他内容。"
+    "不要标题，不要列表，不要日期，不要思考、分析或 Draft。"
+    "最多引用总时长和评分里的 1 个或 2 个数字。其他指标只用于判断，不要写出来。"
+    "语气温和，不要夸张，不要医疗诊断。示例不要照抄数字。\n"
     "示例一：昨晚睡得踏实，一共 8 小时，评分 91。跳舞和力量训练之后这样够恢复，今天力量可以照常安排。\n"
     "示例二：昨晚睡得短了些，一共 5 小时。排练和训练先放轻一点，今晚早点休息。"
 )
@@ -947,17 +960,91 @@ def coerce_model_text(value: Any) -> str:
     return ""
 
 
-def narrative_from_message(message: Any) -> str:
-    if not isinstance(message, dict):
-        return ""
-    text = strip_think_tags(coerce_model_text(message.get("content")))
-    if text:
-        return text
-    for key in ("reasoning_content", "reasoning"):
-        text = strip_think_tags(coerce_model_text(message.get(key)))
-        if text:
-            return text
+def paragraph_reading(paragraph: str) -> str:
+    """Drop a leading 思考/分析/Draft label and keep the reading after it."""
+    kept: list[str] = []
+    for raw_line in paragraph.splitlines():
+        stripped = raw_line.strip().lstrip("#").strip()
+        if kept:
+            kept.append(raw_line.strip())
+            continue
+        if not stripped or REASONING_LABEL_ONLY.match(stripped):
+            continue
+        if SECTION_LABEL_ONLY.fullmatch(stripped):
+            continue
+        labeled = REASONING_LABEL_BODY.match(stripped)
+        if labeled:
+            kept.append(labeled.group(1).strip())
+            continue
+        if REASONING_LINE.match(stripped):
+            continue
+        kept.append(raw_line.strip())
+    return "\n".join(kept).strip()
+
+
+def closing_sentences(text: str) -> str:
+    sentences = re.findall(r"[^。！？\n]+[。！？]", text)
+    if len(sentences) >= 2:
+        return "".join(sentences[-2:]).strip()
+    if sentences:
+        return sentences[-1].strip()
     return ""
+
+
+def final_interpretation(text: str) -> str:
+    """Drop think tags and reasoning paragraphs, then keep the closing reading."""
+    text = strip_think_tags(text)
+    for marker in ("最终解读：", "最终解读:", "正文：", "正文:", "输出：", "输出:"):
+        if marker in text:
+            text = text.split(marker)[-1]
+    paragraphs = [part.strip() for part in re.split(r"\n\s*\n", text) if part.strip()]
+    kept = [paragraph_reading(paragraph) for paragraph in paragraphs]
+    kept = [paragraph for paragraph in kept if paragraph]
+    candidate = kept[-1].strip() if kept else ""
+    if not candidate:
+        return ""
+    compact_length = len(re.sub(r"\s+", "", candidate))
+    if compact_length > NARRATIVE_MAX_CHARS:
+        shortened = closing_sentences(candidate)
+        if shortened:
+            candidate = shortened
+    return candidate.strip()
+
+
+def narrative_from_message(message: Any) -> tuple[str, str, str]:
+    """Return the reading, the raw field it came from, and that field's name."""
+    if not isinstance(message, dict):
+        return "", "", ""
+    candidates: list[tuple[str, str, str]] = []
+    for key in ("content", "reasoning_content", "reasoning"):
+        raw = coerce_model_text(message.get(key))
+        if not raw.strip():
+            continue
+        candidates.append((key, final_interpretation(raw), raw))
+    for key, extracted, raw in candidates:
+        length = len(re.sub(r"\s+", "", extracted))
+        if NARRATIVE_MIN_CHARS <= length <= NARRATIVE_MAX_CHARS:
+            return extracted, raw, key
+    if candidates:
+        key, extracted, raw = candidates[0]
+        return extracted or raw, raw, key
+    return "", "", ""
+
+
+class ModelReply:
+    def __init__(
+        self,
+        text: str,
+        model: str,
+        fields: list[str],
+        raw: str,
+        used: str,
+    ) -> None:
+        self.text = text
+        self.model = model
+        self.fields = fields
+        self.raw = raw
+        self.used = used
 
 
 class SleepCopyError(Exception):
@@ -972,7 +1059,7 @@ def validate_narrative(text: str, summary: dict[str, Any]) -> str:
         raise SleepCopyError("output is empty")
     length = len(compact)
     if length < NARRATIVE_MIN_CHARS or length > NARRATIVE_MAX_CHARS:
-        raise SleepCopyError(f"output length {length} is outside 40-160")
+        raise SleepCopyError(f"output length {length} is outside 40-200")
     if DATE_START.match(text):
         raise SleepCopyError("output starts with a date")
     if len(SENTENCE_END.findall(text)) < 2:
@@ -988,7 +1075,17 @@ def validate_narrative(text: str, summary: dict[str, Any]) -> str:
     return text
 
 
-def parse_openrouter_payload(raw: bytes) -> str:
+def message_fields(message: Any) -> list[str]:
+    if not isinstance(message, dict):
+        return []
+    fields = []
+    for key in ("content", "reasoning", "reasoning_content"):
+        if coerce_model_text(message.get(key)).strip():
+            fields.append(key)
+    return fields
+
+
+def parse_openrouter_payload(raw: bytes) -> ModelReply:
     try:
         payload = json.loads(raw.decode("utf-8"))
     except json.JSONDecodeError as error:
@@ -1002,7 +1099,16 @@ def parse_openrouter_payload(raw: bytes) -> str:
     choices = payload.get("choices")
     if not isinstance(choices, list) or not choices or not isinstance(choices[0], dict):
         raise SleepCopyError("response has no choices")
-    return narrative_from_message(choices[0].get("message"))
+    message = choices[0].get("message")
+    text, raw_text, used = narrative_from_message(message)
+    model = payload.get("model")
+    return ModelReply(
+        text,
+        model if isinstance(model, str) else "",
+        message_fields(message),
+        raw_text,
+        used,
+    )
 
 
 def request_openrouter_narrative(
@@ -1010,7 +1116,7 @@ def request_openrouter_narrative(
     *,
     opener: Any,
     api_key: str,
-) -> str:
+) -> ModelReply:
     body = json.dumps(
         {
             "model": OPENROUTER_MODEL,
@@ -1022,10 +1128,9 @@ def request_openrouter_narrative(
                 {
                     "role": "user",
                     "content": (
-                        "请写 2 到 3 句自然的中文解读，直接输出正文。\n"
-                        "不要罗列指标，不要写日期，不要列表。\n"
-                        "最多提总时长和评分里的 1 到 2 个数字，其余数字只用于判断，不要复述。\n"
-                        "睡眠数据：\n"
+                        "只输出 2 句话，总共不超过 100 个汉字，不要任何其他内容。\n"
+                        "不要罗列指标，不要写日期，不要解释判断过程。\n"
+                        "最多提总时长和评分。下面的数据只供判断：\n"
                         + "\n".join(sleep_fact_lines(summary))
                     ),
                 },
@@ -1070,6 +1175,19 @@ def describe_sleep_copy(copy: SleepCopy) -> str:
     return "文案来源: 固定模板"
 
 
+def failure_detail(error: SleepCopyError, reply: ModelReply | None) -> str:
+    detail = telegram_memos.redact(str(error))
+    if reply is None:
+        return detail
+    preview = telegram_memos.redact(re.sub(r"\s+", " ", reply.raw).strip())[:300]
+    fields = ", ".join(reply.fields) if reply.fields else "none"
+    model = reply.model or "unknown"
+    used = reply.used or "none"
+    return (
+        f"{detail}\n  model: {model}\n  fields: {fields}\n  used: {used}\n  raw: {preview}"
+    )
+
+
 def compose_sleep_message(
     summary: dict[str, Any],
     *,
@@ -1082,16 +1200,12 @@ def compose_sleep_message(
         print("未设置 OPENROUTER_API_KEY，改用固定模板。")
         return SleepCopy(fallback, "fallback", None)
     for attempt in range(1, attempts + 1):
+        reply: ModelReply | None = None
         try:
-            narrative = validate_narrative(
-                request_openrouter_narrative(summary, opener=opener, api_key=api_key),
-                summary,
-            )
+            reply = request_openrouter_narrative(summary, opener=opener, api_key=api_key)
+            narrative = validate_narrative(reply.text, summary)
         except SleepCopyError as error:
-            print(
-                f"OpenRouter 第 {attempt} 次失败: "
-                f"{telegram_memos.redact(str(error))}"
-            )
+            print(f"OpenRouter 第 {attempt} 次失败: {failure_detail(error, reply)}")
             continue
         data = format_sleep_data(summary)
         text = narrative if not data else f"{narrative}\n\n{data}"
