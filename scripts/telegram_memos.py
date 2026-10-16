@@ -12,7 +12,7 @@ BOT_TOKEN_PATTERN = re.compile(r"bot\d+:[A-Za-z0-9_-]+")
 
 def redact(text: str) -> str:
     redacted = text
-    for name in ("TELEGRAM_MEMOS_BOT_TOKEN", "GARMIN_PASSWORD"):
+    for name in ("TELEGRAM_MEMOS_BOT_TOKEN", "GARMIN_PASSWORD", "OPENROUTER_API_KEY"):
         secret = os.environ.get(name)
         if secret:
             redacted = redacted.replace(secret, "***")
