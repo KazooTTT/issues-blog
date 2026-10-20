@@ -150,9 +150,64 @@ const shortDate = (value: string) => value.slice(5).replace("-", "/");
           </ul>
         </section>
 
-        <p class="fitness-note">
-          数据由本机同步写入 D1，页面只读；体能按 42 天、疲劳按 7 天加权推算，同一天的负荷先记账再并入曲线。
-        </p>
+        <details class="fitness-explain">
+          <summary>这几个数字是什么意思、怎么算的</summary>
+
+          <div class="fitness-explain-body">
+            <h3>三个指标</h3>
+            <dl>
+              <div>
+                <dt>长期体能</dt>
+                <dd>
+                  过去大约六周里你持续承受的训练量，相当于身体的「底子」。练得越多涨得越慢，停练也会慢慢掉。
+                </dd>
+              </div>
+              <div>
+                <dt>短期疲劳</dt>
+                <dd>
+                  最近一周的训练量，反应快、起伏大。一次长距离或强度课会把它顶上去，休息几天就落回来。
+                </dd>
+              </div>
+              <div>
+                <dt>当下状态</dt>
+                <dd>
+                  长期体能减短期疲劳。正数是余量，负数是欠账——负得越多，说明最近的负荷越超出你已经攒下的底子。
+                </dd>
+              </div>
+              <div>
+                <dt>负荷</dt>
+                <dd>
+                  每次运动从 Garmin 带回来的训练负荷值。同一天有多次运动就相加，休息日记为 0。
+                </dd>
+              </div>
+            </dl>
+
+            <h3>算法</h3>
+            <p>两条曲线都是指数移动平均，只是时间常数不同：</p>
+            <ul>
+              <li>长期体能：42 天，每天 <code>体能 += (当天负荷 − 体能) / 42</code></li>
+              <li>短期疲劳：7 天，每天 <code>疲劳 += (当天负荷 − 疲劳) / 7</code></li>
+              <li>当下状态：<code>体能 − 疲劳</code></li>
+            </ul>
+            <p>
+              也就是说当天负荷只按比例渗进曲线，不会整体重算历史；时间常数越大，曲线越迟钝。
+              每天先记录「吸收负荷之前」的数值，再把当天负荷并入，所以图上某一天的点，是那天训练之前的状态。
+              从两年前开始逐日推演，所有数值保留一位小数。
+            </p>
+
+            <h3>状态判定</h3>
+            <dl class="fitness-thresholds">
+              <div><dt>状态 ≥ 20</dt><dd>余量充足</dd></div>
+              <div><dt>5 ~ 20</dt><dd>良好</dd></div>
+              <div><dt>-10 ~ 5</dt><dd>正常</dd></div>
+              <div><dt>-30 ~ -10</dt><dd>偏疲劳</dd></div>
+              <div><dt>&lt; -30</dt><dd>疲劳较高</dd></div>
+            </dl>
+            <p class="fitness-explain-foot">
+              数据由本机同步写入 D1，页面只读。模型口径沿用原看板的 Python 实现，数值与那边一致。
+            </p>
+          </div>
+        </details>
 
         <script
           type="application/json"
@@ -441,11 +496,126 @@ const shortDate = (value: string) => value.slice(5).replace("-", "/");
     background: var(--accent-dark);
   }
 
-  .fitness-note {
+  .fitness-explain {
     margin: 0 0 60px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--card);
+  }
+
+  .fitness-explain summary {
+    padding: 16px 20px;
     color: var(--muted);
+    font-size: 13px;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: color 0.16s ease;
+  }
+
+  .fitness-explain summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .fitness-explain summary::before {
+    content: "+";
+    width: 16px;
+    color: var(--accent);
+    font-size: 15px;
+    line-height: 1;
+  }
+
+  .fitness-explain[open] summary::before {
+    content: "−";
+  }
+
+  .fitness-explain summary:hover {
+    color: var(--ink);
+  }
+
+  .fitness-explain-body {
+    padding: 0 20px 20px;
+    border-top: 1px solid var(--line);
+    font-size: 14px;
+    line-height: 1.85;
+  }
+
+  .fitness-explain h3 {
+    margin: 20px 0 10px;
+    font: 600 13px/1.4 var(--sans);
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .fitness-explain dl {
+    margin: 0;
+  }
+
+  .fitness-explain dl > div {
+    display: grid;
+    grid-template-columns: minmax(88px, 0.22fr) minmax(0, 1fr);
+    gap: 14px;
+    padding: 9px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .fitness-explain dl > div:first-child {
+    border-top: 0;
+  }
+
+  .fitness-explain dt {
+    color: var(--ink);
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  .fitness-explain dd {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  .fitness-explain p {
+    margin: 0 0 10px;
+    color: var(--muted);
+  }
+
+  .fitness-explain ul {
+    margin: 0 0 10px;
+    padding-left: 18px;
+    color: var(--muted);
+  }
+
+  .fitness-explain li {
+    margin: 4px 0;
+  }
+
+  .fitness-explain code {
+    padding: 1px 5px;
+    border-radius: 4px;
+    background: var(--line);
+    color: var(--ink);
+    font-size: 0.9em;
+  }
+
+  .fitness-thresholds dd {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .fitness-explain-foot {
+    margin-top: 18px !important;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
     font-size: 12px;
-    line-height: 1.8;
+  }
+
+  @media (max-width: 720px) {
+    .fitness-explain dl > div {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 2px;
+    }
   }
 
   .fitness-empty {
