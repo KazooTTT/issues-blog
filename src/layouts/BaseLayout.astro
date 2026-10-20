@@ -167,8 +167,9 @@ const articleActive =
             <a class:list={{ "nav-link-active": routeStartsWith("/tools/") }} href={sitePath("/tools/")}>工具</a>
             <a href="https://daily.kazoottt.top/" target="_blank" rel="noopener noreferrer">每日收集 ↗</a>
           </NavigationDropdown>
-          <NavigationDropdown label="生活" active={routeStartsWith("/workouts/") || routeStartsWith("/friends/") || routeStartsWith("/wishlist/")}>
+          <NavigationDropdown label="生活" active={routeStartsWith("/workouts/") || routeStartsWith("/fitness/") || routeStartsWith("/friends/") || routeStartsWith("/wishlist/")}>
             <a class:list={{ "nav-link-active": routeStartsWith("/workouts/") }} href={sitePath("/workouts/")}>运动</a>
+            <a class:list={{ "nav-link-active": routeStartsWith("/fitness/") }} href={sitePath("/fitness/")}>体能</a>
             <a class:list={{ "nav-link-active": routeStartsWith("/wishlist/") }} href={sitePath("/wishlist/")}>愿望清单</a>
             <a class:list={{ "nav-link-active": routeStartsWith("/friends/") }} href={sitePath("/friends/")}>友链</a>
           </NavigationDropdown>

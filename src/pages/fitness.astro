@@ -1,0 +1,362 @@
+---
+export const prerender = false;
+
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { loadFitnessSnapshot } from "@/fitness/load";
+import { summarise } from "@/fitness/series";
+import { sitePath } from "@/utils/presentation";
+
+const snapshot = await loadFitnessSnapshot();
+const summary = snapshot ? summarise(snapshot.series) : null;
+
+const PERIODS = [30, 90, 180, 365] as const;
+const requested = Number(Astro.url.searchParams.get("days") ?? 90);
+const windowDays = (PERIODS as readonly number[]).includes(requested) ? requested : 90;
+
+const points = snapshot ? snapshot.series.slice(-windowDays) : [];
+
+const WIDTH = 760;
+const HEIGHT = 260;
+const PAD_X = 8;
+const PAD_Y = 18;
+
+const values = points.flatMap((point) => [point.ctl, point.atl, point.tsb]);
+const maxValue = values.length ? Math.max(...values) : 1;
+const minValue = values.length ? Math.min(...values, 0) : 0;
+const span = maxValue - minValue || 1;
+
+const x = (index: number) =>
+  points.length > 1
+    ? PAD_X + (index * (WIDTH - PAD_X * 2)) / (points.length - 1)
+    : WIDTH / 2;
+const y = (value: number) =>
+  PAD_Y + ((maxValue - value) / span) * (HEIGHT - PAD_Y * 2);
+
+const line = (pick: (point: (typeof points)[number]) => number) =>
+  points
+    .map((point, index) => `${index === 0 ? "M" : "L"}${x(index).toFixed(1)} ${y(pick(point)).toFixed(1)}`)
+    .join(" ");
+
+const ctlPath = line((point) => point.ctl);
+const atlPath = line((point) => point.atl);
+const tsbPath = line((point) => point.tsb);
+
+const firstDate = points.at(0)?.date ?? "";
+const lastDate = points.at(-1)?.date ?? "";
+const weekDelta = summary ? summary.weekLoad - summary.prevWeekLoad : 0;
+const chartLabel = (value: string) => value.slice(5).replace("-", "/");
+const periodLabel = `${windowDays} 天`;
+---
+
+<BaseLayout
+  title="体能"
+  description="长期体能、短期疲劳与当下状态的每日推算，数据来自本机的 Garmin 同步。"
+>
+  <section class="page-intro fitness-intro">
+    <span class="eyebrow">TRAINING LOAD</span>
+    <h1>体能</h1>
+    <p>
+      每次运动都会留下一点负荷。把它按两条不同速度的曲线摊开，就能看出身体攒下了多少余量、最近又压上了多少疲劳。
+    </p>
+  </section>
+
+  {
+    summary && snapshot ? (
+      <>
+        <section class="workout-summary fitness-summary" aria-label="当前训练状态">
+          <div>
+            <strong>{summary.ctl}</strong>
+            <span>长期体能 · 42 天</span>
+          </div>
+          <div>
+            <strong>{summary.atl}</strong>
+            <span>短期疲劳 · 7 天</span>
+          </div>
+          <div>
+            <strong>{summary.tsb > 0 ? `+${summary.tsb}` : summary.tsb}</strong>
+            <span>当下状态 · 体能减疲劳</span>
+          </div>
+        </section>
+
+        <section class="fitness-state" aria-label="状态解读">
+          <div class="fitness-state-head">
+            <span class="fitness-badge">{summary.label}</span>
+            <span class="fitness-ratio">
+              疲劳 / 体能 {summary.ratio.toFixed(2)} · 体能较上周
+              {summary.ctlDelta >= 0 ? " +" : " "}
+              {summary.ctlDelta}
+            </span>
+          </div>
+          <p>{summary.advice}</p>
+          <p class="fitness-week">
+            最近七天负荷 <strong>{summary.weekLoad}</strong>，前七天
+            <strong>{summary.prevWeekLoad}</strong>，{weekDelta >= 0 ? "增加" : "减少"}
+            <strong>{Math.abs(Math.round(weekDelta * 10) / 10)}</strong>。
+          </p>
+        </section>
+
+        <section class="fitness-chart-block">
+          <div class="section-heading">
+            <h2>负荷走势</h2>
+            <span>{periodLabel}</span>
+          </div>
+
+          <nav class="fitness-periods" aria-label="时间范围">
+            {PERIODS.map((period) => (
+              <a
+                class:list={{ "is-active": period === windowDays }}
+                href={`${sitePath("/fitness/")}?days=${period}`}
+              >
+                {period} 天
+              </a>
+            ))}
+          </nav>
+
+          <figure class="fitness-chart">
+            <svg
+              viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+              role="img"
+              aria-label={`${firstDate} 至 ${lastDate} 的体能、疲劳与状态走势`}
+              preserveAspectRatio="none"
+            >
+              <line
+                class="fitness-zero"
+                x1={PAD_X}
+                x2={WIDTH - PAD_X}
+                y1={y(0)}
+                y2={y(0)}
+              />
+              <path class="fitness-line fitness-line-ctl" d={ctlPath} />
+              <path class="fitness-line fitness-line-atl" d={atlPath} />
+              <path class="fitness-line fitness-line-tsb" d={tsbPath} />
+            </svg>
+            <figcaption>
+              <span class="fitness-axis">{chartLabel(firstDate)}</span>
+              <span class="fitness-axis">{chartLabel(lastDate)}</span>
+            </figcaption>
+          </figure>
+
+          <ul class="fitness-legend">
+            <li><i class="swatch swatch-ctl"></i>长期体能</li>
+            <li><i class="swatch swatch-atl"></i>短期疲劳</li>
+            <li><i class="swatch swatch-tsb"></i>状态</li>
+          </ul>
+        </section>
+
+        <p class="fitness-note">
+          数据由本机同步写入 D1，页面只读；体能按 42 天、疲劳按 7 天加权推算，同一天的负荷先记账再并入曲线。
+        </p>
+      </>
+    ) : (
+      <section class="fitness-empty">
+        <h2>数据暂不可用</h2>
+        <p>这一刻没读到 D1 里的运动记录。稍后刷新，或先去看一眼运动记录是否正常。</p>
+        <a href={sitePath("/workouts/")}>去运动记录 →</a>
+      </section>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .fitness-summary strong {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .fitness-state {
+    margin: 34px 0 56px;
+    padding: 26px 28px;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: var(--card);
+    box-shadow: var(--shadow);
+  }
+
+  .fitness-state-head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 18px;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .fitness-badge {
+    font: 600 26px/1.2 var(--serif);
+    color: var(--accent);
+    letter-spacing: -0.01em;
+  }
+
+  .fitness-ratio {
+    color: var(--muted);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .fitness-state p {
+    margin: 0;
+    line-height: 1.85;
+  }
+
+  .fitness-week {
+    margin-top: 12px !important;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .fitness-week strong {
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .fitness-chart-block {
+    margin-bottom: 46px;
+  }
+
+  .fitness-periods {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: -18px 0 22px;
+  }
+
+  .fitness-periods a {
+    padding: 6px 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--muted);
+    font-size: 12px;
+    text-decoration: none;
+    transition: color 0.16s ease, border-color 0.16s ease;
+  }
+
+  .fitness-periods a:hover,
+  .fitness-periods a.is-active {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .fitness-chart {
+    margin: 0;
+  }
+
+  .fitness-chart svg {
+    display: block;
+    width: 100%;
+    height: 260px;
+    overflow: visible;
+  }
+
+  .fitness-chart figcaption {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+
+  .fitness-axis {
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .fitness-zero {
+    stroke: var(--line);
+    stroke-width: 1;
+    stroke-dasharray: 2 4;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .fitness-line {
+    fill: none;
+    stroke-width: 2;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .fitness-line-ctl {
+    stroke: var(--accent);
+  }
+
+  .fitness-line-atl {
+    stroke: var(--accent-dark);
+    opacity: 0.85;
+  }
+
+  .fitness-line-tsb {
+    stroke: var(--muted);
+    stroke-width: 1.5;
+    stroke-dasharray: 4 4;
+  }
+
+  .fitness-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin: 18px 0 0;
+    padding: 0;
+    list-style: none;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .fitness-legend li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .swatch {
+    width: 16px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--muted);
+  }
+
+  .swatch-ctl {
+    background: var(--accent);
+  }
+
+  .swatch-atl {
+    background: var(--accent-dark);
+  }
+
+  .fitness-note {
+    margin: 0 0 60px;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.8;
+  }
+
+  .fitness-empty {
+    margin: 40px 0 80px;
+    padding: 30px 28px;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: var(--card);
+  }
+
+  .fitness-empty h2 {
+    margin: 0 0 10px;
+    font: 600 24px/1.3 var(--serif);
+  }
+
+  .fitness-empty p {
+    margin: 0 0 14px;
+    color: var(--muted);
+  }
+
+  .fitness-empty a {
+    color: var(--accent);
+  }
+
+  @media (max-width: 720px) {
+    .fitness-state {
+      padding: 20px 18px;
+    }
+
+    .fitness-chart svg {
+      height: 200px;
+    }
+  }
+</style>
