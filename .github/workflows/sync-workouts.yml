@@ -7,14 +7,10 @@ on:
         description: "Number of days to fetch (use a larger value for backfills)"
         required: false
         default: "14"
-  schedule:
-    - cron: "0 * * * *"
 
 permissions:
   contents: write
   issues: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: garmin-workout-sync
@@ -32,7 +28,7 @@ jobs:
       GARMIN_IS_CN: ${{ vars.GARMIN_IS_CN || 'true' }}
       GARMIN_SYNC_DAYS: ${{ github.event_name == 'workflow_dispatch' && inputs.days || '14' }}
       GITHUB_TOKEN: ${{ github.token }}
-      SITE_URL: ${{ vars.SITE_URL || format('https://{0}.github.io/{1}', github.repository_owner, github.event.repository.name) }}
+      SITE_URL: ${{ vars.SITE_URL || 'https://blog.kazoottt.top' }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v6
@@ -69,20 +65,13 @@ jobs:
           git add src/data/workouts.json
           git commit -m "sync Garmin workouts"
           git push
-      - uses: actions/configure-pages@v6
+      - name: Assemble Pages output
         if: steps.changes.outputs.changed == 'true'
-      - uses: actions/upload-pages-artifact@v5
+        run: node scripts/build-pages.mjs
+      - name: Deploy to Cloudflare Pages
         if: steps.changes.outputs.changed == 'true'
+        uses: cloudflare/wrangler-action@v3
         with:
-          path: dist
-
-  deploy:
-    needs: sync
-    if: needs.sync.outputs.changed == 'true'
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v5
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist/pages --project-name=issues-blog --branch=main

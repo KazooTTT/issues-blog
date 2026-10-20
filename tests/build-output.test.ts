@@ -5,6 +5,11 @@ import { resolve } from "node:path";
 
 import { beforeAll, describe, expect, it } from "vitest";
 
+import { siteConfig } from "@/config";
+import { fixtureIssues } from "@/data/fixture";
+import { workouts as workoutSnapshot } from "@/data/workouts";
+import { classifyIssues } from "@/domain/content-policy";
+
 const root = resolve(import.meta.dirname, "..");
 
 describe("static blog build", () => {
@@ -21,8 +26,8 @@ describe("static blog build", () => {
   }, 30_000);
 
   it("marks writing sources consistently for the persisted navigation filter", () => {
-    const home = readFileSync(resolve(root, "dist/index.html"), "utf8");
-    const archive = readFileSync(resolve(root, "dist/archive/index.html"), "utf8");
+    const home = readFileSync(resolve(root, "dist/client/blog/index.html"), "utf8");
+    const archive = readFileSync(resolve(root, "dist/client/blog/archive/index.html"), "utf8");
     for (const html of [home, archive]) {
       expect(html).toContain('role="switch"');
       expect(html).toContain("只看人工");
@@ -35,22 +40,33 @@ describe("static blog build", () => {
   });
 
   it("provides a popular page with an honest fallback and groups navigation into three dropdowns", () => {
-    const popular = readFileSync(resolve(root, "dist/popular/index.html"), "utf8");
+    const popular = readFileSync(resolve(root, "dist/client/blog/popular/index.html"), "utf8");
     expect(popular).toContain("热门文章");
     expect(popular).toContain("访问统计暂时不可用");
     expect(popular).toContain('href="/blog/archive/"');
     const navigation = popular.match(/<nav aria-label="主导航">([\s\S]*?)<\/nav>/)?.[1] ?? "";
     expect(navigation.match(/<details /g)).toHaveLength(3);
     expect(navigation.match(/<summary /g)).toHaveLength(3);
-    for (const path of ["popular", "archive", "tags", "projects", "tools", "workouts", "friends", "about"]) {
+    for (const path of ["popular", "archive", "tags", "projects", "tools", "workouts", "friends", "wishlist", "about"]) {
       expect(navigation).toContain(`href="/blog/${path}/"`);
     }
     expect(navigation).toMatch(/<summary[^>]*nav-link-active[^>]*>文章<\/summary>/);
   });
 
+  it("builds a wishlist shell without baking personal data into the page", () => {
+    const html = readFileSync(resolve(root, "dist/client/blog/wishlist/index.html"), "utf8");
+    expect(html).toContain("愿望清单");
+    expect(html).toContain("data-wishlist");
+    expect(html).toContain("data-search");
+    expect(html).toContain("data-status");
+    expect(html).not.toContain("换一个 iPhone Pro");
+    const navigation = html.match(/<nav aria-label="主导航">([\s\S]*?)<\/nav>/)?.[1] ?? "";
+    expect(navigation).toMatch(/<summary[^>]*nav-link-active[^>]*>生活<\/summary>/);
+  });
+
   it("shares About discussion on home and About with older messages collapsed", () => {
     for (const route of ["index.html", "about/index.html"]) {
-      const page = readFileSync(resolve(root, "dist", route), "utf8");
+      const page = readFileSync(resolve(root, "dist/client/blog", route), "utf8");
       expect(page).toContain('aria-label="留言"');
       expect(page).toContain("11 条留言");
       expect(page).toContain('href="https://github.com/kazoottt/issues-blog/issues/1">去 GitHub 留言');
@@ -60,18 +76,18 @@ describe("static blog build", () => {
       expect(page).toContain("第 11 条访客留言");
       expect(page.match(/class="comment"/g)).toHaveLength(11);
     }
-    const emptyPost = readFileSync(resolve(root, "dist/posts/100/index.html"), "utf8");
+    const emptyPost = readFileSync(resolve(root, "dist/client/blog/posts/100/index.html"), "utf8");
     expect(emptyPost).toContain("还没有留言，欢迎来打个招呼。");
     expect(emptyPost).toContain("去 GitHub 留言");
   });
 
   it("generates stable article routes and sends the full-list action to archive", async () => {
-    await expect(access(resolve(root, "dist/posts/101/index.html"))).resolves.toBe(
+    await expect(access(resolve(root, "dist/client/blog/posts/101/index.html"))).resolves.toBe(
       undefined,
     );
-    const home = readFileSync(resolve(root, "dist/index.html"), "utf8");
+    const home = readFileSync(resolve(root, "dist/client/blog/index.html"), "utf8");
     const sitemap = readFileSync(
-      resolve(root, "dist/sitemap-0.xml"),
+      resolve(root, "dist/client/blog/sitemap-0.xml"),
       "utf8",
     );
     expect(home).toContain('href="/blog/posts/100/"');
@@ -95,7 +111,7 @@ describe("static blog build", () => {
   });
 
   it("includes code copy and image preview controls on article pages", () => {
-    const article = readFileSync(resolve(root, "dist/posts/101/index.html"), "utf8");
+    const article = readFileSync(resolve(root, "dist/client/blog/posts/101/index.html"), "utf8");
 
     expect(article).toContain("data-image-lightbox");
     expect(article).toContain("data-copy-code");
@@ -107,7 +123,7 @@ describe("static blog build", () => {
   });
 
   it("renders linked article tags once at the top of the post", () => {
-    const article = readFileSync(resolve(root, "dist/posts/101/index.html"), "utf8");
+    const article = readFileSync(resolve(root, "dist/client/blog/posts/101/index.html"), "utf8");
     const header = article.match(/<header class="post-header">([\s\S]*?)<\/header>/)?.[1];
     const footer = article.match(/<footer class="post-footer">([\s\S]*?)<\/footer>/)?.[1];
 
@@ -118,8 +134,8 @@ describe("static blog build", () => {
   });
 
   it("keeps archive rows focused on dates and titles", () => {
-    const archive = readFileSync(resolve(root, "dist/archive/index.html"), "utf8");
-    const article = readFileSync(resolve(root, "dist/posts/101/index.html"), "utf8");
+    const archive = readFileSync(resolve(root, "dist/client/blog/archive/index.html"), "utf8");
+    const article = readFileSync(resolve(root, "dist/client/blog/posts/101/index.html"), "utf8");
 
     expect(archive).not.toContain('class="archive-tags"');
     expect(archive).not.toContain('class="archive-tag"');
@@ -136,9 +152,9 @@ describe("static blog build", () => {
   });
 
   it("groups periodic review tags under one summary menu item", () => {
-    const home = readFileSync(resolve(root, "dist/index.html"), "utf8");
+    const home = readFileSync(resolve(root, "dist/client/blog/index.html"), "utf8");
     const summary = readFileSync(
-      resolve(root, "dist/collections/summary/index.html"),
+      resolve(root, "dist/client/blog/collections/summary/index.html"),
       "utf8",
     );
 
@@ -154,9 +170,9 @@ describe("static blog build", () => {
   });
 
   it("renders a standalone projects page with its own card layout", () => {
-    const home = readFileSync(resolve(root, "dist/index.html"), "utf8");
+    const home = readFileSync(resolve(root, "dist/client/blog/index.html"), "utf8");
     const projects = readFileSync(
-      resolve(root, "dist/projects/index.html"),
+      resolve(root, "dist/client/blog/projects/index.html"),
       "utf8",
     );
 
@@ -169,8 +185,8 @@ describe("static blog build", () => {
   });
 
   it("keeps the selected theme synchronized across page loads and tabs", () => {
-    const home = readFileSync(resolve(root, "dist/index.html"), "utf8");
-    const article = readFileSync(resolve(root, "dist/posts/101/index.html"), "utf8");
+    const home = readFileSync(resolve(root, "dist/client/blog/index.html"), "utf8");
+    const article = readFileSync(resolve(root, "dist/client/blog/posts/101/index.html"), "utf8");
 
     for (const page of [home, article]) {
       expect(page).toContain("window.blogTheme");
@@ -223,9 +239,9 @@ describe("static blog build", () => {
   });
 
   it("generates full-text RSS and sitemap output", () => {
-    const rss = readFileSync(resolve(root, "dist/rss.xml"), "utf8");
+    const rss = readFileSync(resolve(root, "dist/client/blog/rss.xml"), "utf8");
     const sitemap = readFileSync(
-      resolve(root, "dist/sitemap-0.xml"),
+      resolve(root, "dist/client/blog/sitemap-0.xml"),
       "utf8",
     );
 
@@ -236,42 +252,51 @@ describe("static blog build", () => {
   });
 
   it("keeps site-owned pages outside the Issues CMS", async () => {
-    await expect(access(resolve(root, "dist/friends/index.html"))).resolves.toBe(
+    await expect(access(resolve(root, "dist/client/blog/friends/index.html"))).resolves.toBe(
       undefined,
     );
-    await expect(access(resolve(root, "dist/workouts/index.html"))).resolves.toBe(
-      undefined,
-    );
-    await expect(access(resolve(root, "dist/tools/index.html"))).resolves.toBe(
+    await expect(access(resolve(root, "dist/client/blog/tools/index.html"))).resolves.toBe(
       undefined,
     );
 
-    const friends = readFileSync(resolve(root, "dist/friends/index.html"), "utf8");
-    const workouts = readFileSync(resolve(root, "dist/workouts/index.html"), "utf8");
-    const tools = readFileSync(resolve(root, "dist/tools/index.html"), "utf8");
-    const workoutSnapshot = JSON.parse(
-      readFileSync(resolve(root, "src/data/workouts.json"), "utf8"),
-    ) as Array<{ activityDate: string }>;
+    const friends = readFileSync(resolve(root, "dist/client/blog/friends/index.html"), "utf8");
+    const tools = readFileSync(resolve(root, "dist/client/blog/tools/index.html"), "utf8");
+    // Workouts are SSR routes now, so the page is verified at its source and data
+    // instead of a prerendered dist/client/blog/workouts/index.html artifact.
+    const workouts = readFileSync(resolve(root, "src/pages/workouts.astro"), "utf8");
+    const workoutDetails = readFileSync(
+      resolve(root, "src/components/WorkoutDetails.astro"),
+      "utf8",
+    );
     const latestWorkoutDate = workoutSnapshot
       .map(({ activityDate }) => activityDate)
       .sort()
       .at(-1);
     expect(friends).toContain("Yuang&#39;s Blog");
-    expect(workouts).toContain("力量训练");
+    expect(workoutSnapshot.some(({ activityType }) => activityType === "strength_training")).toBe(
+      true,
+    );
+    expect(workoutDetails).toContain('strength_training: "力量训练"');
     expect(workouts).toContain("最近 7 天");
-    expect(workouts).toContain(`统计截至 ${latestWorkoutDate}`);
+    expect(workouts).toContain("统计截至 {latestDate}");
+    expect(latestWorkoutDate).toBeDefined();
     expect(workouts).toContain('data-workout-view="list"');
     expect(workouts).toContain('data-workout-view="calendar"');
     expect(workouts).toContain('role="tablist"');
-    expect(workouts).toContain('class="workout-kind workout-kind--strength"');
+    expect(workouts).toContain('class:list={["workout-kind", `workout-kind--${kind}`]}');
+    expect(workouts).toContain("strength: { label: \"力量\", mark: \"力\" }");
     expect(workouts).toContain('class="workout-calendar"');
-    expect(workouts).toContain('aria-describedby="workout-detail-');
+    expect(workouts).toContain("aria-describedby={detailId}");
     expect(workouts).toContain('role="tooltip"');
-    const tooltip = workouts.match(/role="tooltip"[\s\S]*?<section class="workout-data-section is-summary">[\s\S]*?<\/section>/)?.[0];
-    expect(tooltip).toBeTruthy();
-    expect(tooltip).not.toContain("activityDate");
-    expect(tooltip).not.toContain("durationSeconds");
-    expect(tooltip).not.toContain("trainingEffectLabel");
+    expect(workouts).toContain("<WorkoutDetails workout={workout} summary />");
+    // The summary tooltip renders display labels only; the field names are used
+    // solely for the summary whitelist and never printed.
+    expect(workoutDetails).toContain(
+      '!summary || ["activityDate", "durationSeconds", "caloriesKcal", "averageHeartRateBpm", "maxHeartRateBpm", "trainingEffectLabel"].includes(key)',
+    );
+    expect(workoutDetails).toContain(
+      "{details.map(([, label, value]) => <div><dt>{label}</dt><dd>{value}</dd></div>)}",
+    );
     expect(workouts).not.toContain("数据快照更新于");
     expect(tools).toContain("Mac mini M2 Pro");
     expect(tools).toContain("软件工具");
@@ -280,57 +305,84 @@ describe("static blog build", () => {
   });
 
   it("keeps workout labels readable without exposing source field names", () => {
-    const workout = readFileSync(
-      resolve(root, "dist/workouts/612229533/index.html"),
+    // The detail route is SSR; assert the label mapping in the component and the
+    // actual snapshot values it renders.
+    const workoutDetails = readFileSync(
+      resolve(root, "src/components/WorkoutDetails.astro"),
       "utf8",
     );
+    const workout = workoutSnapshot.find(({ externalId }) => externalId === "612229533");
+    expect(workout).toBeDefined();
 
-    expect(workout).toContain("<dt>本地开始</dt>");
-    expect(workout).toContain("Asia/Shanghai");
-    expect(workout).not.toContain("GMT 开始");
-    expect(workout).not.toContain("startTimeGmt");
-    expect(workout).not.toContain("移动时长");
-    expect(workout).not.toContain("movingDurationSeconds");
-    expect(workout).not.toContain("<dt>距离</dt><dd>0 m</dd>");
-    expect(workout).not.toContain("<dt>平均速度</dt><dd>0 km/h</dd>");
-    expect(workout).toContain("<dt>Garmin 类型</dt>");
-    expect(workout).toContain("室内有氧</dd>");
-    expect(workout).toContain("<dt>主要训练效果</dt>");
-    expect(workout).toContain("速度</dd>");
-    expect(workout).not.toContain("查看 Garmin 原始字段名");
-    expect(workout).not.toContain("（startTimeLocal）");
-    expect(workout).not.toContain("（activityType）");
-    expect(workout).not.toContain("（trainingEffectLabel）");
-    expect(workout).toContain("主要训练收益偏向速度");
+    expect(workoutDetails).toContain('["startTimeLocal", "本地开始",');
+    expect(workoutDetails).toContain("（Asia/Shanghai）");
+    expect(workoutDetails).not.toContain("GMT 开始");
+    expect(workoutDetails).not.toContain("startTimeGmt");
+    expect(workoutDetails).not.toContain("移动时长");
+    expect(workoutDetails).not.toContain("movingDurationSeconds");
+    expect(workout?.distanceMeters).toBe(0);
+    expect(workout?.averageSpeedMps).toBe(0);
+    expect(workoutDetails).toContain(
+      ".filter(([key]) => workout[key as keyof Workout] !== 0)",
+    );
+    expect(workoutDetails).toContain('["activityType", "Garmin 类型",');
+    expect(workout?.activityType).toBe("indoor_cardio");
+    expect(workoutDetails).toContain('indoor_cardio: "室内有氧"');
+    expect(workoutDetails).toContain('["trainingEffectLabel", "主要训练效果",');
+    expect(workout?.trainingEffectLabel).toBe("SPEED");
+    expect(workoutDetails).toContain("SPEED: {");
+    expect(workoutDetails).toContain('name: "速度"');
+    expect(workoutDetails).not.toContain("查看 Garmin 原始字段名");
+    expect(workoutDetails).not.toContain("（startTimeLocal）");
+    expect(workoutDetails).not.toContain("（activityType）");
+    expect(workoutDetails).not.toContain("（trainingEffectLabel）");
+    expect(workoutDetails).toContain("主要训练收益偏向速度");
   });
 
   it("places the review before the activity summary and links adjacent workouts", () => {
-    const workout = readFileSync(
-      resolve(root, "dist/workouts/622983356/index.html"),
+    // Workout detail is SSR; verify the template order and that the review
+    // action points at the fixture's review Issue.
+    const workout = readFileSync(resolve(root, "src/pages/workouts/[id].astro"), "utf8");
+    const workoutDetails = readFileSync(
+      resolve(root, "src/components/WorkoutDetails.astro"),
       "utf8",
     );
+    const { workoutReviews } = classifyIssues(fixtureIssues, siteConfig.owner);
+    const review = workoutReviews.find(({ workoutId }) => workoutId === "622983356");
     const reviewIndex = workout.indexOf('class="workout-review"');
-    const summaryIndex = workout.indexOf("<h4>活动摘要</h4>");
+    const summaryIndex = workout.indexOf("<WorkoutDetails workout={workout} />");
 
     expect(reviewIndex).toBeGreaterThan(-1);
     expect(summaryIndex).toBeGreaterThan(reviewIndex);
+    expect(workoutDetails).toContain("<h4>活动摘要</h4>");
     expect(workout).toContain('class="workout-detail-navigation"');
     expect(workout).toContain("上一个运动");
     expect(workout).toContain("下一个运动");
     expect(workout).toContain('rel="prev"');
     expect(workout).toContain('rel="next"');
     expect(workout).toContain("编辑复盘 ↗");
-    expect(workout).toContain(
-      'href="https://github.com/kazoottt/issues-blog/issues/202"',
-    );
+    expect(review?.number).toBe(202);
+    expect(review?.url).toBe("https://github.com/kazoottt/issues-blog/issues/202");
+    expect(workout).toContain("href={reviewActionUrl}");
   });
 
   it("marks reviewed workouts in the list and calendar", () => {
-    const workouts = readFileSync(resolve(root, "dist/workouts/index.html"), "utf8");
+    // Workouts index is SSR; the review mark is rendered in all three workout
+    // renderings (list row, calendar marker, calendar agenda).
+    const workouts = readFileSync(resolve(root, "src/pages/workouts.astro"), "utf8");
+    const { workoutReviews } = classifyIssues(fixtureIssues, siteConfig.owner);
+    const reviewedWorkoutIds = new Set(workoutReviews.map(({ workoutId }) => workoutId));
 
     expect(workouts).toContain('class="workout-review-mark"');
     expect(workouts).toContain("已有复盘");
     expect(workouts).not.toContain(">复</span>");
+    expect(
+      workouts.match(/reviewsByWorkoutId\.has\(workout\.externalId\)/g)?.length,
+    ).toBeGreaterThanOrEqual(3);
+    expect(workoutReviews.length).toBeGreaterThan(0);
+    expect(workoutSnapshot.some(({ externalId }) => reviewedWorkoutIds.has(externalId))).toBe(
+      true,
+    );
   });
 
   it("keeps workout tooltips pointed at their trigger while avoiding viewport edges", () => {

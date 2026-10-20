@@ -18,20 +18,20 @@ on:
 permissions:
   contents: read
   issues: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: github-pages
+  group: cloudflare-pages
   cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     env:
+      PUBLIC_WISHLIST_API_URL: ${{ vars.PUBLIC_WISHLIST_API_URL }}
+      PUBLIC_WISHLIST_PROJECT_URL: ${{ vars.PUBLIC_WISHLIST_PROJECT_URL }}
       CONTENT_MODE: github
       GITHUB_TOKEN: ${{ github.token }}
-      SITE_URL: ${{ vars.SITE_URL || format('https://{0}.github.io/{1}', github.repository_owner, github.event.repository.name) }}
+      SITE_URL: ${{ vars.SITE_URL || 'https://blog.kazoottt.top' }}
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v4
@@ -47,18 +47,12 @@ jobs:
         env:
           GA4_SERVICE_ACCOUNT_JSON: ${{ secrets.GA4_SERVICE_ACCOUNT_JSON }}
           GA4_PROPERTY_ID: ${{ vars.GA4_PROPERTY_ID }}
-      - uses: actions/configure-pages@v6
-      - uses: actions/upload-pages-artifact@v5
+      - name: Assemble Pages output
+        run: node scripts/build-pages.mjs
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
         with:
-          path: dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v5
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist/pages --project-name=issues-blog --branch=main
 

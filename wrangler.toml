@@ -1,0 +1,9 @@
+name = "issues-blog"
+compatibility_date = "2026-10-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Garmin 数据由本机同步写入，站点只读。
+[[d1_databases]]
+binding = "DB"
+database_name = "garmin"
+database_id = "53d68402-fcd4-48ce-85dc-d10044bfc32b"

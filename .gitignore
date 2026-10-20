@@ -7,3 +7,14 @@ dist/
 coverage/
 gitblog/
 
+# Cloudflare local credentials and build state
+.dev.vars
+.dev.vars.*
+.wrangler/
+
+# Private report previews
+.local-reports/
+
+# Python
+__pycache__/
+*.pyc

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/config-schema.json",
+  "name": "issues-blog-wishlist",
+  "main": "index.ts",
+  "compatibility_date": "2026-10-01",
+  "workers_dev": true,
+  "vars": {
+    "GITHUB_OWNER": "KazooTTT",
+    "PROJECT_NUMBER": "",
+    "ALLOWED_ORIGINS": "https://kazoottt.github.io,https://kazoottt.top,http://localhost:4321"
+  }
+}

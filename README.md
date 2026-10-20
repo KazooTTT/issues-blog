@@ -201,3 +201,14 @@ python scripts/notify-garmin-sleep.py --input sleep.json --dry-run
 状态文件丢失时，定时任务同样失败且不发送。重新勾选 `seed` 即可。再次 seed
 会把当时 feed 里的文章全部标成已推送，包括还没发过的新文章。若消息已经发出
 但状态提交失败，下次运行可能会再发一次。
+## 愿望清单
+
+「生活 → 愿望清单」通过 Cloudflare Worker 读取 GitHub Projects，修改看板后自动更新，无需重新部署博客。看板字段、Obsidian 导入和配置方式见 [愿望清单接入说明](docs/wishlist.md)。
+
+## 佳明早报与每日收集推送
+
+佳明睡眠早报、从 daily-reports D1 生成的前日日报，可以自动发布为博客 Issue 并发送 Telegram。
+北京时间 09:00 / 00:00 调度，支持失败重试和按日期去重；默认关闭定时发布。
+所需凭据、预览命令和启用步骤见 [自动日报配置](docs/daily-reports.md)。
+
+佳明早报改用[本地 Magpie 解读和发送](docs/local-garmin-reports.md)，不创建博客 Issue。

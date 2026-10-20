@@ -1,0 +1,70 @@
+name: Publish daily and Garmin reports
+
+on:
+  schedule:
+    # UTC: Beijing 00:00, with retries at 01:00–03:00.
+    - cron: "0 16-19 * * *"
+  workflow_dispatch:
+    inputs:
+      kind:
+        description: Report type
+        type: choice
+        options: [sleep, daily]
+        required: true
+      date:
+        description: "Optional YYYY-MM-DD (sleep: wake date; daily: collection date)"
+        required: false
+      preview:
+        description: Generate only, without publishing or sending
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+# Serialize delivery and checkpoint writes, including manual reruns.
+concurrency:
+  group: automated-daily-reports
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.event_name == 'workflow_dispatch' || vars.REPORTS_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      REPORT_KIND: ${{ github.event_name == 'workflow_dispatch' && inputs.kind || 'daily' }}
+      REPORT_DATE: ${{ inputs.date }}
+      REPORT_PREVIEW: ${{ github.event_name == 'workflow_dispatch' && inputs.preview && 'true' || 'false' }}
+      REPORT_REPOSITORY: ${{ github.repository }}
+      REPORT_GITHUB_TOKEN: ${{ secrets.REPORT_GITHUB_TOKEN }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      GARMIN_EMAIL: ${{ secrets.GARMIN_EMAIL }}
+      GARMIN_PASSWORD: ${{ secrets.GARMIN_PASSWORD }}
+      GARMIN_IS_CN: ${{ vars.GARMIN_IS_CN || 'true' }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      DAILY_D1_DATABASE_ID: ${{ vars.DAILY_D1_DATABASE_ID || '4da564b6-3fc1-4d42-89a1-f96af4ad9f58' }}
+      REPORT_TELEGRAM_ENABLED: ${{ vars.REPORT_TELEGRAM_ENABLED || 'true' }}
+      GARMIN_BLOG_ENABLED: ${{ vars.GARMIN_BLOG_ENABLED || 'true' }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install Garmin client
+        if: env.REPORT_KIND == 'sleep'
+        run: python -m pip install "garminconnect==0.3.6"
+      - name: Verify report behavior
+        run: python -m unittest discover -s tests -p 'test_daily_reports.py'
+      - name: Generate and optionally deliver report
+        shell: bash
+        run: |
+          args=("$REPORT_KIND")
+          if [[ -n "$REPORT_DATE" ]]; then args+=(--date "$REPORT_DATE"); fi
+          if [[ "$REPORT_PREVIEW" != 'true' ]]; then args+=(--publish); fi
+          if [[ "$REPORT_TELEGRAM_ENABLED" != 'true' ]]; then args+=(--no-telegram); fi
+          if [[ "$REPORT_KIND" == 'sleep' && "$GARMIN_BLOG_ENABLED" != 'true' ]]; then args+=(--draft); fi
+          # Do not persist private sleep previews as public workflow artifacts or logs.
+          python scripts/publish-daily-reports.py "${args[@]}" --output "$RUNNER_TEMP/report.md"

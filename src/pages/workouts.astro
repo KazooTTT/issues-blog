@@ -1,11 +1,16 @@
 ---
-import { sortWorkoutsChronologically, workouts } from "@/data/workouts";
+export const prerender = false;
+
+import { sortWorkoutsChronologically } from "@/data/workouts";
+import { loadRuntimeDb, loadWorkouts } from "@/data/workout-store";
 import WorkoutDetails from "@/components/WorkoutDetails.astro";
 import { getSiteContent } from "@/data/site-content";
 import { indexWorkoutReviews } from "@/domain/workout-reviews";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
+// 运动记录直接读 D1；读不到时回落到构建快照。
+const workouts = await loadWorkouts(await loadRuntimeDb());
 const { workoutReviews } = await getSiteContent();
 const reviewsByWorkoutId = indexWorkoutReviews(
   workoutReviews,

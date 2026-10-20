@@ -1,39 +1,33 @@
 ---
+export const prerender = false;
+
 import WorkoutDetails from "@/components/WorkoutDetails.astro";
 import BackToTop from "@/components/BackToTop.astro";
 import { getSiteContent } from "@/data/site-content";
-import { workouts, type Workout } from "@/data/workouts";
-import type { WorkoutReview } from "@/domain/types";
+import { loadRuntimeDb, loadWorkoutPage } from "@/data/workout-store";
 import { indexWorkoutReviews } from "@/domain/workout-reviews";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { renderMarkdown } from "@/rendering/content";
 import { formatDate } from "@/utils/presentation";
 
-export async function getStaticPaths() {
-  const { workoutReviews } = await getSiteContent();
-  const reviewsByWorkoutId = indexWorkoutReviews(
-    workoutReviews,
-    workouts.map((workout) => workout.externalId),
-  );
-
-  return workouts.map((workout) => ({
-    params: { id: workout.externalId },
-    props: { workout, review: reviewsByWorkoutId.get(workout.externalId) },
-  }));
+// 单条运动按需渲染，数据来自 D1。
+const page = await loadWorkoutPage(Astro.params.id ?? "", await loadRuntimeDb());
+if (!page) {
+  return new Response("运动记录不存在", {
+    status: 404,
+    headers: { "content-type": "text/plain; charset=utf-8" },
+  });
 }
 
-interface Props {
-  workout: Workout;
-  review?: WorkoutReview;
-}
-
-const { workout, review } = Astro.props;
+const { workout, previousWorkout, nextWorkout } = page;
+const { workoutReviews } = await getSiteContent();
+// 详情页只关心当前这条运动的复盘，其他运动的状态（可能已从 D1 中消失）
+// 不应该让本页 500。
+const review = indexWorkoutReviews(
+  workoutReviews.filter((item) => item.workoutId === workout.externalId),
+  [workout.externalId],
+).get(workout.externalId);
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
-const workoutIndex = workouts.findIndex(
-  ({ externalId }) => externalId === workout.externalId,
-);
-const previousWorkout = workouts[workoutIndex + 1];
-const nextWorkout = workouts[workoutIndex - 1];
 const reviewIssueUrl = new URL("https://github.com/KazooTTT/issues-blog/issues/new");
 reviewIssueUrl.searchParams.set("template", "workout-review.md");
 reviewIssueUrl.searchParams.set("title", `运动复盘｜${workout.activityDate}｜${workout.name}`);

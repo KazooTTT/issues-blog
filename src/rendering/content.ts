@@ -6,6 +6,7 @@ import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { createHighlighter } from "shiki";
+import { createJavaScriptRegexEngine } from "shiki/engine/javascript";
 import { unified } from "unified";
 
 import type { SourceComment } from "@/domain/types";
@@ -13,6 +14,8 @@ import type { SourceComment } from "@/domain/types";
 const highlighter = await createHighlighter({
   langs: [],
   themes: ["github-dark-default"],
+  // Cloudflare Workers 禁止动态实例化 Wasm，使用纯 JS 正则引擎代替 oniguruma。
+  engine: createJavaScriptRegexEngine(),
 });
 
 const githubStyleSchema = {
