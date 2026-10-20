@@ -4,6 +4,7 @@ export const prerender = false;
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { loadFitnessSnapshot } from "@/fitness/load";
 import { summarise } from "@/fitness/series";
+import { chartGeometry } from "@/fitness/chart";
 import { sitePath } from "@/utils/presentation";
 
 const snapshot = await loadFitnessSnapshot();
@@ -14,38 +15,23 @@ const requested = Number(Astro.url.searchParams.get("days") ?? 90);
 const windowDays = (PERIODS as readonly number[]).includes(requested) ? requested : 90;
 
 const points = snapshot ? snapshot.series.slice(-windowDays) : [];
+const geometry = chartGeometry(points);
+const hasAnyTrainingLoad = snapshot
+  ? snapshot.series.some((point) => point.load > 0)
+  : false;
 
-const WIDTH = 760;
-const HEIGHT = 260;
-const PAD_X = 8;
-const PAD_Y = 18;
+// 时间范围切换靠前端切片，服务端只把最近一年序列交给浏览器，避免每次点击都整页刷新。
+// 没有 JavaScript 时，下面的链接仍然按 ?days= 正常跳转。
+const history = snapshot ? snapshot.series.slice(-365) : [];
+const chartPayload = history.map((point) => ({
+  d: point.date,
+  l: point.load,
+  c: point.ctl,
+  a: point.atl,
+  t: point.tsb,
+}));
 
-const values = points.flatMap((point) => [point.ctl, point.atl, point.tsb]);
-const maxValue = values.length ? Math.max(...values) : 1;
-const minValue = values.length ? Math.min(...values, 0) : 0;
-const span = maxValue - minValue || 1;
-
-const x = (index: number) =>
-  points.length > 1
-    ? PAD_X + (index * (WIDTH - PAD_X * 2)) / (points.length - 1)
-    : WIDTH / 2;
-const y = (value: number) =>
-  PAD_Y + ((maxValue - value) / span) * (HEIGHT - PAD_Y * 2);
-
-const line = (pick: (point: (typeof points)[number]) => number) =>
-  points
-    .map((point, index) => `${index === 0 ? "M" : "L"}${x(index).toFixed(1)} ${y(pick(point)).toFixed(1)}`)
-    .join(" ");
-
-const ctlPath = line((point) => point.ctl);
-const atlPath = line((point) => point.atl);
-const tsbPath = line((point) => point.tsb);
-
-const firstDate = points.at(0)?.date ?? "";
-const lastDate = points.at(-1)?.date ?? "";
-const weekDelta = summary ? summary.weekLoad - summary.prevWeekLoad : 0;
-const chartLabel = (value: string) => value.slice(5).replace("-", "/");
-const periodLabel = `${windowDays} 天`;
+const shortDate = (value: string) => value.slice(5).replace("-", "/");
 ---
 
 <BaseLayout
@@ -61,7 +47,7 @@ const periodLabel = `${windowDays} 天`;
   </section>
 
   {
-    summary && snapshot ? (
+    summary && snapshot && hasAnyTrainingLoad ? (
       <>
         <section class="workout-summary fitness-summary" aria-label="当前训练状态">
           <div>
@@ -90,15 +76,17 @@ const periodLabel = `${windowDays} 天`;
           <p>{summary.advice}</p>
           <p class="fitness-week">
             最近七天负荷 <strong>{summary.weekLoad}</strong>，前七天
-            <strong>{summary.prevWeekLoad}</strong>，{weekDelta >= 0 ? "增加" : "减少"}
-            <strong>{Math.abs(Math.round(weekDelta * 10) / 10)}</strong>。
+            <strong>{summary.prevWeekLoad}</strong>，{summary.weekLoad - summary.prevWeekLoad >= 0
+              ? "增加"
+              : "减少"}
+            <strong>{Math.abs(Math.round((summary.weekLoad - summary.prevWeekLoad) * 10) / 10)}</strong>。
           </p>
         </section>
 
         <section class="fitness-chart-block">
           <div class="section-heading">
             <h2>负荷走势</h2>
-            <span>{periodLabel}</span>
+            <span data-period-label>{windowDays} 天</span>
           </div>
 
           <nav class="fitness-periods" aria-label="时间范围">
@@ -106,37 +94,56 @@ const periodLabel = `${windowDays} 天`;
               <a
                 class:list={{ "is-active": period === windowDays }}
                 href={`${sitePath("/fitness/")}?days=${period}`}
+                data-period={period}
+                aria-current={period === windowDays ? "true" : undefined}
               >
                 {period} 天
               </a>
             ))}
           </nav>
 
-          <figure class="fitness-chart">
+          <figure class="fitness-chart" data-chart-visual hidden={!geometry.hasData}>
             <svg
-              viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+              id="fitness-chart-svg"
+              viewBox={`0 0 760 260`}
               role="img"
-              aria-label={`${firstDate} 至 ${lastDate} 的体能、疲劳与状态走势`}
+              aria-label={`${geometry.firstDate} 至 ${geometry.lastDate} 的体能、疲劳与状态走势`}
               preserveAspectRatio="none"
             >
               <line
                 class="fitness-zero"
-                x1={PAD_X}
-                x2={WIDTH - PAD_X}
-                y1={y(0)}
-                y2={y(0)}
+                x1="8"
+                x2="752"
+                y1={geometry.zeroY}
+                y2={geometry.zeroY}
               />
-              <path class="fitness-line fitness-line-ctl" d={ctlPath} />
-              <path class="fitness-line fitness-line-atl" d={atlPath} />
-              <path class="fitness-line fitness-line-tsb" d={tsbPath} />
+              <path
+                class="fitness-line fitness-line-ctl"
+                data-line="ctl"
+                d={geometry.ctlPath}
+              />
+              <path
+                class="fitness-line fitness-line-atl"
+                data-line="atl"
+                d={geometry.atlPath}
+              />
+              <path
+                class="fitness-line fitness-line-tsb"
+                data-line="tsb"
+                d={geometry.tsbPath}
+              />
             </svg>
             <figcaption>
-              <span class="fitness-axis">{chartLabel(firstDate)}</span>
-              <span class="fitness-axis">{chartLabel(lastDate)}</span>
+              <span class="fitness-axis" data-axis="start">{geometry.hasData ? shortDate(geometry.firstDate) : ""}</span>
+              <span class="fitness-axis" data-axis="end">{geometry.hasData ? shortDate(geometry.lastDate) : ""}</span>
             </figcaption>
           </figure>
 
-          <ul class="fitness-legend">
+          <p class="fitness-chart-empty" data-chart-empty hidden={geometry.hasData}>
+            这段时间还没有运动记录，所以没有曲线可画。
+          </p>
+
+          <ul class="fitness-legend" data-chart-visual hidden={!geometry.hasData}>
             <li><i class="swatch swatch-ctl"></i>长期体能</li>
             <li><i class="swatch swatch-atl"></i>短期疲劳</li>
             <li><i class="swatch swatch-tsb"></i>状态</li>
@@ -146,16 +153,121 @@ const periodLabel = `${windowDays} 天`;
         <p class="fitness-note">
           数据由本机同步写入 D1，页面只读；体能按 42 天、疲劳按 7 天加权推算，同一天的负荷先记账再并入曲线。
         </p>
+
+        <script
+          type="application/json"
+          id="fitness-series-data"
+          set:html={JSON.stringify(chartPayload)}
+        />
       </>
     ) : (
       <section class="fitness-empty">
-        <h2>数据暂不可用</h2>
-        <p>这一刻没读到 D1 里的运动记录。稍后刷新，或先去看一眼运动记录是否正常。</p>
+        {hasAnyTrainingLoad ? (
+          <>
+            <h2>数据暂不可用</h2>
+            <p>这一刻没读到 D1 里的运动记录。稍后刷新，或先去看一眼运动记录是否正常。</p>
+          </>
+        ) : (
+          <>
+            <h2>还没有运动记录</h2>
+            <p>D1 里暂时没有训练负荷，等本机同步写入之后，这里会出现曲线。</p>
+          </>
+        )}
         <a href={sitePath("/workouts/")}>去运动记录 →</a>
       </section>
     )
   }
 </BaseLayout>
+
+<script>
+  import { chartGeometry } from "../fitness/chart";
+  import type { SeriesPoint } from "../fitness/series";
+
+  interface CompactPoint {
+    d: string;
+    l: number;
+    c: number;
+    a: number;
+    t: number;
+  }
+
+  const dataElement = document.getElementById("fitness-series-data");
+  const svg = document.getElementById("fitness-chart-svg");
+  const links = Array.from(
+    document.querySelectorAll<HTMLAnchorElement>("a[data-period]"),
+  );
+
+  if (dataElement && svg && links.length) {
+    const series: SeriesPoint[] = (
+      JSON.parse(dataElement.textContent ?? "[]") as CompactPoint[]
+    ).map((point) => ({
+      date: point.d,
+      load: point.l,
+      ctl: point.c,
+      atl: point.a,
+      tsb: point.t,
+    }));
+
+    const visuals = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-chart-visual]"),
+    );
+    const emptyNote = document.querySelector<HTMLElement>("[data-chart-empty]");
+
+    const lineOf = (name: string) =>
+      svg.querySelector<SVGPathElement>(`[data-line="${name}"]`);
+    const ctlLine = lineOf("ctl");
+    const atlLine = lineOf("atl");
+    const tsbLine = lineOf("tsb");
+    const zeroLine = svg.querySelector<SVGLineElement>("line");
+    const axisStart = document.querySelector<HTMLElement>('[data-axis="start"]');
+    const axisEnd = document.querySelector<HTMLElement>('[data-axis="end"]');
+    const periodLabel = document.querySelector<HTMLElement>("[data-period-label]");
+    const short = (value: string) => value.slice(5).replace("-", "/");
+
+    const render = (days: number, updateUrl: boolean) => {
+      const geometry = chartGeometry(series.slice(-days));
+      ctlLine?.setAttribute("d", geometry.ctlPath);
+      atlLine?.setAttribute("d", geometry.atlPath);
+      tsbLine?.setAttribute("d", geometry.tsbPath);
+      zeroLine?.setAttribute("y1", String(geometry.zeroY));
+      zeroLine?.setAttribute("y2", String(geometry.zeroY));
+      svg.setAttribute(
+        "aria-label",
+        geometry.hasData
+          ? `${geometry.firstDate} 至 ${geometry.lastDate} 的体能、疲劳与状态走势`
+          : "这段时间还没有运动记录",
+      );
+      if (axisStart) axisStart.textContent = geometry.hasData ? short(geometry.firstDate) : "";
+      if (axisEnd) axisEnd.textContent = geometry.hasData ? short(geometry.lastDate) : "";
+      if (periodLabel) periodLabel.textContent = `${days} 天`;
+
+      for (const visual of visuals) visual.hidden = !geometry.hasData;
+      if (emptyNote) emptyNote.hidden = geometry.hasData;
+
+      for (const link of links) {
+        const active = Number(link.dataset.period) === days;
+        link.classList.toggle("is-active", active);
+        if (active) link.setAttribute("aria-current", "true");
+        else link.removeAttribute("aria-current");
+      }
+
+      if (updateUrl) {
+        history.replaceState(history.state, "", `?days=${days}`);
+      }
+    };
+
+    for (const link of links) {
+      link.addEventListener("click", (event) => {
+        // 让「新标签页打开」这类操作保持原始的链接行为。
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
+        const days = Number(link.dataset.period);
+        if (!days) return;
+        event.preventDefault();
+        render(days, true);
+      });
+    }
+  }
+</script>
 
 <style>
   .fitness-summary strong {
@@ -272,6 +384,7 @@ const periodLabel = `${windowDays} 天`;
     stroke-linejoin: round;
     stroke-linecap: round;
     vector-effect: non-scaling-stroke;
+    transition: d 0.28s ease;
   }
 
   .fitness-line-ctl {
@@ -287,6 +400,13 @@ const periodLabel = `${windowDays} 天`;
     stroke: var(--muted);
     stroke-width: 1.5;
     stroke-dasharray: 4 4;
+  }
+
+  .fitness-chart-empty {
+    margin: 0;
+    padding: 34px 0;
+    color: var(--muted);
+    font-size: 13px;
   }
 
   .fitness-legend {
@@ -357,6 +477,12 @@ const periodLabel = `${windowDays} 天`;
 
     .fitness-chart svg {
       height: 200px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fitness-line {
+      transition: none;
     }
   }
 </style>
