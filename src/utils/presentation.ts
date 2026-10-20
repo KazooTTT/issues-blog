@@ -60,11 +60,19 @@ export function reactionEmoji(content: string): string {
   );
 }
 
+// base 必须是构建期常量：预渲染页面在 Node 里构建，能读到 SITE_URL；
+// 而 SSR 路由（workouts）在 Worker 运行时没有 process.env.SITE_URL，
+// 会退回 GitHub Pages 的 /issues-blog 前缀，让站内链接全部叠成
+// /issues-blog/xxx 而 404。__SITE_BASE__ 由 astro.config.mjs 注入，
+// 预渲染和 SSR 两边拿到同一个值。
+declare const __SITE_BASE__: string;
+
+const buildBase = (
+  typeof __SITE_BASE__ === "string" ? __SITE_BASE__ : ""
+).replace(/\/$/, "");
+
 export function sitePath(path = "/"): string {
-  const siteUrl = new URL(
-    process.env.SITE_URL ?? "https://kazoottt.github.io/issues-blog",
-  );
-  const base = siteUrl.pathname.replace(/\/$/, "");
+  const base = buildBase;
   const baseWithSlash = base ? `${base}/` : "/";
 
   if (path === "/") {
