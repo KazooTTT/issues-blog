@@ -7,6 +7,6 @@
   "vars": {
     "GITHUB_OWNER": "KazooTTT",
     "PROJECT_NUMBER": "",
-    "ALLOWED_ORIGINS": "https://kazoottt.github.io,https://kazoottt.top,http://localhost:4321"
+    "ALLOWED_ORIGINS": "https://blog.kazoottt.top,https://kazoottt.github.io,https://kazoottt.top,http://localhost:4321"
   }
 }

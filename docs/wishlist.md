@@ -54,6 +54,12 @@ pnpm dlx wrangler secret put GITHUB_TOKEN --config workers/wishlist/wrangler.jso
 
 仅页面代码和首次设置这些 URL 需要部署一次。之后直接在 Projects 新增、编辑、移动卡片，无需改博客代码。移除或归档卡片也会自动反映到网页。
 
+## 页面没有数据时
+
+- 显示「愿望清单正在准备中」：构建时没有配置 `PUBLIC_WISHLIST_API_URL`。在仓库 Settings → Secrets and variables → Actions → Variables 添加上述两个公开 URL，再手动运行 `Build and deploy blog`；只保存 Variable 不会更新已部署页面。
+- 显示同步失败：确认 Worker 已部署、`PROJECT_NUMBER` 已填写、Worker Secret `GITHUB_TOKEN` 有 `read:project` 权限，且 `ALLOWED_ORIGINS` 包含博客实际 origin（当前为 `https://blog.kazoottt.top`）。
+- 接口正常但清单为空：确认看板属于配置的用户、已公开，且有未归档的 draft 卡片或公开仓库 Issue。博客文章不会自动成为愿望卡片。
+
 ## 本地开发
 
 在 `.env` 设置上面的公开 URL 即可。调试 Worker 时在 `workers/wishlist/.dev.vars` 放 `GITHUB_TOKEN`，并加入本地网页的 origin 到 `ALLOWED_ORIGINS`。`.dev.vars` 已被 Git 忽略。

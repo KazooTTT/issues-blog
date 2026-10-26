@@ -20,6 +20,7 @@ export interface SourceComment {
 }
 
 export interface SourceIssue {
+  isPinned?: boolean;
   number: number;
   title: string;
   body: string;

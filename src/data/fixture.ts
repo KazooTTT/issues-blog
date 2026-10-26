@@ -9,6 +9,7 @@ export const fixtureIssues: SourceIssue[] = [
     const publishedAt = `2026-06-${day}T08:00:00Z`;
     return {
       number,
+      isPinned: index < 2,
       title:
         index === 0
           ? "欢迎来到我的博客"
@@ -24,7 +25,6 @@ export const fixtureIssues: SourceIssue[] = [
       updatedAt: publishedAt,
       labels: [
         "blog:publish",
-        ...(index < 2 ? ["blog:featured"] : []),
         ...(index < 4 ? [index % 2 === 0 ? "人工写作为主" : "AI 写作为主"] : []),
         topics[index % topics.length]!,
         ...(index === 0 ? ["周报"] : []),

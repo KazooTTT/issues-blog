@@ -8,7 +8,6 @@ import {
 
 const SYSTEM_LABEL_PREFIX = "blog:";
 const PUBLISH_LABEL = "blog:publish";
-const FEATURED_LABEL = "blog:featured";
 const ABOUT_LABEL = "blog:about";
 
 function publicationTime(issue: SourceIssue): string {
@@ -34,7 +33,7 @@ function toPost(issue: SourceIssue): Post {
     ...issue,
     publishedAt: publicationTime(issue),
     tags: issue.labels.filter((label) => !label.startsWith(SYSTEM_LABEL_PREFIX)),
-    featured: issue.labels.includes(FEATURED_LABEL),
+    featured: issue.isPinned === true,
     permalink: `/posts/${issue.number}/`,
   };
 }

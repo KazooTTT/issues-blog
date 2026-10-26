@@ -21,7 +21,7 @@
 
 ## Featured content and fixed pages
 
-- `blog:featured` marks homepage featured articles.
+- Native GitHub Issue pins mark homepage featured articles; `blog:featured` is ignored. Only published articles qualify. Pinning and unpinning trigger deployment.
 - The homepage shows at most five featured articles, newest publication first.
 - More than five produces a build warning and displays only the newest five.
 - Featured cards have an automatically derived excerpt; regular article lists do not.
