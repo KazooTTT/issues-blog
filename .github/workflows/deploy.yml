@@ -11,7 +11,7 @@ on:
       - "CONTEXT.md"
       - "data/telegram/**"
   issues:
-    types: [opened, edited, closed, reopened, labeled, unlabeled, deleted]
+    types: [opened, edited, closed, reopened, labeled, unlabeled, deleted, pinned, unpinned]
   issue_comment:
     types: [created, edited, deleted]
 

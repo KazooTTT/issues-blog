@@ -7,7 +7,7 @@ Issues Blog 的协作入口。领域术语、发布规则以 [CONTEXT.md](CONTEX
 - 内容源：**本仓库的 GitHub Issues**（仅仓库所有者创建的 Issue 会成为文章）
 - 生成：Astro → GitHub Pages（`.github/workflows/deploy.yml`，Issue/评论变动自动触发重建）
 - 发布 = 给 Issue 打 `blog:publish` 标签；移除标签 = 撤回
-- `blog:featured` = 首页精选（最多 5 篇）；`blog:about` = About 页面
+- GitHub Issue 原生置顶 = 首页精选（仅已发布文章，最多 5 篇；不读取 `blog:featured`）；`blog:about` = About 页面
 - 其他非 `blog:*` 标签都是内容标签；导航标签三选一（至少一个）：**随笔 / 笔记 / 总结**
 
 ## 从 Obsidian 新建并发布文章（推荐流程）

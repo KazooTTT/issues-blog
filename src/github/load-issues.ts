@@ -31,6 +31,7 @@ const issueSchema = z.object({
   body: z.string(),
   url: z.string(),
   state: z.enum(["OPEN", "CLOSED"]),
+  isPinned: z.boolean().nullable(),
   createdAt: z.string(),
   updatedAt: z.string(),
   lastEditedAt: z.string().nullable().optional(),
@@ -75,7 +76,7 @@ const ISSUES_QUERY = `
       issues(first: 50, after: $after, orderBy: { field: CREATED_AT, direction: DESC }) {
         pageInfo { hasNextPage endCursor }
         nodes {
-          id number title body url state createdAt updatedAt lastEditedAt
+          id number title body url state isPinned createdAt updatedAt lastEditedAt
           author { login }
           labels(first: 100) {
             nodes { name }
@@ -210,6 +211,7 @@ function mapIssue(issue: z.infer<typeof issueSchema>): SourceIssue {
     body: issue.body,
     url: issue.url,
     state: issue.state,
+    isPinned: issue.isPinned === true,
     createdAt: issue.createdAt,
     updatedAt: issue.lastEditedAt ?? issue.createdAt,
     author: issue.author?.login ?? "[deleted]",

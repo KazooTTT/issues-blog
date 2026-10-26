@@ -8,7 +8,7 @@
 
 - 仓库所有者创建的 Issue 才能成为文章。
 - 添加 `blog:publish` 发布；移除后撤回。
-- 添加 `blog:featured` 进入首页精选区，最多展示 5 篇。
+- 在 GitHub Issue 中选择 **Pin issue** 进入首页精选区（仅已发布文章），取消置顶即移出；不再读取 `blog:featured` 标签。精选按首次发布时间倒序排列，最多展示 5 篇。置顶和取消置顶会自动触发重新部署。
 - 一个带 `blog:about` 的 Issue 提供 About 页面；其评论作为首页和 About 共用的留言区，通过 GitHub 留言，自动重建后显示。
 - 其他非 `blog:*` Labels 都作为内容标签。
 - Issue 的 Open/Closed 状态不影响发布。
@@ -42,7 +42,7 @@ pnpm build
 
 ## GitHub 设置
 
-1. 创建 `blog:publish`、`blog:featured` 和 `blog:about` Labels。
+1. 创建 `blog:publish` 和 `blog:about` Labels。
 2. 在 Settings → Pages 中选择 GitHub Actions 作为 Source。
 3. 如需自定义域名，在 Actions Variables 中设置 `SITE_URL`。
 4. 保持 Actions 的 Pages 写权限；归档工作流还需要 Contents 写权限。

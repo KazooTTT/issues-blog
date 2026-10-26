@@ -27,6 +27,20 @@ function issue(overrides: Partial<SourceIssue> = {}): SourceIssue {
 }
 
 describe("content publication policy", () => {
+  it("features native pins only and keeps publication restrictions", () => {
+    const result = classifyIssues([
+      issue({ number: 1, isPinned: true }),
+      issue({ number: 2, labels: ["blog:publish", "blog:featured"] }),
+      issue({ number: 3, isPinned: false, labels: ["blog:publish", "blog:featured"] }),
+      issue({ number: 4, isPinned: true, labels: [] }),
+      issue({ number: 5, isPinned: true, author: "reader" }),
+      issue({ number: 6, isPinned: true, labels: ["blog:publish", "blog:about"] }),
+    ], owner);
+    expect(result.posts.filter(post => post.featured).map(post => post.number)).toEqual([1]);
+    expect(result.posts.map(post => post.number)).toEqual([1, 2, 3]);
+    expect(classifyIssues([issue({ isPinned: false })], owner).posts[0]?.featured).toBe(false);
+  });
+
   it("publishes only owner-authored labeled issues and preserves the first publication time", () => {
     const result = classifyIssues(
       [

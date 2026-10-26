@@ -24,6 +24,7 @@ function issueNode(number: number): TestIssueNode {
     body: `Body ${number}`,
     url: `https://github.com/kazoottt/issues-blog/issues/${number}`,
     state: "OPEN",
+    isPinned: number === 1,
     createdAt: "2026-07-01T00:00:00Z",
     updatedAt: "2026-07-02T00:00:00Z",
     author: { login: "kazoottt" },
@@ -81,8 +82,11 @@ describe("GitHub content loader", () => {
     });
 
     expect(fetcher).toHaveBeenCalledTimes(2);
+    expect(JSON.parse(fetcher.mock.calls[0]![1]!.body as string).query).toContain("isPinned");
+    expect(issues[1]?.isPinned).toBe(false);
     expect(issues.map((issue) => issue.number)).toEqual([1, 2]);
     expect(issues[0]).toMatchObject({
+      isPinned: true,
       author: "kazoottt",
       labels: ["blog:publish", "技术"],
       labelEvents: [
