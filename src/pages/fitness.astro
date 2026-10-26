@@ -376,7 +376,16 @@ const shortDate = (value: string) => value.slice(5).replace("-", "/");
   }
 
   .fitness-chart-block {
+    --fitness-ctl: #257773;
+    --fitness-atl: #bd5631;
+    --fitness-tsb: #526883;
     margin-bottom: 46px;
+  }
+
+  :global([data-theme="dark"]) .fitness-chart-block {
+    --fitness-ctl: #69c3b8;
+    --fitness-atl: #f18b65;
+    --fitness-tsb: #a8bcd4;
   }
 
   .fitness-periods {
@@ -443,18 +452,19 @@ const shortDate = (value: string) => value.slice(5).replace("-", "/");
   }
 
   .fitness-line-ctl {
-    stroke: var(--accent);
+    stroke: var(--fitness-ctl);
+    stroke-width: 3;
   }
 
   .fitness-line-atl {
-    stroke: var(--accent-dark);
-    opacity: 0.85;
+    stroke: var(--fitness-atl);
+    stroke-width: 2.5;
   }
 
   .fitness-line-tsb {
-    stroke: var(--muted);
-    stroke-width: 1.5;
-    stroke-dasharray: 4 4;
+    stroke: var(--fitness-tsb);
+    stroke-width: 2;
+    stroke-dasharray: 6 5;
   }
 
   .fitness-chart-empty {
@@ -482,18 +492,23 @@ const shortDate = (value: string) => value.slice(5).replace("-", "/");
   }
 
   .swatch {
-    width: 16px;
-    height: 2px;
-    border-radius: 2px;
-    background: var(--muted);
+    width: 24px;
+    height: 0;
+    border-top: 2px solid var(--fitness-tsb);
   }
 
   .swatch-ctl {
-    background: var(--accent);
+    border-color: var(--fitness-ctl);
+    border-width: 3px;
   }
 
   .swatch-atl {
-    background: var(--accent-dark);
+    border-color: var(--fitness-atl);
+    border-width: 3px;
+  }
+
+  .swatch-tsb {
+    border-style: dashed;
   }
 
   .fitness-explain {
