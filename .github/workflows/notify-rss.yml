@@ -36,7 +36,7 @@ jobs:
       RESEND_LATEST: ${{ github.event_name == 'workflow_dispatch' && inputs.resend_latest == true }}
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
       - name: Test RSS notification
