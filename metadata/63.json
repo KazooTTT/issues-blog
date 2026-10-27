@@ -11,13 +11,13 @@
   "labels": [
     "blog:publish",
     "周报",
+    "设计",
     "todo",
     "react",
     "软件",
     "想读",
     "想玩",
     "asr",
-    "design",
     "llm",
     "nextjs",
     "videdesign",
@@ -75,6 +75,10 @@
     {
       "label": "人工写作为主",
       "createdAt": "2026-10-12T03:23:47Z"
+    },
+    {
+      "label": "设计",
+      "createdAt": "2026-10-27T04:49:51Z"
     }
   ],
   "reactions": [],
