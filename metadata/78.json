@@ -10,7 +10,7 @@
   "author": "KazooTTT",
   "labels": [
     "blog:publish",
-    "frontend",
+    "前端",
     "font",
     "typography",
     "AI 写作为主"
@@ -35,6 +35,10 @@
     {
       "label": "AI 写作为主",
       "createdAt": "2026-10-12T03:23:37Z"
+    },
+    {
+      "label": "前端",
+      "createdAt": "2026-10-27T04:43:51Z"
     }
   ],
   "reactions": [],
