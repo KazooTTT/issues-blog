@@ -11,9 +11,9 @@
   "labels": [
     "blog:publish",
     "笔记",
+    "前端",
     "bugfix",
     "chart",
-    "frontend",
     "public",
     "sort",
     "AI 写作为主"
@@ -50,6 +50,10 @@
     {
       "label": "AI 写作为主",
       "createdAt": "2026-10-12T03:23:38Z"
+    },
+    {
+      "label": "前端",
+      "createdAt": "2026-10-27T04:49:16Z"
     }
   ],
   "reactions": [],
