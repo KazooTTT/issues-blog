@@ -12,7 +12,7 @@
     "blog:publish",
     "笔记",
     "效率",
-    "mac",
+    "macos",
     "AI 写作为主"
   ],
   "labelEvents": [
@@ -35,6 +35,10 @@
     {
       "label": "AI 写作为主",
       "createdAt": "2026-10-12T03:23:35Z"
+    },
+    {
+      "label": "macos",
+      "createdAt": "2026-10-27T04:48:38Z"
     }
   ],
   "reactions": [],
