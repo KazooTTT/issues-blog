@@ -10,7 +10,7 @@
   "author": "KazooTTT",
   "labels": [
     "agent-tasks",
-    "agent:queued"
+    "agent:running"
   ],
   "labelEvents": [
     {
@@ -20,6 +20,10 @@
     {
       "label": "agent:queued",
       "createdAt": "2026-10-29T03:11:20Z"
+    },
+    {
+      "label": "agent:running",
+      "createdAt": "2026-10-29T03:12:40Z"
     }
   ],
   "reactions": [],
@@ -32,6 +36,16 @@
       "avatarUrl": "https://avatars.githubusercontent.com/in/5497307?v=4",
       "createdAt": "2026-10-29T03:11:00Z",
       "updatedAt": "2026-10-29T03:11:00Z",
+      "reactions": []
+    },
+    {
+      "id": "IC_kwDOTiKyjc8AAAABgqV-cA",
+      "body": "<!-- agent-tasks:ab2bbcf17edac1a8cba21ac8b34b79daa7a7b71028983e90 -->\n### 执行进展\n\n状态：**开始执行**\n任务：体能需要支持 7 天范围的筛选\n\n此评论由 Agent Tasks 自动同步；Issue 保持原状态，未据此自动关闭。",
+      "url": "https://github.com/KazooTTT/issues-blog/issues/130#issuecomment-6486851184",
+      "author": "kazoottt-agent-tasks",
+      "avatarUrl": "https://avatars.githubusercontent.com/in/5497307?v=4",
+      "createdAt": "2026-10-29T03:12:27Z",
+      "updatedAt": "2026-10-29T03:12:27Z",
       "reactions": []
     }
   ]
