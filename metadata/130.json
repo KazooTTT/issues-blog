@@ -1,0 +1,22 @@
+{
+  "number": 130,
+  "title": "体能需要支持 7 天范围的筛选",
+  "body": "",
+  "url": "https://github.com/KazooTTT/issues-blog/issues/130",
+  "state": "OPEN",
+  "isPinned": false,
+  "createdAt": "2026-10-29T03:10:31Z",
+  "updatedAt": "2026-10-29T03:10:31Z",
+  "author": "KazooTTT",
+  "labels": [
+    "agent-tasks"
+  ],
+  "labelEvents": [
+    {
+      "label": "agent-tasks",
+      "createdAt": "2026-10-29T03:10:32Z"
+    }
+  ],
+  "reactions": [],
+  "comments": []
+}
