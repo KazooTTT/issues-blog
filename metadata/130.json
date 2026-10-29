@@ -47,6 +47,16 @@
       "createdAt": "2026-10-29T03:12:27Z",
       "updatedAt": "2026-10-29T03:12:27Z",
       "reactions": []
+    },
+    {
+      "id": "IC_kwDOTiKyjc8AAAABgqbUEw",
+      "body": "<!-- agent-tasks:artifact:2f0f1f0846e6d2d347d58776a5465cbe -->\n\n本地 dev + 种子 D1 实测：/fitness/?days=7 时「7 天」为激活态，图表横轴 10/23–10/29，与 90 天视图的 10/20 起点区分\n\n![集成测试截图](https://github.com/user-attachments/assets/21f78307-c74d-4cfa-b289-fa1de692d898)",
+      "url": "https://github.com/KazooTTT/issues-blog/issues/130#issuecomment-6486938643",
+      "author": "KazooTTT",
+      "avatarUrl": "https://avatars.githubusercontent.com/u/31075337?u=9e171c8e1fc172635dd89f0af554d1d066f691f8&v=4",
+      "createdAt": "2026-10-29T03:18:36Z",
+      "updatedAt": "2026-10-29T03:18:36Z",
+      "reactions": []
     }
   ]
 }
