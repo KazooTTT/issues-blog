@@ -71,6 +71,16 @@
       "createdAt": "2026-10-29T03:19:12Z",
       "updatedAt": "2026-10-29T03:19:12Z",
       "reactions": []
+    },
+    {
+      "id": "IC_kwDOTiKyjc8AAAABgqdEeg",
+      "body": "<!-- agent-tasks:ef3a47a6aa4153ca62e58a80d71d5f6d1ffc23c28001f65b -->\n### 执行进展\n\n状态：**已完成**\n任务：体能需要支持 7 天范围的筛选\n\n交付结果：\n体能看板时间范围新增「7 天」：抽出 src/fitness/periods.ts（FITNESS_PERIODS=[7,30,90,180,365] + resolveFitnessPeriod，非法值仍回落 90 天），fitness.astro 的范围导航与切片改为使用该模块，服务端和前端共用同一列表；新增 tests/fitness-periods.test.ts。交付于分支 feat/fitness-7-day-range（提交 54cc3990a90863158821241f895e8040a03b5fe0，已推送并核对远端 SHA 一致），PR https://github.com/KazooTTT/issues-blog/pull/131 。目标仓库是既有 public 远端，未改动可见性。\n\n验证依据：\npnpm test：14 文件 89 测试通过（含新增 3 条）；pnpm check：0 errors / 0 warnings；pnpm build：通过。本地 dev + 种子 D1 实测：/fitness/?days=7 激活「7 天」且图表横轴 10/23–10/29（7 个点），/fitness/?days=90 起点 10/20（10 个点），?days=5 回落 90 天；页面内点击「7 天」window 标记未丢失（无整页刷新），URL 变为 ?days=7、标签与坐标轴同步更新；浏览器控制台无报错。验证截图：https://github.com/user-attachments/assets/21f78307-c74d-4cfa-b289-fa1de692d898\n\n说明：\n执行方核验通过\n\n关联 PR：\nhttps://github.com/KazooTTT/issues-blog/pull/131\n\n此评论由 Agent Tasks 自动同步；Issue 保持原状态，未据此自动关闭。",
+      "url": "https://github.com/KazooTTT/issues-blog/issues/130#issuecomment-6486967418",
+      "author": "kazoottt-agent-tasks",
+      "avatarUrl": "https://avatars.githubusercontent.com/in/5497307?v=4",
+      "createdAt": "2026-10-29T03:20:47Z",
+      "updatedAt": "2026-10-29T03:20:47Z",
+      "reactions": []
     }
   ]
 }
