@@ -81,6 +81,16 @@
       "createdAt": "2026-10-29T03:20:47Z",
       "updatedAt": "2026-10-29T03:20:47Z",
       "reactions": []
+    },
+    {
+      "id": "IC_kwDOTiKyjc8AAAABgqeTmw",
+      "body": "<!-- agent-tasks:f85760109e89c4ec0cbafc62f1d48996ac3c96e34c370e75 -->\n### 已收到你的回复\n\n> <!-- agent-tasks:artifact:2f0f1f0846e6d2d347d58776a5465cbe -->\n>\n> 本地 dev + 种子 D1 实测：/fitness/?days=7 时「7 天」为激活态，图表横轴 10/23–10/29，与 90 天视图的 10/20 起点区分\n>\n> ![集成测试截图](https://github.com/user-attachments/assets/21f78307-c74d-4cfa-b289-fa1de692d898)\n\n这条回复已记录为最新需求资料。当前任务不会因普通评论自动重开；需要继续执行，请在任务管理页明确重新派发。",
+      "url": "https://github.com/KazooTTT/issues-blog/issues/130#issuecomment-6486987675",
+      "author": "kazoottt-agent-tasks",
+      "avatarUrl": "https://avatars.githubusercontent.com/in/5497307?v=4",
+      "createdAt": "2026-10-29T03:22:07Z",
+      "updatedAt": "2026-10-29T03:22:07Z",
+      "reactions": []
     }
   ]
 }
