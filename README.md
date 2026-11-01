@@ -2,5 +2,5 @@
 
 Generated recovery snapshots. GitHub Issues remain the source of truth.
 
-Last generated: 2026-11-01T15:59:18.963Z
+Last generated: 2026-11-01T16:02:56.141Z
 Issue count: 104
