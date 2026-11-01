@@ -19,48 +19,7 @@
     "vscode",
     "人工写作为主"
   ],
-  "labelEvents": [
-    {
-      "label": "blog:publish",
-      "createdAt": "2026-07-24T10:20:19Z"
-    },
-    {
-      "label": "笔记",
-      "createdAt": "2026-07-24T10:20:19Z"
-    },
-    {
-      "label": "typescript",
-      "createdAt": "2026-07-24T10:20:19Z"
-    },
-    {
-      "label": "bun",
-      "createdAt": "2026-07-24T10:20:19Z"
-    },
-    {
-      "label": "code",
-      "createdAt": "2026-07-24T10:20:19Z"
-    },
-    {
-      "label": "runner",
-      "createdAt": "2026-07-24T10:20:20Z"
-    },
-    {
-      "label": "ts-node",
-      "createdAt": "2026-07-24T10:20:20Z"
-    },
-    {
-      "label": "vscode",
-      "createdAt": "2026-07-24T10:20:20Z"
-    },
-    {
-      "label": "AI 写作为主",
-      "createdAt": "2026-10-12T03:23:50Z"
-    },
-    {
-      "label": "人工写作为主",
-      "createdAt": "2026-10-12T03:39:16Z"
-    }
-  ],
+  "labelEvents": [],
   "reactions": [],
   "comments": []
 }
